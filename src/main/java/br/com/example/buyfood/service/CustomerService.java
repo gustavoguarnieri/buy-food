@@ -4,7 +4,7 @@ import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.CustomerRequestDto;
 import br.com.example.buyfood.model.dto.response.CustomerResponseDto;
 import br.com.example.buyfood.model.entity.CustomerEntity;
-import br.com.example.buyfood.model.enums.RegisterStatus;
+import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.model.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

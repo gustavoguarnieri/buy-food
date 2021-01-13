@@ -1,7 +1,7 @@
 package br.com.example.buyfood.model.entity;
 
 import br.com.example.buyfood.model.embeddable.Audit;
-import br.com.example.buyfood.model.enums.RegisterStatus;
+import br.com.example.buyfood.enums.RegisterStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

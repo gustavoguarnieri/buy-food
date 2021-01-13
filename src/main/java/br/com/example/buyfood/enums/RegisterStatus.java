@@ -1,4 +1,4 @@
-package br.com.example.buyfood.model.enums;
+package br.com.example.buyfood.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
