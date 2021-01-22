@@ -16,6 +16,20 @@ services:
       - '3306'
     volumes:
       - db-volume:/var/lib/mysql
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: db
+      DB_DATABASE: bd_buy_food
+      DB_USER: admin
+      DB_PASSWORD: masterkey
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
 volumes:
   db-volume:
 
