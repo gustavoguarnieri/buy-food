@@ -2,120 +2,50 @@ package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.request.UserCreateRequestDto;
 import br.com.example.buyfood.model.dto.request.UserSigninRequestDto;
+import br.com.example.buyfood.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.keycloak.OAuth2Constants;
-import org.keycloak.admin.client.CreatedResponseUtil;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.authorization.client.AuthzClient;
-import org.keycloak.authorization.client.Configuration;
 import org.keycloak.representations.AccessTokenResponse;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
-@RequestMapping(value = "/users")
 @RestController
+@RequestMapping(value = "/users")
 public class UserController {
 
-    @Value("${keycloak.realm}")
-    private String realm;
+    private final UserService userService;
 
-    @Value("${keycloak.auth-server-url}")
-    private String authServerUrl;
-
-    @Value("${keycloak.resource}")
-    private String clientId;
-
-    @Value("${keycloak.credentials.secret}")
-    private String clientSecret;
-
-    private String role = "USER";
-    private String user = "admin";
-    private String pass = "Pa55w0rd";
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<?> createUser(@RequestBody UserCreateRequestDto userCreateRequestDTO) {
+    public UserCreateRequestDto createUser(@RequestBody UserCreateRequestDto userCreateRequestDTO) {
 
-        Keycloak keycloak = KeycloakBuilder.builder()
-                .serverUrl(authServerUrl)
-                .grantType(OAuth2Constants.PASSWORD)
-                .realm(realm)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .username(user)
-                .password(pass)
-                .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()).build();
+        log.info("createUser: starting create user firstname={} email={}",
+                userCreateRequestDTO.getFirstname(), userCreateRequestDTO.getEmail());
 
-        keycloak.tokenManager().getAccessToken();
+        var createUserResponse =  userService.createUser(userCreateRequestDTO);
 
-        UserRepresentation user = new UserRepresentation();
-        user.setEnabled(true);
-        user.setUsername(userCreateRequestDTO.getEmail());
-        user.setFirstName(userCreateRequestDTO.getFirstname());
-        user.setLastName(userCreateRequestDTO.getLastname());
-        user.setEmail(userCreateRequestDTO.getEmail());
+        log.info("createUser: finishing create user firstname={} email={}",
+                userCreateRequestDTO.getFirstname(), userCreateRequestDTO.getEmail());
 
-        RealmResource realmResource = keycloak.realm(realm);
-        UsersResource usersResource = realmResource.users();
-
-        Response response = usersResource.create(user);
-
-        userCreateRequestDTO.setStatusCode(response.getStatus());
-        userCreateRequestDTO.setStatus(response.getStatusInfo().toString());
-
-        if (response.getStatus() == 201) {
-
-            String userId = CreatedResponseUtil.getCreatedId(response);
-
-            log.info("Created userId {}", userId);
-
-            CredentialRepresentation passwordCred = new CredentialRepresentation();
-            passwordCred.setTemporary(false);
-            passwordCred.setType(CredentialRepresentation.PASSWORD);
-            passwordCred.setValue(userCreateRequestDTO.getPassword());
-
-            UserResource userResource = usersResource.get(userId);
-            userResource.resetPassword(passwordCred);
-
-            RoleRepresentation realmRoleUser = realmResource.roles().get(role).toRepresentation();
-            userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
-        }
-        return ResponseEntity.ok(userCreateRequestDTO);
+        return createUserResponse;
     }
 
     @PostMapping(path = "/signin")
-    public ResponseEntity<?> signin(@RequestBody UserSigninRequestDto userSignin) {
+    public AccessTokenResponse signin(@RequestBody UserSigninRequestDto userSignin) {
 
-        Map<String, Object> clientCredentials = new HashMap<>();
-        clientCredentials.put("secret", clientSecret);
-        clientCredentials.put("grant_type", CredentialRepresentation.PASSWORD);
+        log.info("signin: starting signin user email={}", userSignin.getEmail());
 
-        Configuration configuration =
-                new Configuration(authServerUrl, realm, clientId, clientCredentials, null);
-        AuthzClient authzClient = AuthzClient.create(configuration);
+        var userSigninResponse = userService.signin(userSignin);
 
-        AccessTokenResponse response =
-                authzClient.obtainAccessToken(userSignin.getEmail(), userSignin.getPassword());
+        log.info("signin: finishing signin user email={}", userSignin.getEmail());
 
-        return ResponseEntity.ok(response);
+        return userSigninResponse;
     }
 
     @GetMapping(value = "/unprotected-data")
