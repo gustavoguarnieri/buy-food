@@ -5,6 +5,7 @@ import br.com.example.buyfood.model.dto.request.UserSigninRequestDto;
 import br.com.example.buyfood.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.AccessTokenResponse;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -48,14 +49,10 @@ public class UserController {
         return userSigninResponse;
     }
 
-    @GetMapping(value = "/unprotected-data")
-    public String getName() {
-        return "Hello, this api is not protected.";
-    }
-
-    @GetMapping(value = "/protected-data")
-    public String getEmail() {
-        return "Hello, this api is protected.";
+    @Secured("ADMIN")
+    @GetMapping(value = "/admin")
+    public String getAdminData() {
+        return "Hello, this endpoint is just for admin role.";
     }
 }
 

@@ -41,9 +41,9 @@ public class UserService {
     @Value("${keycloak.credentials.secret}")
     private String clientSecret;
 
-    private final String role = "USER";
-    private final String user = "admin";
-    private final String pass = "Pa55w0rd";
+    private final String ROLE = "user";
+    private final String USER = "admin";
+    private final String PASS = "Pa55w0rd";
 
     public UserCreateRequestDto createUser(UserCreateRequestDto userCreateRequestDTO){
 
@@ -53,8 +53,8 @@ public class UserService {
                 .realm(realm)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .username(user)
-                .password(pass)
+                .username(USER)
+                .password(PASS)
                 .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()).build();
 
         keycloak.tokenManager().getAccessToken();
@@ -89,7 +89,7 @@ public class UserService {
                 UserResource userResource = usersResource.get(userId);
                 userResource.resetPassword(passwordCred);
 
-                RoleRepresentation realmRoleUser = realmResource.roles().get(role).toRepresentation();
+                RoleRepresentation realmRoleUser = realmResource.roles().get(ROLE).toRepresentation();
                 userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
 
             } else {
