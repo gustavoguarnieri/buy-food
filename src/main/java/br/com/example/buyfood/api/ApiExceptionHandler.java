@@ -9,6 +9,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.ws.rs.ForbiddenException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
@@ -44,6 +46,22 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request){
         var status = HttpStatus.NOT_FOUND;
+        var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Object> handleForbidden(ForbiddenException ex, WebRequest request){
+        var status = HttpStatus.FORBIDDEN;
+        var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleForbidden(AccessDeniedException ex, WebRequest request){
+        var status = HttpStatus.FORBIDDEN;
         var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);

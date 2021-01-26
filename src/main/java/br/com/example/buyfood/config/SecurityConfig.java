@@ -31,10 +31,10 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable().sessionManagement().
                 sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers("/api/users/create").permitAll()
-                .antMatchers("/api/users/signin").permitAll()
-                .antMatchers("/api/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/users/**").hasRole("USER")
+                .antMatchers("/api/v1/users/create").permitAll()
+                .antMatchers("/api/v1/users/signin").permitAll()
+                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/users/**").hasRole("USER")
                 .anyRequest().authenticated();
     }
 

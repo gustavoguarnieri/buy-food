@@ -24,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/customer")
+@RequestMapping("/api/v1/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -36,10 +36,11 @@ public class CustomerController {
     @ApiOperation(value = "Returns a list of customers")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of customers"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    @GetMapping(produces="application/json")
+    @GetMapping
     public List<CustomerResponseDto> getCustomerList(){
 
         log.info("getCustomerlist: starting to consult the list of customers");
@@ -54,6 +55,7 @@ public class CustomerController {
     @ApiOperation(value = "Returns the informed customer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed customer"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
@@ -72,6 +74,7 @@ public class CustomerController {
     @ApiOperation(value = "Create a new customer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created customer"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
@@ -91,6 +94,7 @@ public class CustomerController {
     @ApiOperation(value = "Update customer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated customer"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
@@ -108,6 +112,7 @@ public class CustomerController {
     @ApiOperation(value = "Delete customer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Deleted customer"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
