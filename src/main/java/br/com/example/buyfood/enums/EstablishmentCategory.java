@@ -1,0 +1,12 @@
+package br.com.example.buyfood.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum EstablishmentCategory {
+    RESTAURANT,
+    PIZZERIA,
+    BAR;
+}

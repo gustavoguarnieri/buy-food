@@ -24,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/customer")
+@RequestMapping("/api/v1/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -33,6 +33,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @GetMapping
     @ApiOperation(value = "Returns a list of customers")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of customers"),
@@ -40,18 +41,18 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    @GetMapping
     public List<CustomerResponseDto> getCustomerList(){
 
         log.info("getCustomerlist: starting to consult the list of customers");
 
-        List<CustomerResponseDto> customerResponseDtoList = customerService.getCustomerList();
+        var customerResponseDtoList = customerService.getCustomerList();
 
-        log.info("getCustomerlist: finishing to consult the list of customers");
+        log.info("getCustomerlist: finished to consult the list of customers");
 
         return customerResponseDtoList;
     }
 
+    @GetMapping("/{id}")
     @ApiOperation(value = "Returns the informed customer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed customer"),
@@ -59,18 +60,19 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    @GetMapping("/{id}")
     public CustomerResponseDto getCustomer(@Valid @NotBlank @PathVariable("id") Long id){
 
         log.info("getCustomer: starting to consult customer by id={}", id);
 
-        CustomerResponseDto customerResponseDto = customerService.getCustomer(id);
+        var customerResponseDto = customerService.getCustomer(id);
 
-        log.info("getCustomer: finishing to consult customer by id={}", id);
+        log.info("getCustomer: finished to consult customer by id={}", id);
 
         return customerResponseDto;
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new customer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created customer"),
@@ -78,19 +80,18 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public CustomerResponseDto createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
 
         log.info("createCustomer: starting to create new customer");
 
-        CustomerResponseDto customerResponseDto = customerService.createCustomer(customerRequestDto);
+        var customerResponseDto = customerService.createCustomer(customerRequestDto);
 
-        log.info("createCustomer: finishing to create new customer");
+        log.info("createCustomer: finished to create new customer");
 
         return customerResponseDto;
     }
 
+    @PutMapping("/{id}")
     @ApiOperation(value = "Update customer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated customer"),
@@ -98,7 +99,6 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    @PutMapping("/{id}")
     public void updateCustomer(@Valid @NotBlank @PathVariable("id") Long id,
                                               @Valid @RequestBody CustomerRequestDto customerRequestDto) {
 
@@ -106,9 +106,10 @@ public class CustomerController {
 
         customerService.updateCustomer(id, customerRequestDto);
 
-        log.info("updateCustomer: finishing update customer id={}", id);
+        log.info("updateCustomer: finished update customer id={}", id);
     }
 
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete customer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Deleted customer"),
@@ -116,13 +117,12 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    @DeleteMapping("/{id}")
     public void deleteCustomer(@Valid @NotBlank @PathVariable("id") Long id) {
 
         log.info("deleteCustomer: starting delete customer id={}", id);
 
         customerService.deleteCustomer(id);
 
-        log.info("deleteCustomer: finishing delete customer id={}", id);
+        log.info("deleteCustomer: finished delete customer id={}", id);
     }
 }

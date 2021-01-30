@@ -1,0 +1,130 @@
+package br.com.example.buyfood.controller;
+
+import br.com.example.buyfood.model.dto.request.EstablishmentRequestDto;
+import br.com.example.buyfood.model.dto.response.EstablishmentResponseDto;
+import br.com.example.buyfood.service.EstablishmentService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/establishments")
+public class EstablishmentController {
+
+    private final EstablishmentService establishmentService;
+
+    public EstablishmentController(EstablishmentService establishmentService) {
+        this.establishmentService = establishmentService;
+    }
+
+    @GetMapping
+    @ApiOperation(value = "Returns a list of establishment")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns a list of establishment"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public List<EstablishmentResponseDto> getEstablishmentList(){
+
+        log.info("getEstablishmentList: starting to consult the list of establishment");
+
+        var establishmentResponseDtoList = establishmentService.getEstablishmentList();
+
+        log.info("getEstablishmentList: finished to consult the list of establishment");
+
+        return establishmentResponseDtoList;
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Returns the informed establishment")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns the informed establishment"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public EstablishmentResponseDto getEstablishment(@Valid @NotBlank @PathVariable("id") Long id){
+
+        log.info("getEstablishment: starting to consult establishment by id={}", id);
+
+        var establishmentResponseDto = establishmentService.getEstablishment(id);
+
+        log.info("getEstablishment: finished to consult establishment by id={}", id);
+
+        return establishmentResponseDto;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create a new establishment")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created establishment"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public EstablishmentResponseDto createEstablishment(
+            @Valid @RequestBody EstablishmentRequestDto establishmentRequestDto) {
+
+        log.info("createEstablishment: starting to create new customer");
+
+        var establishmentResponseDto = establishmentService
+                .createEstablishment(establishmentRequestDto);
+
+        log.info("createEstablishment: finished to create new customer");
+
+        return establishmentResponseDto;
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Update establishment")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Updated establishment"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public void updateEstablishment(@Valid @NotBlank @PathVariable("id") Long id,
+                               @Valid @RequestBody EstablishmentRequestDto establishmentRequestDto) {
+
+        log.info("updateEstablishment: starting update establishment id={}", id);
+
+        establishmentService.updateEstablishment(id, establishmentRequestDto);
+
+        log.info("updateEstablishment: finished update establishment id={}", id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Delete establishment")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Deleted establishment"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public void deleteEstablishment(@Valid @NotBlank @PathVariable("id") Long id) {
+
+        log.info("deleteEstablishment: starting delete establishment id={}", id);
+
+        establishmentService.deleteEstablishment(id);
+
+        log.info("deleteEstablishment: finished delete establishment id={}", id);
+    }
+}

@@ -1,26 +1,29 @@
 package br.com.example.buyfood.model.entity;
 
+import br.com.example.buyfood.enums.EstablishmentCategory;
 import br.com.example.buyfood.enums.RegisterStatus;
+import br.com.example.buyfood.model.converter.EstablishmentCategoryConverter;
 import br.com.example.buyfood.model.embeddable.Audit;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
-@Table(name="customer")
-public class CustomerEntity {
+@Table(name="establishment")
+public class EstablishmentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,23 +31,24 @@ public class CustomerEntity {
 
     @NotBlank
     @Column(nullable = false)
-    private String name;
-
-    private String nickName;
+    private String companyName;
 
     @NotBlank
     @Column(nullable = false)
-    private String cpf;
+    private String tradingName;
 
     @NotBlank
     @Column(nullable = false)
     private String email;
 
     @NotBlank
-    private String phoneNumber;
+    private String commercialPhone;
 
-    @NotNull
-    private LocalDate birthDate;
+    @NotBlank
+    private String mobilePhone;
+
+    @Convert(converter = EstablishmentCategoryConverter.class)
+    private EstablishmentCategory category;
 
     @Column(nullable = false)
     private int status = RegisterStatus.ENABLED.getValue();
