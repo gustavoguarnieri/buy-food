@@ -27,3 +27,6 @@ keycloak:
     secret: 2abe3b6d-8e5a-4016-a941-84b039117987
   use-resource-role-mappings: true
   bearer-only: true
+
+swagger:
+  enabled: true

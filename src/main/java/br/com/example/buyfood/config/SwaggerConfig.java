@@ -1,5 +1,6 @@
 package br.com.example.buyfood.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -15,9 +16,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
+    @Value("${swagger.enabled}")
+    private boolean enableSwagger;
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .enable(enableSwagger)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("br.com.example.buyfood.controller"))
                 .paths(PathSelectors.any())
@@ -35,5 +40,25 @@ public class SwaggerConfig {
                         .contact(new Contact("Gustavo", "https://www.linkedin.com/in/gustavo-guarnieri/",
                                 "gustavo.guarnieri@gmail.com"))
                 .build();
+    }
+
+    public Boolean isSwaggerEnabled() {
+        return enableSwagger;
+    }
+
+    public String[] swaggerAuthWhiteList() {
+        if (isSwaggerEnabled()) {
+          return new String[] {
+                  "/v2/api-docs",
+                  "/swagger-resources",
+                  "/swagger-resources/**",
+                  "/configuration/ui",
+                  "/configuration/security",
+                  "/swagger-ui.html",
+                  "/webjars/**"
+          };
+        } else {
+            return new String[] {};
+        }
     }
 }

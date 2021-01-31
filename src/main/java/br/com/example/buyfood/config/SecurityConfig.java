@@ -24,6 +24,13 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableGlobalMethodSecurity(prePostEnabled = true,securedEnabled= true)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
+    private SwaggerConfig swaggerConfig;
+    private static final String AUTHORITY_MAPPER_PREFIX = "ROLE_";
+
+    public SecurityConfig(SwaggerConfig swaggerConfig) {
+        this.swaggerConfig = swaggerConfig;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -31,6 +38,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable().sessionManagement().
                 sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+                .antMatchers(swaggerConfig.swaggerAuthWhiteList()).permitAll()
                 .antMatchers("/api/v1/users/create").permitAll()
                 .antMatchers("/api/v1/users/signin").permitAll()
                 .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
@@ -52,7 +60,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) {
 
         SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
-        grantedAuthorityMapper.setPrefix("ROLE_");
+        grantedAuthorityMapper.setPrefix(AUTHORITY_MAPPER_PREFIX);
         grantedAuthorityMapper.setConvertToUpperCase(true);
 
         KeycloakAuthenticationProvider keycloakAuthenticationProvider =
