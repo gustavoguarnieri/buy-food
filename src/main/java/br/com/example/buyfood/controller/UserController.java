@@ -28,7 +28,7 @@ public class UserController {
 
     @ApiOperation(value = "Create a new user")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created user"),
+            @ApiResponse(code = 201, message = "Created user", response = UserCreateRequestDto.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
@@ -48,7 +48,7 @@ public class UserController {
 
     @ApiOperation(value = "Signin")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 200, message = "OK", response = AccessTokenResponse.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })

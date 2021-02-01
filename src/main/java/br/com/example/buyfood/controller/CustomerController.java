@@ -36,7 +36,8 @@ public class CustomerController {
     @GetMapping
     @ApiOperation(value = "Returns a list of customers")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns a list of customers"),
+            @ApiResponse(code = 200, message = "Returns a list of customers",
+                    response = CustomerResponseDto.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -55,7 +56,7 @@ public class CustomerController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Returns the informed customer")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns the informed customer"),
+            @ApiResponse(code = 200, message = "Returns the informed customer", response = CustomerResponseDto.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -75,7 +76,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new customer")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created customer"),
+            @ApiResponse(code = 201, message = "Created customer", response = CustomerResponseDto.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),

@@ -36,7 +36,8 @@ public class EstablishmentController {
     @GetMapping
     @ApiOperation(value = "Returns a list of establishment")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns a list of establishment"),
+            @ApiResponse(code = 200, message = "Returns a list of establishment",
+                    response = EstablishmentResponseDto.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -55,7 +56,8 @@ public class EstablishmentController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Returns the informed establishment")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns the informed establishment"),
+            @ApiResponse(code = 200, message = "Returns the informed establishment",
+                    response = EstablishmentResponseDto.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -75,7 +77,7 @@ public class EstablishmentController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new establishment")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created establishment"),
+            @ApiResponse(code = 201, message = "Created establishment", response = EstablishmentResponseDto.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
