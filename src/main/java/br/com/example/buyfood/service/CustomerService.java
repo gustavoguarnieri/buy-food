@@ -27,13 +27,13 @@ public class CustomerService {
     }
 
     public List<CustomerResponseDto> getCustomerList() {
-        return customerRepository.findAll().stream()
+        return customerRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public CustomerResponseDto getCustomer(Long id) {
-        return customerRepository.findById(id)
+        return customerRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Customer not found"));
     }

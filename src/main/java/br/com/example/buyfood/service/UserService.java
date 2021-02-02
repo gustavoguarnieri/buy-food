@@ -42,11 +42,11 @@ public class UserService {
     @Value("${keycloak.credentials.secret}")
     private String clientSecret;
 
-    private final String ROLE = "user";
-    private final String USER = "admin";
-    private final String PASS = "Pa55w0rd";
-
     public UserCreateRequestDto createUser(UserCreateRequestDto userCreateRequestDTO){
+
+        String ROLE = "user";
+        String USER = "admin";
+        String PASS = "Pa55w0rd";
 
         Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(authServerUrl)

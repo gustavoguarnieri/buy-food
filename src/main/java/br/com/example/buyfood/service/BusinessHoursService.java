@@ -27,13 +27,13 @@ public class BusinessHoursService {
     }
 
     public List<BusinessHoursResponseDto> getBusinessHoursList() {
-        return businessHoursRepository.findAll().stream()
+        return businessHoursRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public BusinessHoursResponseDto getBusinessHours(Long id) {
-        return businessHoursRepository.findById(id)
+        return businessHoursRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }

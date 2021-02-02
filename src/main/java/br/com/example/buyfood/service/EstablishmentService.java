@@ -27,13 +27,13 @@ public class EstablishmentService {
     }
 
     public List<EstablishmentResponseDto> getEstablishmentList() {
-        return establishmentRepository.findAll().stream()
+        return establishmentRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public EstablishmentResponseDto getEstablishment(Long id) {
-        return establishmentRepository.findById(id)
+        return establishmentRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
