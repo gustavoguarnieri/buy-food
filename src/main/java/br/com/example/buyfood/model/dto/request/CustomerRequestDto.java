@@ -3,6 +3,7 @@ package br.com.example.buyfood.model.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ public class CustomerRequestDto {
     @NotBlank
     private String cpf;
     @NotBlank
+    @Email
     private String email;
     @NotBlank
     private String phoneNumber;
