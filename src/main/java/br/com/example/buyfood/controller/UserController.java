@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.AccessTokenResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,11 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/v1/users")
 public class UserController {
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
     @ApiOperation(value = "Create a new user")
     @ApiResponses(value = {
@@ -34,15 +32,11 @@ public class UserController {
     })
     @PostMapping(path = "/create")
     public UserCreateRequestDto createUser(@RequestBody UserCreateRequestDto userCreateRequestDTO) {
-
         log.info("createUser: starting create user firstname={} email={}",
                 userCreateRequestDTO.getFirstname(), userCreateRequestDTO.getEmail());
-
         var createUserResponse =  userService.createUser(userCreateRequestDTO);
-
         log.info("createUser: finishing create user firstname={} email={}",
                 userCreateRequestDTO.getFirstname(), userCreateRequestDTO.getEmail());
-
         return createUserResponse;
     }
 
@@ -54,13 +48,9 @@ public class UserController {
     })
     @PostMapping(path = "/signin")
     public AccessTokenResponse signin(@RequestBody UserSigninRequestDto userSignin) {
-
         log.info("signin: starting signin user email={}", userSignin.getEmail());
-
         var userSigninResponse = userService.signin(userSignin);
-
         log.info("signin: finishing signin user email={}", userSignin.getEmail());
-
         return userSigninResponse;
     }
 

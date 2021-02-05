@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +28,8 @@ import java.util.List;
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
 
-    private final CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    @Autowired
+    private CustomerService customerService;
 
     @GetMapping
     @ApiOperation(value = "Returns a list of customers")
@@ -42,14 +40,10 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<CustomerResponseDto> getCustomerList(){
-
+    public List<CustomerResponseDto> getCustomerList() {
         log.info("getCustomerlist: starting to consult the list of customers");
-
         var customerResponseDtoList = customerService.getCustomerList();
-
         log.info("getCustomerlist: finished to consult the list of customers");
-
         return customerResponseDtoList;
     }
 
@@ -61,14 +55,10 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public CustomerResponseDto getCustomer(@Valid @NotBlank @PathVariable("id") Long id){
-
+    public CustomerResponseDto getCustomer(@Valid @NotBlank @PathVariable("id") Long id) {
         log.info("getCustomer: starting to consult customer by id={}", id);
-
         var customerResponseDto = customerService.getCustomer(id);
-
         log.info("getCustomer: finished to consult customer by id={}", id);
-
         return customerResponseDto;
     }
 
@@ -82,13 +72,9 @@ public class CustomerController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public CustomerResponseDto createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
-
         log.info("createCustomer: starting to create new customer");
-
         var customerResponseDto = customerService.createCustomer(customerRequestDto);
-
         log.info("createCustomer: finished to create new customer");
-
         return customerResponseDto;
     }
 
@@ -102,11 +88,8 @@ public class CustomerController {
     })
     public void updateCustomer(@Valid @NotBlank @PathVariable("id") Long id,
                                               @Valid @RequestBody CustomerRequestDto customerRequestDto) {
-
         log.info("updateCustomer: starting update customer id={}", id);
-
         customerService.updateCustomer(id, customerRequestDto);
-
         log.info("updateCustomer: finished update customer id={}", id);
     }
 
@@ -119,11 +102,8 @@ public class CustomerController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void deleteCustomer(@Valid @NotBlank @PathVariable("id") Long id) {
-
         log.info("deleteCustomer: starting delete customer id={}", id);
-
         customerService.deleteCustomer(id);
-
         log.info("deleteCustomer: finished delete customer id={}", id);
     }
 }

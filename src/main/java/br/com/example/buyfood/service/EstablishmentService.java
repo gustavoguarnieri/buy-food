@@ -8,6 +8,7 @@ import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.repository.EstablishmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class EstablishmentService {
 
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
+    @Autowired
     private EstablishmentRepository establishmentRepository;
 
-    public EstablishmentService(ModelMapper modelMapper, EstablishmentRepository establishmentRepository) {
-        this.modelMapper = modelMapper;
-        this.establishmentRepository = establishmentRepository;
-    }
+    @Autowired
+    private BusinessHoursService businessHoursService;
 
     public List<EstablishmentResponseDto> getEstablishmentList() {
         return establishmentRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
@@ -56,7 +57,7 @@ public class EstablishmentService {
         establishmentRepository.save(establishmentEntity);
     }
 
-    private EstablishmentEntity getEstablishmentById(Long id) {
+    public EstablishmentEntity getEstablishmentById(Long id) {
         return establishmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
 

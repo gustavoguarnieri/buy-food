@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +28,8 @@ import java.util.List;
 @RequestMapping("/api/v1/business-hours")
 public class BusinessHoursController {
 
-    private final BusinessHoursService businessHoursService;
-
-    public BusinessHoursController(BusinessHoursService businessHoursService) {
-        this.businessHoursService = businessHoursService;
-    }
+    @Autowired
+    private BusinessHoursService businessHoursService;
 
     @GetMapping
     @ApiOperation(value = "Returns a list of business hours")
@@ -43,13 +41,9 @@ public class BusinessHoursController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public List<BusinessHoursResponseDto> getBusinessHoursList() {
-
         log.info("getBusinessHoursList: starting to consult the list of business hours");
-
         var  businessHoursResponseDtoList = businessHoursService.getBusinessHoursList();
-
         log.info("getBusinessHoursList: finished to consult the list of business hours");
-
         return businessHoursResponseDtoList;
     }
 
@@ -63,13 +57,9 @@ public class BusinessHoursController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public BusinessHoursResponseDto  getBusinessHours(@Valid @NotBlank @PathVariable("id") Long id) {
-
         log.info("getBusinessHours: starting to consult business hours by id={}", id);
-
         var businessHoursResponseDto = businessHoursService.getBusinessHours(id);
-
         log.info("getBusinessHours: finished to consult business hours by id={}", id);
-
         return businessHoursResponseDto;
     }
 
@@ -86,12 +76,9 @@ public class BusinessHoursController {
             @Valid @RequestBody BusinessHoursRequestDto businessHoursRequestDto) {
 
         log.info("createBusinessHours: starting to create new business hours");
-
         var businessHoursResponseDto = businessHoursService
                 .createBusinessHours(businessHoursRequestDto);
-
         log.info("createBusinessHours: finished to create new business hours");
-
         return businessHoursResponseDto;
     }
 
@@ -107,9 +94,7 @@ public class BusinessHoursController {
                                     @Valid @RequestBody BusinessHoursRequestDto businessHoursRequestDto) {
 
         log.info("updateBusinessHours: starting update business hours id={}", id);
-
         businessHoursService.updateBusinessHours(id, businessHoursRequestDto);
-
         log.info("updateBusinessHours: finished update business hours id={}", id);
     }
 
@@ -124,9 +109,7 @@ public class BusinessHoursController {
     public void deleteBusinessHours(@Valid @NotBlank @PathVariable("id") Long id) {
 
         log.info("deleteBusinessHours: starting delete business hours id={}", id);
-
         businessHoursService.deleteBusinessHours(id);
-
         log.info("deleteBusinessHours: finished delete business hours id={}", id);
     }
 }

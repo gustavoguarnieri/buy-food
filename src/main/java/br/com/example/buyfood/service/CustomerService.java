@@ -8,6 +8,7 @@ import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.model.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerService {
 
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    private final CustomerRepository customerRepository;
-
-    public CustomerService(ModelMapper modelMapper, CustomerRepository customerRepository) {
-        this.modelMapper = modelMapper;
-        this.customerRepository = customerRepository;
-    }
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public List<CustomerResponseDto> getCustomerList() {
         return customerRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
