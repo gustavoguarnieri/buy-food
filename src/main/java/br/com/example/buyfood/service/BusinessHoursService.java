@@ -8,6 +8,7 @@ import br.com.example.buyfood.model.entity.BusinessHoursEntity;
 import br.com.example.buyfood.model.repository.BusinessHoursRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class BusinessHoursService {
 
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
+    @Autowired
     private BusinessHoursRepository businessHoursRepository;
 
-    public BusinessHoursService(ModelMapper modelMapper, BusinessHoursRepository businessHoursRepository) {
-        this.modelMapper = modelMapper;
-        this.businessHoursRepository = businessHoursRepository;
-    }
+    @Autowired
+    private EstablishmentService establishmentService;
 
     public List<BusinessHoursResponseDto> getBusinessHoursList() {
         return businessHoursRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
@@ -39,12 +40,16 @@ public class BusinessHoursService {
     }
 
     public BusinessHoursResponseDto createBusinessHours(BusinessHoursRequestDto businessHoursRequestDto) {
+        var establishment = establishmentService.getEstablishmentById(
+                businessHoursRequestDto.getEstablishmentId());
         BusinessHoursEntity businessHoursEntity = convertToEntity(businessHoursRequestDto);
+        businessHoursEntity.setEstablishment(establishment);
         return convertToDto(businessHoursRepository.save(businessHoursEntity));
     }
 
     public void updateBusinessHours(Long id, BusinessHoursRequestDto businessHoursRequestDto) {
         getBusinessHoursById(id);
+        establishmentService.getEstablishmentById(businessHoursRequestDto.getEstablishmentId());
         BusinessHoursEntity businessHoursEntity = convertToEntity(businessHoursRequestDto);
         businessHoursEntity.setId(id);
         businessHoursRepository.save(businessHoursEntity);
@@ -56,7 +61,7 @@ public class BusinessHoursService {
         businessHoursRepository.save(businessHoursEntity);
     }
 
-    private BusinessHoursEntity getBusinessHoursById(Long id) {
+    public BusinessHoursEntity getBusinessHoursById(Long id) {
         return businessHoursRepository.findById(id).orElseThrow(() -> new NotFoundException("Business hours not found"));
     }
 

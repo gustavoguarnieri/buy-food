@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalTime;
 
@@ -23,6 +25,10 @@ public class BusinessHoursEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "establishment_id", referencedColumnName = "id")
+    private EstablishmentEntity establishment;
 
     private LocalTime startTimeFirstPeriodSunday;
     private LocalTime finalTimeFirstPeriodSunday;
