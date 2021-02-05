@@ -36,7 +36,7 @@ public class BusinessHoursService {
     public BusinessHoursResponseDto getBusinessHours(Long id) {
         return businessHoursRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
                 .map(this::convertToDto)
-                .orElseThrow(() -> new NotFoundException("Establishment not found"));
+                .orElseThrow(() -> new NotFoundException("Business hours not found"));
     }
 
     public BusinessHoursResponseDto createBusinessHours(BusinessHoursRequestDto businessHoursRequestDto) {
