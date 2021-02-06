@@ -28,14 +28,26 @@ public class DeliveryTaxService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<DeliveryTaxResponseDto> getDeliveryTaxList() {
-        return deliveryTaxRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<DeliveryTaxResponseDto> getDeliveryTaxList(Integer status) {
+        if (status == null){
+            return deliveryTaxRepository.findAll().stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return getDeliveryTaxList(RegisterStatus.ENABLED);
+                case 0: {
+                    return getDeliveryTaxList(RegisterStatus.DISABLED);
+                }
+                default:
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
     }
 
     public DeliveryTaxResponseDto getDeliveryTax(Long id) {
-        return deliveryTaxRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
+        return deliveryTaxRepository.findById(id)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Delivery tax not found"));
     }
@@ -72,6 +84,12 @@ public class DeliveryTaxService {
 
     public DeliveryTaxEntity getDeliveryTaxById(Long id) {
         return deliveryTaxRepository.findById(id).orElseThrow(() -> new NotFoundException("Delivery tax not found"));
+    }
+
+    private List<DeliveryTaxResponseDto> getDeliveryTaxList(RegisterStatus enabled) {
+        return deliveryTaxRepository.findAllByStatus(enabled.getValue()).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private DeliveryTaxResponseDto convertToDto (DeliveryTaxEntity deliveryTaxEntity) {

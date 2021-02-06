@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,9 +41,9 @@ public class DeliveryTaxController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thRrown"),
     })
-    public List<DeliveryTaxResponseDto> getDeliveryTaxList() {
+    public List<DeliveryTaxResponseDto> getDeliveryTaxList(@RequestParam(required = false) Integer status) {
         log.info("getDeliveryTaxList: starting to consult the list of delivery tax");
-        var  deliveryTaxResponseDto = deliveryTaxService.getDeliveryTaxList();
+        var  deliveryTaxResponseDto = deliveryTaxService.getDeliveryTaxList(status);
         log.info("getDeliveryTaxList: finished to consult the list of delivery tax");
         return deliveryTaxResponseDto;
     }

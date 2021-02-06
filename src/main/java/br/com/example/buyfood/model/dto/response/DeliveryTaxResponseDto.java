@@ -13,4 +13,5 @@ public class DeliveryTaxResponseDto {
 
     private Long id;
     private BigDecimal taxAmount;
+    private Integer status;
 }
