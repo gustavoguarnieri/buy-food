@@ -75,10 +75,10 @@ public class EstablishmentController {
     })
     public EstablishmentResponseDto createEstablishment(
             @Valid @RequestBody EstablishmentRequestDto establishmentRequestDto) {
-        log.info("createEstablishment: starting to create new customer");
+        log.info("createEstablishment: starting to create new establishment");
         var establishmentResponseDto = establishmentService
                 .createEstablishment(establishmentRequestDto);
-        log.info("createEstablishment: finished to create new customer");
+        log.info("createEstablishment: finished to create new establishment");
         return establishmentResponseDto;
     }
 
