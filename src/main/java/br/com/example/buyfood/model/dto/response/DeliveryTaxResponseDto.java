@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 public class DeliveryTaxResponseDto {
 
     private Long id;
+    private Long establishmentId;
     private BigDecimal taxAmount;
     private Integer status;
 }
