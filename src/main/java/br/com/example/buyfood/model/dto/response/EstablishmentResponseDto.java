@@ -18,4 +18,5 @@ public class EstablishmentResponseDto {
     private String mobilePhone;
     private EstablishmentCategory category;
     private BusinessHoursResponseDto businessHours;
+    private DeliveryTaxResponseDto deliveryTax;
 }

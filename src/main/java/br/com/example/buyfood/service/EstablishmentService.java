@@ -58,7 +58,8 @@ public class EstablishmentService {
     }
 
     public EstablishmentEntity getEstablishmentById(Long id) {
-        return establishmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Establishment not found"));
+        return establishmentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
 
     private EstablishmentResponseDto convertToDto (EstablishmentEntity establishmentEntity) {

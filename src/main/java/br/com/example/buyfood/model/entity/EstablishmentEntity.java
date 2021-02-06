@@ -32,6 +32,9 @@ public class EstablishmentEntity {
     @OneToOne(mappedBy = "establishment", fetch = FetchType.LAZY)
     private BusinessHoursEntity businessHours;
 
+    @OneToOne(mappedBy = "establishment", fetch = FetchType.LAZY)
+    private DeliveryTaxEntity deliveryTax;
+
     @NotBlank
     @Column(nullable = false)
     private String companyName;
