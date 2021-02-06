@@ -50,15 +50,15 @@ public class CustomerService {
     }
 
     public CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto) {
-        CustomerEntity customerEntity = convertToEntity(customerRequestDto);
-        return convertToDto(customerRepository.save(customerEntity));
+        CustomerEntity convertedCustomerEntity = convertToEntity(customerRequestDto);
+        return convertToDto(customerRepository.save(convertedCustomerEntity));
     }
 
     public void updateCustomer(Long id, CustomerRequestDto customerRequestDto) {
         getCustomerById(id);
-        CustomerEntity customerEntity = convertToEntity(customerRequestDto);
-        customerEntity.setId(id);
-        customerRepository.save(customerEntity);
+        CustomerEntity convertedCustomerEntity = convertToEntity(customerRequestDto);
+        convertedCustomerEntity.setId(id);
+        customerRepository.save(convertedCustomerEntity);
     }
 
     public void deleteCustomer(Long id) {

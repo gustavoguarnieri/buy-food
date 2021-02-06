@@ -1,5 +1,6 @@
 package br.com.example.buyfood.controller;
 
+import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDto;
 import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDto;
 import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDto;
 import br.com.example.buyfood.service.DeliveryTaxService;
@@ -92,10 +93,10 @@ public class DeliveryTaxController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateDeliveryTax(@Valid @NotBlank @PathVariable("id") Long id,
-                                    @Valid @RequestBody DeliveryTaxRequestDto deliveryTaxRequestDto) {
+                                  @Valid @RequestBody DeliveryTaxPutRequestDto deliveryTaxPutRequestDto) {
 
         log.info("updateDeliveryTax: starting update delivery tax id={}", id);
-        deliveryTaxService.updateDeliveryTax(id, deliveryTaxRequestDto);
+        deliveryTaxService.updateDeliveryTax(id, deliveryTaxPutRequestDto);
         log.info("updateDeliveryTax: finished update delivery tax id={}", id);
     }
 

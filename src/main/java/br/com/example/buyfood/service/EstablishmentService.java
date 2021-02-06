@@ -50,15 +50,15 @@ public class EstablishmentService {
     }
 
     public EstablishmentResponseDto createEstablishment(EstablishmentRequestDto establishmentRequestDto) {
-        EstablishmentEntity establishmentEntity = convertToEntity(establishmentRequestDto);
-        return convertToDto(establishmentRepository.save(establishmentEntity));
+        EstablishmentEntity convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
+        return convertToDto(establishmentRepository.save(convertedEstablishmentEntity));
     }
 
     public void updateEstablishment(Long id, EstablishmentRequestDto establishmentRequestDto) {
         getEstablishmentById(id);
-        EstablishmentEntity establishmentEntity = convertToEntity(establishmentRequestDto);
-        establishmentEntity.setId(id);
-        establishmentRepository.save(establishmentEntity);
+        EstablishmentEntity convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
+        convertedEstablishmentEntity.setId(id);
+        establishmentRepository.save(convertedEstablishmentEntity);
     }
 
     public void deleteEstablishment(Long id) {

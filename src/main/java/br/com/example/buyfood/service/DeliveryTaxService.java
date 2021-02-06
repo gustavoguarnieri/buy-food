@@ -3,6 +3,7 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
+import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDto;
 import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDto;
 import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDto;
 import br.com.example.buyfood.model.entity.DeliveryTaxEntity;
@@ -62,18 +63,17 @@ public class DeliveryTaxService {
             throw new BadRequestException("Establishment already exist");
         }
 
-        DeliveryTaxEntity deliveryTaxEntity = convertToEntity(deliveryTaxRequestDto);
-        deliveryTaxEntity.setEstablishment(establishment);
-        return convertToDto(deliveryTaxRepository.save(deliveryTaxEntity));
+        DeliveryTaxEntity convertedDeliveryTaxEntity = convertToEntity(deliveryTaxRequestDto);
+        convertedDeliveryTaxEntity.setEstablishment(establishment);
+        return convertToDto(deliveryTaxRepository.save(convertedDeliveryTaxEntity));
     }
 
-    public void updateDeliveryTax(Long id, DeliveryTaxRequestDto deliveryTaxRequestDto) {
-        getDeliveryTaxById(id);
-        establishmentService.getEstablishmentById(deliveryTaxRequestDto.getEstablishmentId());
-        DeliveryTaxEntity deliveryTaxEntity = convertToEntity(deliveryTaxRequestDto);
-        deliveryTaxEntity.setId(id);
-        deliveryTaxEntity.setStatus(deliveryTaxRequestDto.getStatus());
-        deliveryTaxRepository.save(deliveryTaxEntity);
+    public void updateDeliveryTax(Long id, DeliveryTaxPutRequestDto deliveryTaxPutRequestDto) {
+        var deliveryTax = getDeliveryTaxById(id);
+        DeliveryTaxEntity convertedDeliveryTaxEntity = convertToEntity(deliveryTaxPutRequestDto);
+        convertedDeliveryTaxEntity.setId(id);
+        convertedDeliveryTaxEntity.setEstablishment(deliveryTax.getEstablishment());
+        deliveryTaxRepository.save(convertedDeliveryTaxEntity);
     }
 
     public void deleteDeliveryTax(Long id) {
@@ -96,7 +96,7 @@ public class DeliveryTaxService {
         return modelMapper.map(deliveryTaxEntity, DeliveryTaxResponseDto.class);
     }
 
-    private DeliveryTaxEntity convertToEntity (DeliveryTaxRequestDto deliveryTaxRequestDto) {
+    private DeliveryTaxEntity convertToEntity (Object deliveryTaxRequestDto) {
         return modelMapper.map(deliveryTaxRequestDto, DeliveryTaxEntity.class);
     }
 }

@@ -3,6 +3,7 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
+import br.com.example.buyfood.model.dto.request.BusinessHoursPutRequestDto;
 import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDto;
 import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDto;
 import br.com.example.buyfood.model.entity.BusinessHoursEntity;
@@ -55,17 +56,17 @@ public class BusinessHoursService {
     public BusinessHoursResponseDto createBusinessHours(BusinessHoursRequestDto businessHoursRequestDto) {
         var establishment = establishmentService.getEstablishmentById(
                 businessHoursRequestDto.getEstablishmentId());
-        BusinessHoursEntity businessHoursEntity = convertToEntity(businessHoursRequestDto);
-        businessHoursEntity.setEstablishment(establishment);
-        return convertToDto(businessHoursRepository.save(businessHoursEntity));
+        BusinessHoursEntity convertedBusinessHoursEntity = convertToEntity(businessHoursRequestDto);
+        convertedBusinessHoursEntity.setEstablishment(establishment);
+        return convertToDto(businessHoursRepository.save(convertedBusinessHoursEntity));
     }
 
-    public void updateBusinessHours(Long id, BusinessHoursRequestDto businessHoursRequestDto) {
-        getBusinessHoursById(id);
-        establishmentService.getEstablishmentById(businessHoursRequestDto.getEstablishmentId());
-        BusinessHoursEntity businessHoursEntity = convertToEntity(businessHoursRequestDto);
-        businessHoursEntity.setId(id);
-        businessHoursRepository.save(businessHoursEntity);
+    public void updateBusinessHours(Long id, BusinessHoursPutRequestDto businessHoursPutRequestDto) {
+        var businessHours = getBusinessHoursById(id);
+        BusinessHoursEntity convertedBusinessHoursEntity = convertToEntity(businessHoursPutRequestDto);
+        convertedBusinessHoursEntity.setId(id);
+        convertedBusinessHoursEntity.setEstablishment(businessHours.getEstablishment());
+        businessHoursRepository.save(convertedBusinessHoursEntity);
     }
 
     public void deleteBusinessHours(Long id) {
@@ -88,7 +89,7 @@ public class BusinessHoursService {
         return modelMapper.map(businessEntity, BusinessHoursResponseDto.class);
     }
 
-    private BusinessHoursEntity convertToEntity (BusinessHoursRequestDto businessHoursRequestDto) {
+    private BusinessHoursEntity convertToEntity (Object businessHoursRequestDto) {
         return modelMapper.map(businessHoursRequestDto, BusinessHoursEntity.class);
     }
 }

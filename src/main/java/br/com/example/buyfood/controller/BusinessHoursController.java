@@ -1,5 +1,6 @@
 package br.com.example.buyfood.controller;
 
+import br.com.example.buyfood.model.dto.request.BusinessHoursPutRequestDto;
 import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDto;
 import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDto;
 import br.com.example.buyfood.service.BusinessHoursService;
@@ -92,10 +93,10 @@ public class BusinessHoursController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateBusinessHours(@Valid @NotBlank @PathVariable("id") Long id,
-                                    @Valid @RequestBody BusinessHoursRequestDto businessHoursRequestDto) {
+                                    @Valid @RequestBody BusinessHoursPutRequestDto businessHoursPutRequestDto) {
 
         log.info("updateBusinessHours: starting update business hours id={}", id);
-        businessHoursService.updateBusinessHours(id, businessHoursRequestDto);
+        businessHoursService.updateBusinessHours(id, businessHoursPutRequestDto);
         log.info("updateBusinessHours: finished update business hours id={}", id);
     }
 
