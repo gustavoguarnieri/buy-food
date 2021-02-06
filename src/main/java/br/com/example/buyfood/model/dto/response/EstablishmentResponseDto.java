@@ -19,4 +19,5 @@ public class EstablishmentResponseDto {
     private EstablishmentCategory category;
     private BusinessHoursResponseDto businessHoursId;
     private DeliveryTaxResponseDto deliveryTaxId;
+    private Integer status;
 }

@@ -1,6 +1,7 @@
 package br.com.example.buyfood.service;
 
 import br.com.example.buyfood.enums.RegisterStatus;
+import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.EstablishmentRequestDto;
 import br.com.example.buyfood.model.dto.response.EstablishmentResponseDto;
@@ -27,10 +28,22 @@ public class EstablishmentService {
     @Autowired
     private BusinessHoursService businessHoursService;
 
-    public List<EstablishmentResponseDto> getEstablishmentList() {
-        return establishmentRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
+    public List<EstablishmentResponseDto> getEstablishmentList(Integer status) {
+        if (status == null){
+            return establishmentRepository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return getEstablishmentListByStatus(RegisterStatus.ENABLED);
+                case 0: {
+                    return getEstablishmentListByStatus(RegisterStatus.DISABLED);
+                }
+                default:
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
     }
 
     public EstablishmentResponseDto getEstablishment(Long id) {
@@ -60,6 +73,12 @@ public class EstablishmentService {
     public EstablishmentEntity getEstablishmentById(Long id) {
         return establishmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
+    }
+
+    private List<EstablishmentResponseDto> getEstablishmentListByStatus(RegisterStatus enabled) {
+        return establishmentRepository.findAllByStatus(enabled.getValue()).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private EstablishmentResponseDto convertToDto (EstablishmentEntity establishmentEntity) {
