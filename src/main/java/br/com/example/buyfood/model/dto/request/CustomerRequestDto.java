@@ -24,4 +24,5 @@ public class CustomerRequestDto {
     private String phoneNumber;
     @NotNull
     private LocalDate birthDate;
+    private int status = 1;
 }

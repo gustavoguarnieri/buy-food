@@ -21,4 +21,5 @@ public class EstablishmentRequestDto {
     private String commercialPhone;
     private String mobilePhone;
     private EstablishmentCategory category;
+    private int status = 1;
 }

@@ -14,5 +14,5 @@ public class DeliveryTaxRequestDto {
     private Long establishmentId;
     @NotNull
     private BigDecimal taxAmount;
-    private int status;
+    private int status = 1;
 }
