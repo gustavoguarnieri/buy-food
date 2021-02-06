@@ -44,7 +44,7 @@ public class EstablishmentService {
     }
 
     public EstablishmentResponseDto getEstablishment(Long id) {
-        return establishmentRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
+        return establishmentRepository.findById(id)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
