@@ -2,6 +2,7 @@ package br.com.example.buyfood.service;
 
 import br.com.example.buyfood.model.dto.request.UserCreateRequestDto;
 import br.com.example.buyfood.model.dto.request.UserSigninRequestDto;
+import br.com.example.buyfood.model.dto.response.UserCreateResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class UserService {
     @Value("${keycloak.credentials.secret}")
     private String clientSecret;
 
-    public UserCreateRequestDto createUser(UserCreateRequestDto userCreateRequestDTO){
+    public UserCreateResponseDto createUser(UserCreateRequestDto userCreateRequestDto){
 
         String ROLE = "user";
         String USER = "admin";
@@ -62,19 +62,21 @@ public class UserService {
 
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
-        user.setUsername(userCreateRequestDTO.getEmail());
-        user.setFirstName(userCreateRequestDTO.getFirstname());
-        user.setLastName(userCreateRequestDTO.getLastname());
-        user.setEmail(userCreateRequestDTO.getEmail());
+        user.setUsername(userCreateRequestDto.getEmail());
+        user.setFirstName(userCreateRequestDto.getFirstname());
+        user.setLastName(userCreateRequestDto.getLastname());
+        user.setEmail(userCreateRequestDto.getEmail());
 
         RealmResource realmResource = keycloak.realm(realm);
         UsersResource usersResource = realmResource.users();
 
-        try {
-            Response response = usersResource.create(user);
+        var userCreateResponseDto = new UserCreateResponseDto();
 
-            userCreateRequestDTO.setStatusCode(response.getStatus());
-            userCreateRequestDTO.setStatus(response.getStatusInfo().toString());
+        try {
+            var response = usersResource.create(user);
+
+            userCreateResponseDto.setStatusCode(response.getStatus());
+            userCreateResponseDto.setStatus(response.getStatusInfo().toString());
 
             if (response.getStatus() == HttpStatus.CREATED.value()) {
 
@@ -85,7 +87,7 @@ public class UserService {
                 CredentialRepresentation passwordCred = new CredentialRepresentation();
                 passwordCred.setTemporary(false);
                 passwordCred.setType(CredentialRepresentation.PASSWORD);
-                passwordCred.setValue(userCreateRequestDTO.getPassword());
+                passwordCred.setValue(userCreateRequestDto.getPassword());
 
                 UserResource userResource = usersResource.get(userId);
                 userResource.resetPassword(passwordCred);
@@ -104,7 +106,7 @@ public class UserService {
             log.error("An error occurred when creating the user={}", user.toString());
         }
 
-        return userCreateRequestDTO;
+        return userCreateResponseDto;
     }
 
     public AccessTokenResponse signin(UserSigninRequestDto userSignin){

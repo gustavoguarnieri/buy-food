@@ -19,6 +19,4 @@ public class UserCreateRequestDto {
     private String firstname;
     @NotBlank
     private String lastname;
-    private int statusCode;
-    private String status;
 }

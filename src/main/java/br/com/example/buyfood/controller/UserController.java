@@ -2,6 +2,7 @@ package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.request.UserCreateRequestDto;
 import br.com.example.buyfood.model.dto.request.UserSigninRequestDto;
+import br.com.example.buyfood.model.dto.response.UserCreateResponseDto;
 import br.com.example.buyfood.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -26,12 +27,12 @@ public class UserController {
 
     @ApiOperation(value = "Create a new user")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created user", response = UserCreateRequestDto.class),
+            @ApiResponse(code = 201, message = "Created user", response = UserCreateResponseDto.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     @PostMapping(path = "/create")
-    public UserCreateRequestDto createUser(@RequestBody UserCreateRequestDto userCreateRequestDTO) {
+    public UserCreateResponseDto createUser(@RequestBody UserCreateRequestDto userCreateRequestDTO) {
         log.info("createUser: starting create user firstname={} email={}",
                 userCreateRequestDTO.getFirstname(), userCreateRequestDTO.getEmail());
         var createUserResponse =  userService.createUser(userCreateRequestDTO);
