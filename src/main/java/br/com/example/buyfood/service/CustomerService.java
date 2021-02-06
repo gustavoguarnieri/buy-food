@@ -1,10 +1,11 @@
 package br.com.example.buyfood.service;
 
+import br.com.example.buyfood.enums.RegisterStatus;
+import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.CustomerRequestDto;
 import br.com.example.buyfood.model.dto.response.CustomerResponseDto;
 import br.com.example.buyfood.model.entity.CustomerEntity;
-import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.model.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,14 +25,26 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<CustomerResponseDto> getCustomerList() {
-        return customerRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<CustomerResponseDto> getCustomerList(Integer status) {
+        if (status == null){
+            return customerRepository.findAll().stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return getCustomerListByStatus(RegisterStatus.ENABLED);
+                case 0: {
+                    return getCustomerListByStatus(RegisterStatus.DISABLED);
+                }
+                default:
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
     }
 
     public CustomerResponseDto getCustomer(Long id) {
-        return customerRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
+        return customerRepository.findById(id)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Customer not found"));
     }
@@ -56,6 +69,12 @@ public class CustomerService {
 
     private CustomerEntity getCustomerById(Long id) {
         return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer not found"));
+    }
+
+    private List<CustomerResponseDto> getCustomerListByStatus(RegisterStatus enabled) {
+        return customerRepository.findAllByStatus(enabled.getValue()).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private CustomerResponseDto convertToDto (CustomerEntity customerEntity) {

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,9 +41,9 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<CustomerResponseDto> getCustomerList() {
+    public List<CustomerResponseDto> getCustomerList(@RequestParam(required = false) Integer status) {
         log.info("getCustomerlist: starting to consult the list of customers");
-        var customerResponseDtoList = customerService.getCustomerList();
+        var customerResponseDtoList = customerService.getCustomerList(status);
         log.info("getCustomerlist: finished to consult the list of customers");
         return customerResponseDtoList;
     }
