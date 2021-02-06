@@ -25,9 +25,6 @@ public class EstablishmentService {
     @Autowired
     private EstablishmentRepository establishmentRepository;
 
-    @Autowired
-    private BusinessHoursService businessHoursService;
-
     public List<EstablishmentResponseDto> getEstablishmentList(Integer status) {
         if (status == null){
             return establishmentRepository.findAll().stream()
