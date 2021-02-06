@@ -1,6 +1,7 @@
 package br.com.example.buyfood.service;
 
 import br.com.example.buyfood.enums.RegisterStatus;
+import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDto;
 import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDto;
@@ -27,14 +28,26 @@ public class BusinessHoursService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<BusinessHoursResponseDto> getBusinessHoursList() {
-        return businessHoursRepository.findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<BusinessHoursResponseDto> getBusinessHoursList(Integer status) {
+        if (status == null){
+            return businessHoursRepository.findAll().stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return getBusinessHoursListByStatus(RegisterStatus.ENABLED);
+                case 0: {
+                    return getBusinessHoursListByStatus(RegisterStatus.DISABLED);
+                }
+                default:
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
     }
 
     public BusinessHoursResponseDto getBusinessHours(Long id) {
-        return businessHoursRepository.findByIdAndStatus(id, RegisterStatus.ENABLED.getValue())
+        return businessHoursRepository.findById(id)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Business hours not found"));
     }
@@ -63,6 +76,12 @@ public class BusinessHoursService {
 
     public BusinessHoursEntity getBusinessHoursById(Long id) {
         return businessHoursRepository.findById(id).orElseThrow(() -> new NotFoundException("Business hours not found"));
+    }
+
+    private List<BusinessHoursResponseDto> getBusinessHoursListByStatus(RegisterStatus enabled) {
+        return businessHoursRepository.findAllByStatus(enabled.getValue()).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private BusinessHoursResponseDto convertToDto (BusinessHoursEntity businessEntity) {

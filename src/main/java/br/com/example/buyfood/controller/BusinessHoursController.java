@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,9 +41,9 @@ public class BusinessHoursController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<BusinessHoursResponseDto> getBusinessHoursList() {
+    public List<BusinessHoursResponseDto> getBusinessHoursList(@RequestParam(required = false) Integer status) {
         log.info("getBusinessHoursList: starting to consult the list of business hours");
-        var  businessHoursResponseDtoList = businessHoursService.getBusinessHoursList();
+        var  businessHoursResponseDtoList = businessHoursService.getBusinessHoursList(status);
         log.info("getBusinessHoursList: finished to consult the list of business hours");
         return businessHoursResponseDtoList;
     }
