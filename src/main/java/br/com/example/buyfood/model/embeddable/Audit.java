@@ -2,6 +2,7 @@ package br.com.example.buyfood.model.embeddable;
 
 import br.com.example.buyfood.service.UserService;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -13,7 +14,12 @@ import java.time.LocalDateTime;
 @Embeddable
 @Getter
 @Setter
+@NoArgsConstructor
 public class Audit {
+
+    public Audit(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     @Column(updatable = false)
     private String createdBy;
@@ -28,12 +34,12 @@ public class Audit {
     @PrePersist
     public void prePersist() {
         creationDate = LocalDateTime.now();
-        createdBy = new UserService().getUserId();
+        createdBy = new UserService().getUserId().orElse("-1");
     }
 
     @PreUpdate
     public void preUpdate() {
         lastUpdatedDate = LocalDateTime.now();
-        lastUpdatedBy = new UserService().getUserId();
+        lastUpdatedBy = new UserService().getUserId().orElse("-1");
     }
 }

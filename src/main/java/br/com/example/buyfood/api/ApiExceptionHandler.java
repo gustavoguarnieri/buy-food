@@ -2,6 +2,7 @@ package br.com.example.buyfood.api;
 
 import br.com.example.buyfood.exception.ApiException;
 import br.com.example.buyfood.exception.BusinessException;
+import br.com.example.buyfood.exception.ConflitException;
 import br.com.example.buyfood.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -62,6 +63,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleForbidden(AccessDeniedException ex, WebRequest request){
         var status = HttpStatus.FORBIDDEN;
+        var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ConflitException.class)
+    public ResponseEntity<Object> handleConflit(ConflitException ex, WebRequest request){
+        var status = HttpStatus.CONFLICT;
         var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
