@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductResponseDto {
+
     private String name;
     private BigDecimal price;
     private String description;

@@ -37,8 +37,8 @@ public class SwaggerConfig {
                 .version("1.0.0")
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
-                        .contact(new Contact("Gustavo", "https://www.linkedin.com/in/gustavo-guarnieri/",
-                                "gustavo.guarnieri@gmail.com"))
+                .contact(new Contact("Gustavo", "https://www.linkedin.com/in/gustavo-guarnieri/",
+                        "gustavo.guarnieri@gmail.com"))
                 .build();
     }
 
@@ -48,17 +48,17 @@ public class SwaggerConfig {
 
     public String[] swaggerAuthWhiteList() {
         if (isSwaggerEnabled()) {
-          return new String[] {
-                  "/v2/api-docs",
-                  "/swagger-resources",
-                  "/swagger-resources/**",
-                  "/configuration/ui",
-                  "/configuration/security",
-                  "/swagger-ui.html",
-                  "/webjars/**"
-          };
+            return new String[]{
+                    "/v2/api-docs",
+                    "/swagger-resources",
+                    "/swagger-resources/**",
+                    "/configuration/ui",
+                    "/configuration/security",
+                    "/swagger-ui.html",
+                    "/webjars/**"
+            };
         } else {
-            return new String[] {};
+            return new String[]{};
         }
     }
 }

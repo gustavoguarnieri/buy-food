@@ -30,7 +30,7 @@ public class DeliveryTaxService {
     private EstablishmentService establishmentService;
 
     public List<DeliveryTaxResponseDto> getDeliveryTaxList(Integer status) {
-        if (status == null){
+        if (status == null) {
             return deliveryTaxRepository.findAll().stream()
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
@@ -92,11 +92,11 @@ public class DeliveryTaxService {
                 .collect(Collectors.toList());
     }
 
-    private DeliveryTaxResponseDto convertToDto (DeliveryTaxEntity deliveryTaxEntity) {
+    private DeliveryTaxResponseDto convertToDto(DeliveryTaxEntity deliveryTaxEntity) {
         return modelMapper.map(deliveryTaxEntity, DeliveryTaxResponseDto.class);
     }
 
-    private DeliveryTaxEntity convertToEntity (Object deliveryTaxRequestDto) {
+    private DeliveryTaxEntity convertToEntity(Object deliveryTaxRequestDto) {
         return modelMapper.map(deliveryTaxRequestDto, DeliveryTaxEntity.class);
     }
 }

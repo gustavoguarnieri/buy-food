@@ -91,7 +91,7 @@ public class ProductController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateProduct(@Valid @NotBlank @PathVariable("id") Long id,
-                                    @Valid @RequestBody ProductRequestDto productRequestDto) {
+                              @Valid @RequestBody ProductRequestDto productRequestDto) {
         log.info("updateProduct: starting update product id={}", id);
         productService.updateProduct(id, productRequestDto);
         log.info("updateProduct: finished update product id={}", id);

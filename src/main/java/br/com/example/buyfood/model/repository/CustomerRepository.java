@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
     List<CustomerEntity> findAllByStatus(int status);
+
     Optional<CustomerEntity> findByIdAndStatus(Long id, int status);
 }

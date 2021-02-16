@@ -21,14 +21,14 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name="product")
+@Table(name = "product")
 public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @OneToMany(mappedBy="product")
+
+    @OneToMany(mappedBy = "product")
     private List<ImageEntity> images;
 
     @NotBlank

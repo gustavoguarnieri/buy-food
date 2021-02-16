@@ -85,7 +85,7 @@ public class FileStorageService {
     }
 
     private void isValidFilePath(String fileName) {
-        if(fileName.contains("..")) {
+        if (fileName.contains("..")) {
             throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
         }
     }
@@ -101,14 +101,14 @@ public class FileStorageService {
     private Resource getResource(String fileName) throws MalformedURLException {
         Path filePath = fileStorageLocation.resolve(fileName).normalize();
         Resource resource = new UrlResource(filePath.toUri());
-        if(resource.exists()) {
+        if (resource.exists()) {
             return resource;
         } else {
             throw new FileNotFoundException("File not found " + fileName);
         }
     }
 
-    public ResponseEntity<Resource> downloadFile(String fileName, HttpServletRequest request){
+    public ResponseEntity<Resource> downloadFile(String fileName, HttpServletRequest request) {
         Resource resource = loadFileAsResource(fileName);
 
         String contentType = null;
@@ -118,7 +118,7 @@ public class FileStorageService {
             log.info("Could not determine file type.");
         }
 
-        if(contentType == null) {
+        if (contentType == null) {
             contentType = "application/octet-stream";
         }
 

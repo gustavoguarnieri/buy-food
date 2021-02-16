@@ -44,7 +44,7 @@ public class BusinessHoursController {
     })
     public List<BusinessHoursResponseDto> getBusinessHoursList(@RequestParam(required = false) Integer status) {
         log.info("getBusinessHoursList: starting to consult the list of business hours");
-        var  businessHoursResponseDtoList = businessHoursService.getBusinessHoursList(status);
+        var businessHoursResponseDtoList = businessHoursService.getBusinessHoursList(status);
         log.info("getBusinessHoursList: finished to consult the list of business hours");
         return businessHoursResponseDtoList;
     }
@@ -58,7 +58,7 @@ public class BusinessHoursController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public BusinessHoursResponseDto  getBusinessHours(@Valid @NotBlank @PathVariable("id") Long id) {
+    public BusinessHoursResponseDto getBusinessHours(@Valid @NotBlank @PathVariable("id") Long id) {
         log.info("getBusinessHours: starting to consult business hours by id={}", id);
         var businessHoursResponseDto = businessHoursService.getBusinessHours(id);
         log.info("getBusinessHours: finished to consult business hours by id={}", id);

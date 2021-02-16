@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface BusinessHoursRepository extends JpaRepository<BusinessHoursEntity, Long> {
     List<BusinessHoursEntity> findAllByStatus(int status);
+
     Optional<BusinessHoursEntity> findByIdAndStatus(Long id, int status);
 }

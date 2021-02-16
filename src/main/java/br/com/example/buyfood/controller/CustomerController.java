@@ -88,7 +88,7 @@ public class CustomerController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateCustomer(@Valid @NotBlank @PathVariable("id") Long id,
-                                              @Valid @RequestBody CustomerRequestDto customerRequestDto) {
+                               @Valid @RequestBody CustomerRequestDto customerRequestDto) {
         log.info("updateCustomer: starting update customer id={}", id);
         customerService.updateCustomer(id, customerRequestDto);
         log.info("updateCustomer: finished update customer id={}", id);

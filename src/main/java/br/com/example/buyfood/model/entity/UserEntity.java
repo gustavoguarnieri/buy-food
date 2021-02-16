@@ -28,7 +28,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="user_keycloak")
+@Table(name = "user_keycloak")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,7 +51,7 @@ public class UserEntity implements Serializable {
     private Long id;
 
     private String userId;
-    
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<DeliveryAddressEntity> deliveryAddresses;
 

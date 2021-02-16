@@ -26,10 +26,10 @@ public class EstablishmentService {
     private EstablishmentRepository establishmentRepository;
 
     public List<EstablishmentResponseDto> getEstablishmentList(Integer status) {
-        if (status == null){
+        if (status == null) {
             return establishmentRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
         } else {
             switch (status) {
                 case 1:
@@ -78,11 +78,11 @@ public class EstablishmentService {
                 .collect(Collectors.toList());
     }
 
-    private EstablishmentResponseDto convertToDto (EstablishmentEntity establishmentEntity) {
+    private EstablishmentResponseDto convertToDto(EstablishmentEntity establishmentEntity) {
         return modelMapper.map(establishmentEntity, EstablishmentResponseDto.class);
     }
 
-    private EstablishmentEntity convertToEntity (EstablishmentRequestDto establishmentRequestDto) {
+    private EstablishmentEntity convertToEntity(EstablishmentRequestDto establishmentRequestDto) {
         return modelMapper.map(establishmentRequestDto, EstablishmentEntity.class);
     }
 }

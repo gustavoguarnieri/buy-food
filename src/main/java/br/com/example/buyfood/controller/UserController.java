@@ -41,7 +41,7 @@ public class UserController {
     public UserCreateResponseDto createUser(@RequestBody UserCreateRequestDto userCreateRequestDTO) {
         log.info("createUser: starting create user firstname={} email={}",
                 userCreateRequestDTO.getFirstName(), userCreateRequestDTO.getEmail());
-        var createUserResponse =  userService.createUser(userCreateRequestDTO);
+        var createUserResponse = userService.createUser(userCreateRequestDTO);
         log.info("createUser: finishing create user firstname={} email={}",
                 userCreateRequestDTO.getFirstName(), userCreateRequestDTO.getEmail());
         return createUserResponse;
@@ -71,7 +71,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateUser(@Valid @NotBlank @PathVariable("userId") String userId,
-                                    @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+                           @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         log.info("updateUser: starting update user userId={}", userId);
         userService.updateCustomUser(userId, userUpdateRequestDto);
         log.info("updateUser: finished update user userId={}", userId);

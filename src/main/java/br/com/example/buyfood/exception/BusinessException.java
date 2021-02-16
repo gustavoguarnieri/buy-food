@@ -3,14 +3,13 @@ package br.com.example.buyfood.exception;
 import org.springframework.http.HttpStatus;
 
 public class BusinessException extends RuntimeException {
-
     private HttpStatus statusCode;
 
-    public BusinessException (String message) {
+    public BusinessException(String message) {
         super(message);
     }
 
-    public BusinessException (String message, Throwable throwable) {
+    public BusinessException(String message, Throwable throwable) {
         super(message, throwable);
     }
 

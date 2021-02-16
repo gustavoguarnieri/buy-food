@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ImageRequestDto extends UploadFileResponse {
+
     private Long id;
     private Integer status;
 

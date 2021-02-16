@@ -26,7 +26,7 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     public List<CustomerResponseDto> getCustomerList(Integer status) {
-        if (status == null){
+        if (status == null) {
             return customerRepository.findAll().stream()
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
@@ -77,11 +77,11 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
-    private CustomerResponseDto convertToDto (CustomerEntity customerEntity) {
+    private CustomerResponseDto convertToDto(CustomerEntity customerEntity) {
         return modelMapper.map(customerEntity, CustomerResponseDto.class);
     }
 
-    private CustomerEntity convertToEntity (CustomerRequestDto customerRequestDto) {
+    private CustomerEntity convertToEntity(CustomerRequestDto customerRequestDto) {
         return modelMapper.map(customerRequestDto, CustomerEntity.class);
     }
 }

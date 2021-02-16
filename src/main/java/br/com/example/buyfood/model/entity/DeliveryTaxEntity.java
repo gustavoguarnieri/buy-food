@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
-@Table(name="delivery_tax")
+@Table(name = "delivery_tax")
 public class DeliveryTaxEntity {
 
     @Id

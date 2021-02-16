@@ -19,7 +19,7 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Setter
-@Table(name="business_hours")
+@Table(name = "business_hours")
 public class BusinessHoursEntity {
 
     @Id

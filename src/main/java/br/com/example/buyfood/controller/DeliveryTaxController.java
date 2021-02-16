@@ -44,7 +44,7 @@ public class DeliveryTaxController {
     })
     public List<DeliveryTaxResponseDto> getDeliveryTaxList(@RequestParam(required = false) Integer status) {
         log.info("getDeliveryTaxList: starting to consult the list of delivery tax");
-        var  deliveryTaxResponseDto = deliveryTaxService.getDeliveryTaxList(status);
+        var deliveryTaxResponseDto = deliveryTaxService.getDeliveryTaxList(status);
         log.info("getDeliveryTaxList: finished to consult the list of delivery tax");
         return deliveryTaxResponseDto;
     }

@@ -30,7 +30,7 @@ public class BusinessHoursService {
     private EstablishmentService establishmentService;
 
     public List<BusinessHoursResponseDto> getBusinessHoursList(Integer status) {
-        if (status == null){
+        if (status == null) {
             return businessHoursRepository.findAll().stream()
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
@@ -85,11 +85,11 @@ public class BusinessHoursService {
                 .collect(Collectors.toList());
     }
 
-    private BusinessHoursResponseDto convertToDto (BusinessHoursEntity businessEntity) {
+    private BusinessHoursResponseDto convertToDto(BusinessHoursEntity businessEntity) {
         return modelMapper.map(businessEntity, BusinessHoursResponseDto.class);
     }
 
-    private BusinessHoursEntity convertToEntity (Object businessHoursRequestDto) {
+    private BusinessHoursEntity convertToEntity(Object businessHoursRequestDto) {
         return modelMapper.map(businessHoursRequestDto, BusinessHoursEntity.class);
     }
 }

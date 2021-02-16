@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface DeliveryTaxRepository extends JpaRepository<DeliveryTaxEntity, Long> {
     List<DeliveryTaxEntity> findAllByStatus(int status);
+
     Optional<DeliveryTaxEntity> findByIdAndStatus(Long id, int status);
+
     Optional<DeliveryTaxEntity> findByEstablishmentId(Long id);
 }

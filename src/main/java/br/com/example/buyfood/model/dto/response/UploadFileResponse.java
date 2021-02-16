@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UploadFileResponse {
+
     private String fileName;
     private String fileUri;
     private String fileType;

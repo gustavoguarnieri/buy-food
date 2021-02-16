@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class ProductRequestDto {
+
     @NotBlank
     private String name;
     @NotNull

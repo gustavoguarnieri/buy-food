@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface EstablishmentRepository extends JpaRepository<EstablishmentEntity, Long> {
     List<EstablishmentEntity> findAllByStatus(int status);
+
     Optional<EstablishmentEntity> findByIdAndStatus(Long id, int status);
 }
