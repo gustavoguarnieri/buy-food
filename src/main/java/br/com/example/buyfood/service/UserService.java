@@ -54,10 +54,10 @@ public class UserService {
     @Value("${keycloak.credentials.secret}")
     private String clientSecret;
 
-    @Value("${keyclock-custom.admin-user}")
+    @Value("${keycloak-custom.admin-user}")
     private String adminUser;
 
-    @Value("${keyclock-custom.admin-password}")
+    @Value("${keycloak-custom.admin-password}")
     private String adminPass;
 
     @Autowired
@@ -116,7 +116,7 @@ public class UserService {
                         user.getEmail(), response.getStatus() + "-" + response.getStatusInfo().toString());
             }
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.error("createUser: An error occurred when creating the user={} ", user.getUsername(), ex);
         }
 
@@ -143,12 +143,12 @@ public class UserService {
                 .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()).build();
     }
 
-    public AccessTokenResponse signin(UserSigninRequestDto userSignin){
+    public AccessTokenResponse signin(UserSigninRequestDto userSignin) {
 
         Map<String, Object> clientCredentials = getClientCredentials();
 
         AccessTokenResponse response = null;
-        try{
+        try {
             var configuration = new Configuration(authServerUrl, realm, clientId,
                     clientCredentials, null);
             var authzClient = AuthzClient.create(configuration);
@@ -167,8 +167,8 @@ public class UserService {
         return clientCredentials;
     }
 
-    public Optional<String> getUserId(){
-        try{
+    public Optional<String> getUserId() {
+        try {
             return Optional.ofNullable(getKeycloakClaims().get("user_id").toString());
         } catch (Exception ex) {
             log.error("getUserId: An error occurred when getUserId, user ", ex);
@@ -192,13 +192,13 @@ public class UserService {
 
         var user = userRepository.findByEmail(userCreateRequestDto.getEmail());
 
-        if (user.isPresent()){
+        if (user.isPresent()) {
             log.warn("saveCustomUser: Duplicated resource, this email={} already exist ",
                     userCreateRequestDto.getEmail());
             throw new ConflitException("Duplicated resource, this email already exist");
         }
 
-        try{
+        try {
             return userRepository.save(
                     new UserEntity(
                             null,
@@ -223,7 +223,7 @@ public class UserService {
         var userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        try{
+        try {
             userEntity.setFirstName(userUpdateRequestDto.getFirstName());
             userEntity.setLastName(userUpdateRequestDto.getLastName());
             userEntity.setNickName(userUpdateRequestDto.getNickName());
@@ -235,7 +235,7 @@ public class UserService {
             throw new BusinessException(ex.getMessage());
         }
 
-        try{
+        try {
             var keycloak = getKeycloakBuilder(adminUser, adminPass);
             var realmResource = keycloak.realm(realm);
             var usersResource = realmResource.users();
@@ -260,7 +260,7 @@ public class UserService {
         var userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        try{
+        try {
             userEntity.setStatus(0);
             userRepository.save(userEntity);
         } catch (Exception ex) {
@@ -268,7 +268,7 @@ public class UserService {
             throw new BusinessException(ex.getMessage());
         }
 
-        try{
+        try {
             var keycloak = getKeycloakBuilder(adminUser, adminPass);
             var realmResource = keycloak.realm(realm);
             var usersResource = realmResource.users();
