@@ -79,15 +79,16 @@ public class BusinessHoursService {
         businessHoursRepository.save(convertedBusinessHoursEntity);
     }
 
-    public void deleteBusinessHours(Long establishmentId, Long id) {
+    public void deleteBusinessHours(Long establishmentId, Long businessHoursId) {
         establishmentService.getEstablishmentById(establishmentId);
-        BusinessHoursEntity businessHoursEntity = getBusinessHoursById(id);
+        BusinessHoursEntity businessHoursEntity = getBusinessHoursById(businessHoursId);
         businessHoursEntity.setStatus(RegisterStatus.DISABLED.getValue());
         businessHoursRepository.save(businessHoursEntity);
     }
 
-    public BusinessHoursEntity getBusinessHoursById(Long id) {
-        return businessHoursRepository.findById(id).orElseThrow(() -> new NotFoundException("Business hours not found"));
+    public BusinessHoursEntity getBusinessHoursById(Long businessHoursId) {
+        return businessHoursRepository.findById(businessHoursId)
+                .orElseThrow(() -> new NotFoundException("Business hours not found"));
     }
 
     private List<BusinessHoursResponseDto> getBusinessHoursListByEstablishmentAndStatus(
