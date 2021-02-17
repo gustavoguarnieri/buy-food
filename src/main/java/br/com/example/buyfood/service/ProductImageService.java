@@ -5,6 +5,7 @@ import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.ImageRequestDto;
 import br.com.example.buyfood.model.dto.response.ImageResponseDto;
+import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ImageEntity;
 import br.com.example.buyfood.model.entity.ProductEntity;
 import br.com.example.buyfood.model.repository.ProductImageRepository;
@@ -35,15 +36,19 @@ public class ProductImageService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    public List<ImageResponseDto> getProductImageList(Long productId, Integer status) {
+    @Autowired
+    private EstablishmentService establishmentService;
+
+    public List<ImageResponseDto> getProductImageList(Long establishmentId, Long productId, Integer status) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
-            return getProductImageListByProductId(productId);
+            return getProductImageListByEstablishmentIdAndProductId(establishment, productId);
         } else {
             switch (status) {
                 case 1:
-                    return getProductImageListByProductIdAndStatus(productId, RegisterStatus.ENABLED);
+                    return getProductImageListByEstablishmentIdProductIdAndStatus(establishment, productId, RegisterStatus.ENABLED);
                 case 0: {
-                    return getProductImageListByProductIdAndStatus(productId, RegisterStatus.DISABLED);
+                    return getProductImageListByEstablishmentIdProductIdAndStatus(establishment, productId, RegisterStatus.DISABLED);
                 }
                 default:
                     log.error("getProductImageList: Status incompatible, status:{}", status);
@@ -52,14 +57,12 @@ public class ProductImageService {
         }
     }
 
-    public ImageResponseDto getProductImage(Long productId, Long imageId) {
-        return productImageRepository.findByIdAndProductId(imageId, productId)
-                .map(this::convertToDto)
-                .orElseThrow(() -> new NotFoundException("Product image not found"));
+    public ImageResponseDto getProductImage(Long establishmentId, Long productId, Long imageId) {
+        return convertToDto(getProductImageByEstablishmentAndIdAndProductId(establishmentId, productId, imageId));
     }
 
-    public ImageResponseDto createProductImage(Long id, MultipartFile file) {
-        var productEntity = getProductById(id);
+    public ImageResponseDto createProductImage(Long establishmentId, Long productId, MultipartFile file) {
+        var productEntity = getProductByEstablishmentAndProductId(establishmentId, productId);
 
         var uploadFileResponse = fileStorageService.saveFile(file);
 
@@ -69,6 +72,7 @@ public class ProductImageService {
                 uploadFileResponse.getFileUri(),
                 uploadFileResponse.getFileType(),
                 uploadFileResponse.getSize());
+
         productImageRepository.save(imageEntity);
 
         return new ImageResponseDto(
@@ -80,8 +84,9 @@ public class ProductImageService {
                 1);
     }
 
-    public List<ImageResponseDto> createProductImageList(Long productId, MultipartFile[] files) {
-        var productEntity = getProductById(productId);
+    public List<ImageResponseDto> createProductImageList(Long establishmentId, Long productId, MultipartFile[] files) {
+        var productEntity = getProductByEstablishmentAndProductId(establishmentId, productId);
+
         var uploadFileResponse = fileStorageService.saveFileList(files);
 
         List<ImageResponseDto> imageResponseDtoList = new ArrayList<ImageResponseDto>();
@@ -100,8 +105,8 @@ public class ProductImageService {
         return imageResponseDtoList;
     }
 
-    public void updateProductImage(Long productId, Long imageId, ImageRequestDto imageRequestDto) {
-        getProductImage(productId, imageId);
+    public void updateProductImage(Long establishmentId, Long productId, Long imageId, ImageRequestDto imageRequestDto) {
+        getProductImage(establishmentId, productId, imageId);
         var productEntity = getProductById(productId);
         ImageEntity imageEntity = convertToEntity(imageRequestDto);
         imageEntity.setId(imageId);
@@ -109,15 +114,17 @@ public class ProductImageService {
         productImageRepository.save(imageEntity);
     }
 
-    public void deleteProductImage(Long productId, Long imageId) {
-        var imageEntity = getProductImageByIdAndProductId(productId, imageId);
+    public void deleteProductImage(Long establishmentId, Long productId, Long imageId) {
+        var imageEntity = getProductImageByEstablishmentAndIdAndProductId(establishmentId, productId, imageId);
         imageEntity.setStatus(RegisterStatus.DISABLED.getValue());
         productImageRepository.save(imageEntity);
 
     }
 
-    private ImageEntity getProductImageByIdAndProductId(Long productId, Long imageId) {
+    private ImageEntity getProductImageByEstablishmentAndIdAndProductId(Long establishmentId, Long productId, Long imageId) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
         return productImageRepository.findByIdAndProductId(imageId, productId)
+                .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
                 .orElseThrow(() -> new NotFoundException("Product image not found"));
     }
 
@@ -126,14 +133,25 @@ public class ProductImageService {
                 .orElseThrow(() -> new NotFoundException("Product image not found"));
     }
 
-    private List<ImageResponseDto> getProductImageListByProductId(Long productId) {
+    public ProductEntity getProductByEstablishmentAndProductId(Long establishmentId, Long productId) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        return productRepository.findByEstablishmentAndId(establishment, productId)
+                .orElseThrow(() -> new NotFoundException("Product image not found"));
+    }
+
+    private List<ImageResponseDto> getProductImageListByEstablishmentIdAndProductId(EstablishmentEntity establishment,
+                                                                                    Long productId) {
         return productImageRepository.findAllByProductId(productId).stream()
+                .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private List<ImageResponseDto> getProductImageListByProductIdAndStatus(Long productId, RegisterStatus enabled) {
+    private List<ImageResponseDto> getProductImageListByEstablishmentIdProductIdAndStatus(EstablishmentEntity establishment,
+                                                                                          Long productId,
+                                                                                          RegisterStatus enabled) {
         return productImageRepository.findAllByProductIdAndStatus(productId, enabled.getValue()).stream()
+                .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }

@@ -28,13 +28,13 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/products/{productId}")
+@RequestMapping("/api/v1/establishment/{establishmentId}/products/{productId}/images")
 public class ProductImageController {
 
     @Autowired
     private ProductImageService productImageService;
 
-    @GetMapping("/images")
+    @GetMapping
     @ApiOperation(value = "Returns a list of product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of product image",
@@ -43,15 +43,19 @@ public class ProductImageController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<ImageResponseDto> getProductImageList(@Valid @NotBlank @PathVariable("productId") Long productId,
-                                                      @RequestParam(required = false) Integer status) {
-        log.info("getProductImageList: starting to consult the list of product image");
-        var imageResponseDto = productImageService.getProductImageList(productId, status);
-        log.info("getProductImageList: finished to consult the list of product image");
+    public List<ImageResponseDto> getProductImageList(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+            @Valid @NotBlank @PathVariable("productId") Long productId,
+            @RequestParam(required = false) Integer status) {
+        log.info("getProductImageList: starting to consult the list of product image, establishmentId={}, productId={}",
+                establishmentId, productId);
+        var imageResponseDto = productImageService.getProductImageList(establishmentId, productId, status);
+        log.info("getProductImageList: finished to consult the list of product image, establishmentId={}, productId={}",
+                establishmentId, productId);
         return imageResponseDto;
     }
 
-    @GetMapping("/images/{imageId}")
+    @GetMapping("/{imageId}")
     @ApiOperation(value = "Returns the informed product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed product image",
@@ -60,15 +64,18 @@ public class ProductImageController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public ImageResponseDto getProductImage(@Valid @NotBlank @PathVariable("productId") Long productId,
+    public ImageResponseDto getProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                                            @Valid @NotBlank @PathVariable("productId") Long productId,
                                             @Valid @NotBlank @PathVariable("imageId") Long imageId) {
-        log.info("getProductImage: starting to consult product image by productId={}, imageId={}", productId, imageId);
-        var imageResponseDto = productImageService.getProductImage(productId, imageId);
-        log.info("getProductImage: finished to consult product image by productId={}, imageId={}", productId, imageId);
+        log.info("getProductImage: starting to consult product image by establishmentId={}, productId={}, imageId={}",
+                establishmentId, productId, imageId);
+        var imageResponseDto = productImageService.getProductImage(establishmentId, productId, imageId);
+        log.info("getProductImage: finished to consult product image by establishmentId={}, productId={}, imageId={}",
+                establishmentId, productId, imageId);
         return imageResponseDto;
     }
 
-    @PostMapping("/images/upload-file")
+    @PostMapping("/upload-file")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new product image")
     @ApiResponses(value = {
@@ -77,16 +84,19 @@ public class ProductImageController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public ImageResponseDto createProductImage(@Valid @NotBlank @PathVariable("productId") Long productId,
+    public ImageResponseDto createProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                                               @Valid @NotBlank @PathVariable("productId") Long productId,
                                                @RequestParam MultipartFile file) {
-        log.info("createProductImage: starting to create new product image");
+        log.info("createProductImage: starting to create new product image, establishmentId={}, productId={}",
+                establishmentId, productId);
         var productImageResponseDto = productImageService
-                .createProductImage(productId, file);
-        log.info("createProductImage: finished to create new product image");
+                .createProductImage(establishmentId, productId, file);
+        log.info("createProductImage: finished to create new product image, establishmentId={}, productId={}",
+                establishmentId, productId);
         return productImageResponseDto;
     }
 
-    @PostMapping("/images/upload-files")
+    @PostMapping("/upload-files")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new product images")
     @ApiResponses(value = {
@@ -96,16 +106,20 @@ public class ProductImageController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<ImageResponseDto> createProductImages(@Valid @NotBlank @PathVariable("productId") Long productId,
-                                                      @RequestParam MultipartFile[] files) {
-        log.info("createProductImages: starting to create new product images");
+    public List<ImageResponseDto> createProductImages(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+            @Valid @NotBlank @PathVariable("productId") Long productId,
+            @RequestParam MultipartFile[] files) {
+        log.info("createProductImages: starting to create new product images, establishmentId={}, productId={}",
+                establishmentId, productId);
         var imageResponseDtoList = productImageService
-                .createProductImageList(productId, files);
-        log.info("createProductImages: finished to create new product images");
+                .createProductImageList(establishmentId, productId, files);
+        log.info("createProductImages: finished to create new product images, establishmentId={}, productId={}",
+                establishmentId, productId);
         return imageResponseDtoList;
     }
 
-    @PutMapping("/images/{imageId}")
+    @PutMapping("/{imageId}")
     @ApiOperation(value = "Update product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated product image"),
@@ -113,15 +127,18 @@ public class ProductImageController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void updateProductImage(@Valid @NotBlank @PathVariable("productId") Long productId,
+    public void updateProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                                   @Valid @NotBlank @PathVariable("productId") Long productId,
                                    @Valid @NotBlank @PathVariable("imageId") Long imageId,
                                    @Valid @RequestBody ImageRequestDto imageRequestDto) {
-        log.info("updateProduct: starting update product image by productId={}, imageId={}", productId, imageId);
-        productImageService.updateProductImage(productId, imageId, imageRequestDto);
-        log.info("updateProduct: finished update product image by productId={}, imageId={}", productId, imageId);
+        log.info("updateProduct: starting update product image by establishmentId={}, productId={}, imageId={}",
+                establishmentId, productId, imageId);
+        productImageService.updateProductImage(establishmentId, productId, imageId, imageRequestDto);
+        log.info("updateProduct: finished update product image by establishmentId={}, productId={}, imageId={}",
+                establishmentId, productId, imageId);
     }
 
-    @DeleteMapping("/images/{imageId}")
+    @DeleteMapping("/{imageId}")
     @ApiOperation(value = "Delete product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Deleted product image"),
@@ -129,10 +146,13 @@ public class ProductImageController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void deleteProductImage(@Valid @NotBlank @PathVariable("productId") Long productId,
+    public void deleteProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                                   @Valid @NotBlank @PathVariable("productId") Long productId,
                                    @Valid @NotBlank @PathVariable("imageId") Long imageId) {
-        log.info("deleteProductImage: starting delete product image productId={}, imageId={}", productId, imageId);
-        productImageService.deleteProductImage(productId, imageId);
-        log.info("deleteProductImage: finished delete product image productId={}, imageId={}", productId, imageId);
+        log.info("deleteProductImage: starting delete product image establishmentId={}, productId={}, imageId={}",
+                establishmentId, productId, imageId);
+        productImageService.deleteProductImage(establishmentId, productId, imageId);
+        log.info("deleteProductImage: finished delete product image establishmentId={}, productId={}, imageId={}",
+                establishmentId, productId, imageId);
     }
 }
