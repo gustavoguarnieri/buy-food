@@ -13,8 +13,6 @@ import java.time.LocalTime;
 @Setter
 public class BusinessHoursRequestDto {
 
-    @NotNull
-    private Long establishmentId;
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTimeFirstPeriodSunday;

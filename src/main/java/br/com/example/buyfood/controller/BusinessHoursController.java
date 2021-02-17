@@ -27,7 +27,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/business-hours")
+@RequestMapping("/api/v1/establishment/{establishmentId}/business-hours")
 public class BusinessHoursController {
 
     @Autowired
@@ -42,14 +42,19 @@ public class BusinessHoursController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<BusinessHoursResponseDto> getBusinessHoursList(@RequestParam(required = false) Integer status) {
-        log.info("getBusinessHoursList: starting to consult the list of business hours");
-        var businessHoursResponseDtoList = businessHoursService.getBusinessHoursList(status);
-        log.info("getBusinessHoursList: finished to consult the list of business hours");
+    public List<BusinessHoursResponseDto> getBusinessHoursList(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+            @RequestParam(required = false) Integer status) {
+        log.info("getBusinessHoursList: starting to consult the list of business hours, " +
+                "establishmentId={}", establishmentId);
+        var businessHoursResponseDtoList =
+                businessHoursService.getBusinessHoursList(establishmentId, status);
+        log.info("getBusinessHoursList: finished to consult the list of business hours, " +
+                "establishmentId={}", establishmentId);
         return businessHoursResponseDtoList;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{businessHoursId}")
     @ApiOperation(value = "Returns the informed business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed business hours",
@@ -58,10 +63,15 @@ public class BusinessHoursController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public BusinessHoursResponseDto getBusinessHours(@Valid @NotBlank @PathVariable("id") Long id) {
-        log.info("getBusinessHours: starting to consult business hours by id={}", id);
-        var businessHoursResponseDto = businessHoursService.getBusinessHours(id);
-        log.info("getBusinessHours: finished to consult business hours by id={}", id);
+    public BusinessHoursResponseDto getBusinessHours(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+            @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId) {
+        log.info("getBusinessHours: starting to consult business hours by establishmentId={}, businessHoursId={}",
+                establishmentId, businessHoursId);
+        var businessHoursResponseDto =
+                businessHoursService.getBusinessHours(establishmentId, businessHoursId);
+        log.info("getBusinessHours: finished to consult business hours by establishmentId={}, businessHoursId={}",
+                establishmentId, businessHoursId);
         return businessHoursResponseDto;
     }
 
@@ -75,16 +85,17 @@ public class BusinessHoursController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public BusinessHoursResponseDto createBusinessHours(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @RequestBody BusinessHoursRequestDto businessHoursRequestDto) {
 
-        log.info("createBusinessHours: starting to create new business hours");
+        log.info("createBusinessHours: starting to create new business hours, establishmentId={}", establishmentId);
         var businessHoursResponseDto = businessHoursService
-                .createBusinessHours(businessHoursRequestDto);
-        log.info("createBusinessHours: finished to create new business hours");
+                .createBusinessHours(establishmentId, businessHoursRequestDto);
+        log.info("createBusinessHours: finished to create new business hours, establishmentId={}", establishmentId);
         return businessHoursResponseDto;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{businessHoursId}")
     @ApiOperation(value = "Update business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated business hours"),
@@ -92,15 +103,18 @@ public class BusinessHoursController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void updateBusinessHours(@Valid @NotBlank @PathVariable("id") Long id,
+    public void updateBusinessHours(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                                    @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId,
                                     @Valid @RequestBody BusinessHoursPutRequestDto businessHoursPutRequestDto) {
 
-        log.info("updateBusinessHours: starting update business hours id={}", id);
-        businessHoursService.updateBusinessHours(id, businessHoursPutRequestDto);
-        log.info("updateBusinessHours: finished update business hours id={}", id);
+        log.info("updateBusinessHours: starting update business hours establishmentId={}, businessHoursId={}",
+                establishmentId, businessHoursId);
+        businessHoursService.updateBusinessHours(establishmentId, businessHoursId, businessHoursPutRequestDto);
+        log.info("updateBusinessHours: finished update business hours establishmentId={}, businessHoursId={}",
+                establishmentId, businessHoursId);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{businessHoursId}")
     @ApiOperation(value = "Delete business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Deleted business hours"),
@@ -108,10 +122,13 @@ public class BusinessHoursController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void deleteBusinessHours(@Valid @NotBlank @PathVariable("id") Long id) {
+    public void deleteBusinessHours(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                                    @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId) {
 
-        log.info("deleteBusinessHours: starting delete business hours id={}", id);
-        businessHoursService.deleteBusinessHours(id);
-        log.info("deleteBusinessHours: finished delete business hours id={}", id);
+        log.info("deleteBusinessHours: starting delete business hours establishmentId={}, businessHoursId={}",
+                establishmentId, businessHoursId);
+        businessHoursService.deleteBusinessHours(establishmentId, businessHoursId);
+        log.info("deleteBusinessHours: finished delete business hours establishmentId={}, businessHoursId={}",
+                establishmentId, businessHoursId);
     }
 }
