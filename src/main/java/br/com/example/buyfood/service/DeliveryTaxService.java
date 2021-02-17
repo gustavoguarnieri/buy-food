@@ -30,8 +30,7 @@ public class DeliveryTaxService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<DeliveryTaxResponseDto> getDeliveryTaxListByEstablishmentAndStatus(Long establishmentId,
-                                                                                   Integer status) {
+    public List<DeliveryTaxResponseDto> getDeliveryTaxList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
             return deliveryTaxRepository.findAllByEstablishment(establishment).stream()
@@ -86,12 +85,13 @@ public class DeliveryTaxService {
         deliveryTaxRepository.save(deliveryTaxEntity);
     }
 
-    public DeliveryTaxEntity getDeliveryTaxById(Long id) {
-        return deliveryTaxRepository.findById(id).orElseThrow(() -> new NotFoundException("Delivery tax not found"));
+    public DeliveryTaxEntity getDeliveryTaxById(Long deliveryTaxId) {
+        return deliveryTaxRepository.findById(deliveryTaxId)
+                .orElseThrow(() -> new NotFoundException("Delivery tax not found"));
     }
 
-    private List<DeliveryTaxResponseDto> getDeliveryTaxListByEstablishmentAndStatus(
-            EstablishmentEntity establishment, RegisterStatus enabled) {
+    private List<DeliveryTaxResponseDto> getDeliveryTaxListByEstablishmentAndStatus(EstablishmentEntity establishment,
+                                                                                    RegisterStatus enabled) {
         return deliveryTaxRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

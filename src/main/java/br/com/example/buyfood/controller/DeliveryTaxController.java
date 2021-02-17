@@ -48,7 +48,7 @@ public class DeliveryTaxController {
         log.info("getDeliveryTaxList: starting to consult the list of delivery tax " +
                 "establishmentId={}", establishmentId);
         var deliveryTaxResponseDto =
-                deliveryTaxService.getDeliveryTaxListByEstablishmentAndStatus(establishmentId, status);
+                deliveryTaxService.getDeliveryTaxList(establishmentId, status);
         log.info("getDeliveryTaxList: finished to consult the list of delivery tax " +
                 "establishmentId={}", establishmentId);
         return deliveryTaxResponseDto;
@@ -107,9 +107,11 @@ public class DeliveryTaxController {
                                   @Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId,
                                   @Valid @RequestBody DeliveryTaxPutRequestDto deliveryTaxPutRequestDto) {
 
-        log.info("updateDeliveryTax: starting update delivery tax deliveryTaxId={}", deliveryTaxId);
+        log.info("updateDeliveryTax: starting update delivery tax establishmentId={}, deliveryTaxId={}",
+                establishmentId, deliveryTaxId);
         deliveryTaxService.updateDeliveryTax(establishmentId, deliveryTaxId, deliveryTaxPutRequestDto);
-        log.info("updateDeliveryTax: finished update delivery tax deliveryTaxId={}", deliveryTaxId);
+        log.info("updateDeliveryTax: finished update delivery tax establishmentId={}, deliveryTaxId={}",
+                establishmentId, deliveryTaxId);
     }
 
     @DeleteMapping("/{deliveryTaxId}")
