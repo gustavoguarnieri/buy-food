@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -30,6 +32,10 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "product")
     private List<ImageEntity> images;
+
+    @ManyToOne
+    @JoinColumn(name = "establishment_id", referencedColumnName = "id")
+    private EstablishmentEntity establishment;
 
     @NotBlank
     @Column(nullable = false, length = 50)

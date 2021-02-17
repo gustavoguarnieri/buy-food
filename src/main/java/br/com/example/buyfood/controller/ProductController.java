@@ -26,7 +26,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/establishment/{establishmentId}/products")
 public class ProductController {
 
     @Autowired
@@ -41,14 +41,16 @@ public class ProductController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<ProductResponseDto> getProductList(@RequestParam(required = false) Integer status) {
-        log.info("getProductList: starting to consult the list of product");
-        var productResponseDtoList = productService.getProductList(status);
-        log.info("getProductList: finished to consult the list of product");
+    public List<ProductResponseDto> getProductList(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+            @RequestParam(required = false) Integer status) {
+        log.info("getProductList: starting to consult the list of product establishmentId={}", establishmentId);
+        var productResponseDtoList = productService.getProductList(establishmentId, status);
+        log.info("getProductList: finished to consult the list of product establishmentId={}", establishmentId);
         return productResponseDtoList;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     @ApiOperation(value = "Returns the informed product")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed product",
@@ -57,10 +59,14 @@ public class ProductController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public ProductResponseDto getProduct(@Valid @NotBlank @PathVariable("id") Long id) {
-        log.info("getProduct: starting to consult product by id={}", id);
-        var productResponseDto = productService.getProduct(id);
-        log.info("getProduct: finished to consult product by id={}", id);
+    public ProductResponseDto getProduct(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+            @Valid @NotBlank @PathVariable("productId") Long productId) {
+        log.info("getProduct: starting to consult product by establishmentId={}, productId={}",
+                establishmentId, productId);
+        var productResponseDto = productService.getProduct(establishmentId, productId);
+        log.info("getProduct: finished to consult product by establishmentId={}, productId={}",
+                establishmentId, productId);
         return productResponseDto;
     }
 
@@ -74,15 +80,16 @@ public class ProductController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public ProductResponseDto createProduct(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @RequestBody ProductRequestDto productRequestDto) {
-        log.info("createProduct: starting to create new product");
+        log.info("createProduct: starting to create new product establishmentId={}", establishmentId);
         var productResponseDto = productService
-                .createProduct(productRequestDto);
-        log.info("createProduct: finished to create new product");
+                .createProduct(establishmentId, productRequestDto);
+        log.info("createProduct: finished to create new product establishmentId={}", establishmentId);
         return productResponseDto;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     @ApiOperation(value = "Update product")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated product"),
@@ -90,14 +97,17 @@ public class ProductController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void updateProduct(@Valid @NotBlank @PathVariable("id") Long id,
+    public void updateProduct(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                              @Valid @NotBlank @PathVariable("productId") Long productId,
                               @Valid @RequestBody ProductRequestDto productRequestDto) {
-        log.info("updateProduct: starting update product id={}", id);
-        productService.updateProduct(id, productRequestDto);
-        log.info("updateProduct: finished update product id={}", id);
+        log.info("updateProduct: starting update product establishmentId={}, productId={}",
+                establishmentId, productId);
+        productService.updateProduct(establishmentId, productId, productRequestDto);
+        log.info("updateProduct: finished update product establishmentId={}, productId={}",
+                establishmentId, productId);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @ApiOperation(value = "Delete product")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Deleted product"),
@@ -105,9 +115,12 @@ public class ProductController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void deleteProduct(@Valid @NotBlank @PathVariable("id") Long id) {
-        log.info("deleteProduct: starting delete product id={}", id);
-        productService.deleteProduct(id);
-        log.info("deleteProduct: finished delete product id={}", id);
+    public void deleteProduct(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+                              @Valid @NotBlank @PathVariable("productId") Long productId) {
+        log.info("deleteProduct: starting delete product establishmentId={}, productId={}",
+                establishmentId, productId);
+        productService.deleteProduct(establishmentId, productId);
+        log.info("deleteProduct: finished delete product establishmentId={}, productId={}",
+                establishmentId, productId);
     }
 }

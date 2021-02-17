@@ -1,5 +1,6 @@
 package br.com.example.buyfood.model.repository;
 
+import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
-    List<ProductEntity> findAllByStatus(int status);
+    List<ProductEntity> findAllByEstablishment(EstablishmentEntity establishment);
 
-    Optional<ProductEntity> findByIdAndStatus(Long id, int status);
+    List<ProductEntity> findAllByEstablishmentAndStatus(EstablishmentEntity establishment, int status);
+
+    Optional<ProductEntity> findByEstablishmentAndId(EstablishmentEntity establishment, Long productId);
+
+    Optional<ProductEntity> findByEstablishment(EstablishmentEntity establishment);
 }
