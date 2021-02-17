@@ -58,11 +58,6 @@ public class ProductService {
     public ProductResponseDto createProduct(Long establishmentId, ProductRequestDto productRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
 
-        if (productRepository.findByEstablishment(establishment).isPresent()) {
-            log.warn("createProduct: establishment already exist establishmentId={}", establishmentId);
-            throw new BadRequestException("Establishment already exist");
-        }
-
         ProductEntity convertedProductEntity = convertToEntity(productRequestDto);
         convertedProductEntity.setEstablishment(establishment);
         return convertToDto(productRepository.save(convertedProductEntity));
