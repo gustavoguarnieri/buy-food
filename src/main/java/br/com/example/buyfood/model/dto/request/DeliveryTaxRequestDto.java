@@ -11,8 +11,6 @@ import java.math.BigDecimal;
 public class DeliveryTaxRequestDto {
 
     @NotNull
-    private Long establishmentId;
-    @NotNull
     private BigDecimal taxAmount;
     private int status = 1;
 }

@@ -7,6 +7,7 @@ import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDto;
 import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDto;
 import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDto;
 import br.com.example.buyfood.model.entity.DeliveryTaxEntity;
+import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.repository.DeliveryTaxRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -29,17 +30,19 @@ public class DeliveryTaxService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<DeliveryTaxResponseDto> getDeliveryTaxList(Integer status) {
+    public List<DeliveryTaxResponseDto> getDeliveryTaxListByEstablishmentAndStatus(Long establishmentId,
+                                                                                   Integer status) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
-            return deliveryTaxRepository.findAll().stream()
+            return deliveryTaxRepository.findAllByEstablishment(establishment).stream()
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
         } else {
             switch (status) {
                 case 1:
-                    return getDeliveryTaxList(RegisterStatus.ENABLED);
+                    return getDeliveryTaxListByEstablishmentAndStatus(establishment, RegisterStatus.ENABLED);
                 case 0: {
-                    return getDeliveryTaxList(RegisterStatus.DISABLED);
+                    return getDeliveryTaxListByEstablishmentAndStatus(establishment, RegisterStatus.DISABLED);
                 }
                 default:
                     throw new BadRequestException("Status incompatible");
@@ -47,19 +50,18 @@ public class DeliveryTaxService {
         }
     }
 
-    public DeliveryTaxResponseDto getDeliveryTax(Long id) {
-        return deliveryTaxRepository.findById(id)
+    public DeliveryTaxResponseDto getDeliveryTax(Long establishmentId, Long deliveryTaxId) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        return deliveryTaxRepository.findByEstablishmentAndId(establishment, deliveryTaxId)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Delivery tax not found"));
     }
 
-    public DeliveryTaxResponseDto createDeliveryTax(DeliveryTaxRequestDto deliveryTaxRequestDto) {
-        var establishment = establishmentService.getEstablishmentById(
-                deliveryTaxRequestDto.getEstablishmentId());
+    public DeliveryTaxResponseDto createDeliveryTax(Long establishmentId, DeliveryTaxRequestDto deliveryTaxRequestDto) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
 
-        if (deliveryTaxRepository.findByEstablishmentId(deliveryTaxRequestDto.getEstablishmentId()).isPresent()) {
-            log.warn("createDeliveryTax: establishment already exist establishmentId={}",
-                    deliveryTaxRequestDto.getEstablishmentId());
+        if (deliveryTaxRepository.findByEstablishment(establishment).isPresent()) {
+            log.warn("createDeliveryTax: establishment already exist establishmentId={}", establishmentId);
             throw new BadRequestException("Establishment already exist");
         }
 
@@ -68,16 +70,18 @@ public class DeliveryTaxService {
         return convertToDto(deliveryTaxRepository.save(convertedDeliveryTaxEntity));
     }
 
-    public void updateDeliveryTax(Long id, DeliveryTaxPutRequestDto deliveryTaxPutRequestDto) {
-        var deliveryTax = getDeliveryTaxById(id);
+    public void updateDeliveryTax(Long establishmentId, Long deliveryTaxId,
+                                  DeliveryTaxPutRequestDto deliveryTaxPutRequestDto) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
         DeliveryTaxEntity convertedDeliveryTaxEntity = convertToEntity(deliveryTaxPutRequestDto);
-        convertedDeliveryTaxEntity.setId(id);
-        convertedDeliveryTaxEntity.setEstablishment(deliveryTax.getEstablishment());
+        convertedDeliveryTaxEntity.setId(deliveryTaxId);
+        convertedDeliveryTaxEntity.setEstablishment(establishment);
         deliveryTaxRepository.save(convertedDeliveryTaxEntity);
     }
 
-    public void deleteDeliveryTax(Long id) {
-        DeliveryTaxEntity deliveryTaxEntity = getDeliveryTaxById(id);
+    public void deleteDeliveryTax(Long establishmentId, Long deliveryTaxId) {
+        establishmentService.getEstablishmentById(establishmentId);
+        DeliveryTaxEntity deliveryTaxEntity = getDeliveryTaxById(deliveryTaxId);
         deliveryTaxEntity.setStatus(RegisterStatus.DISABLED.getValue());
         deliveryTaxRepository.save(deliveryTaxEntity);
     }
@@ -86,8 +90,9 @@ public class DeliveryTaxService {
         return deliveryTaxRepository.findById(id).orElseThrow(() -> new NotFoundException("Delivery tax not found"));
     }
 
-    private List<DeliveryTaxResponseDto> getDeliveryTaxList(RegisterStatus enabled) {
-        return deliveryTaxRepository.findAllByStatus(enabled.getValue()).stream()
+    private List<DeliveryTaxResponseDto> getDeliveryTaxListByEstablishmentAndStatus(
+            EstablishmentEntity establishment, RegisterStatus enabled) {
+        return deliveryTaxRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
