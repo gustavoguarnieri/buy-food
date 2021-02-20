@@ -4,16 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class OrderItemsRequestDto {
+public class DeliveryTaxRequestDTO {
 
     @NotNull
-    private Long id;
-    private int lineCode;
-    @NotNull
-    private Integer quantity;
-    @NotNull
-    private Long productId;
+    private BigDecimal taxAmount;
+    private int status = 1;
 }

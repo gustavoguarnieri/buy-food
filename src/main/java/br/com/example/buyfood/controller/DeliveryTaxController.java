@@ -1,8 +1,8 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDto;
-import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDto;
-import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDto;
+import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDTO;
+import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDTO;
 import br.com.example.buyfood.service.DeliveryTaxService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,12 +37,12 @@ public class DeliveryTaxController {
     @ApiOperation(value = "Returns a list of delivery tax")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of delivery tax",
-                    response = DeliveryTaxRequestDto.class, responseContainer = "List"),
+                    response = DeliveryTaxRequestDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thRrown"),
     })
-    public List<DeliveryTaxResponseDto> getDeliveryTaxList(
+    public List<DeliveryTaxResponseDTO> getDeliveryTaxList(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @RequestParam(required = false) Integer status) {
         log.info("getDeliveryTaxList: starting to consult the list of delivery tax " +
@@ -58,12 +58,12 @@ public class DeliveryTaxController {
     @ApiOperation(value = "Returns the informed delivery tax")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed delivery tax",
-                    response = DeliveryTaxRequestDto.class),
+                    response = DeliveryTaxRequestDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public DeliveryTaxResponseDto getDeliveryTax(
+    public DeliveryTaxResponseDTO getDeliveryTax(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId) {
         log.info("getDeliveryTax: starting to consult delivery tax by establishmentId={}, deliveryTaxId={}",
@@ -79,14 +79,14 @@ public class DeliveryTaxController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new delivery tax")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created delivery tax", response = DeliveryTaxRequestDto.class),
+            @ApiResponse(code = 201, message = "Created delivery tax", response = DeliveryTaxRequestDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public DeliveryTaxResponseDto createDeliveryTax(
+    public DeliveryTaxResponseDTO createDeliveryTax(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-            @Valid @RequestBody DeliveryTaxRequestDto deliveryTaxRequestDto) {
+            @Valid @RequestBody DeliveryTaxRequestDTO deliveryTaxRequestDto) {
 
         log.info("createDeliveryTax: starting to create new delivery tax, establishmentId={}", establishmentId);
         var deliveryTaxResponseDto = deliveryTaxService
@@ -105,7 +105,7 @@ public class DeliveryTaxController {
     })
     public void updateDeliveryTax(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                                   @Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId,
-                                  @Valid @RequestBody DeliveryTaxPutRequestDto deliveryTaxPutRequestDto) {
+                                  @Valid @RequestBody DeliveryTaxPutRequestDTO deliveryTaxPutRequestDto) {
 
         log.info("updateDeliveryTax: starting update delivery tax establishmentId={}, deliveryTaxId={}",
                 establishmentId, deliveryTaxId);

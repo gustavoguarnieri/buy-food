@@ -1,8 +1,8 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.BusinessHoursPutRequestDto;
-import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDto;
-import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDto;
+import br.com.example.buyfood.model.dto.request.BusinessHoursPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDTO;
+import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDTO;
 import br.com.example.buyfood.service.BusinessHoursService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,12 +37,12 @@ public class BusinessHoursController {
     @ApiOperation(value = "Returns a list of business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of business hours",
-                    response = BusinessHoursResponseDto.class, responseContainer = "List"),
+                    response = BusinessHoursResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<BusinessHoursResponseDto> getBusinessHoursList(
+    public List<BusinessHoursResponseDTO> getBusinessHoursList(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @RequestParam(required = false) Integer status) {
         log.info("getBusinessHoursList: starting to consult the list of business hours, " +
@@ -58,12 +58,12 @@ public class BusinessHoursController {
     @ApiOperation(value = "Returns the informed business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed business hours",
-                    response = BusinessHoursResponseDto.class),
+                    response = BusinessHoursResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public BusinessHoursResponseDto getBusinessHours(
+    public BusinessHoursResponseDTO getBusinessHours(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId) {
         log.info("getBusinessHours: starting to consult business hours by establishmentId={}, businessHoursId={}",
@@ -79,14 +79,14 @@ public class BusinessHoursController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new business hours")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created business hours", response = BusinessHoursResponseDto.class),
+            @ApiResponse(code = 201, message = "Created business hours", response = BusinessHoursResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public BusinessHoursResponseDto createBusinessHours(
+    public BusinessHoursResponseDTO createBusinessHours(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-            @Valid @RequestBody BusinessHoursRequestDto businessHoursRequestDto) {
+            @Valid @RequestBody BusinessHoursRequestDTO businessHoursRequestDto) {
 
         log.info("createBusinessHours: starting to create new business hours, establishmentId={}", establishmentId);
         var businessHoursResponseDto = businessHoursService
@@ -105,7 +105,7 @@ public class BusinessHoursController {
     })
     public void updateBusinessHours(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                                     @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId,
-                                    @Valid @RequestBody BusinessHoursPutRequestDto businessHoursPutRequestDto) {
+                                    @Valid @RequestBody BusinessHoursPutRequestDTO businessHoursPutRequestDto) {
 
         log.info("updateBusinessHours: starting update business hours establishmentId={}, businessHoursId={}",
                 establishmentId, businessHoursId);

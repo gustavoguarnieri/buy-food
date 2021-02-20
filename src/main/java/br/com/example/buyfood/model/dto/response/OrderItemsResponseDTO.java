@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrderItemsResponseDto {
+public class OrderItemsResponseDTO {
 
     private Long id;
     private int lineCode;

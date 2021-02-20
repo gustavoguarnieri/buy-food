@@ -3,9 +3,9 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDto;
-import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDto;
-import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDto;
+import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDTO;
+import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDTO;
 import br.com.example.buyfood.model.entity.DeliveryTaxEntity;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.repository.DeliveryTaxRepository;
@@ -30,7 +30,7 @@ public class DeliveryTaxService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<DeliveryTaxResponseDto> getDeliveryTaxList(Long establishmentId, Integer status) {
+    public List<DeliveryTaxResponseDTO> getDeliveryTaxList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
             return deliveryTaxRepository.findAllByEstablishment(establishment).stream()
@@ -49,14 +49,14 @@ public class DeliveryTaxService {
         }
     }
 
-    public DeliveryTaxResponseDto getDeliveryTax(Long establishmentId, Long deliveryTaxId) {
+    public DeliveryTaxResponseDTO getDeliveryTax(Long establishmentId, Long deliveryTaxId) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         return deliveryTaxRepository.findByEstablishmentAndId(establishment, deliveryTaxId)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Delivery tax not found"));
     }
 
-    public DeliveryTaxResponseDto createDeliveryTax(Long establishmentId, DeliveryTaxRequestDto deliveryTaxRequestDto) {
+    public DeliveryTaxResponseDTO createDeliveryTax(Long establishmentId, DeliveryTaxRequestDTO deliveryTaxRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
 
         if (deliveryTaxRepository.findByEstablishment(establishment).isPresent()) {
@@ -70,7 +70,7 @@ public class DeliveryTaxService {
     }
 
     public void updateDeliveryTax(Long establishmentId, Long deliveryTaxId,
-                                  DeliveryTaxPutRequestDto deliveryTaxPutRequestDto) {
+                                  DeliveryTaxPutRequestDTO deliveryTaxPutRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         DeliveryTaxEntity convertedDeliveryTaxEntity = convertToEntity(deliveryTaxPutRequestDto);
         convertedDeliveryTaxEntity.setId(deliveryTaxId);
@@ -90,15 +90,15 @@ public class DeliveryTaxService {
                 .orElseThrow(() -> new NotFoundException("Delivery tax not found"));
     }
 
-    private List<DeliveryTaxResponseDto> getDeliveryTaxListByEstablishmentAndStatus(EstablishmentEntity establishment,
+    private List<DeliveryTaxResponseDTO> getDeliveryTaxListByEstablishmentAndStatus(EstablishmentEntity establishment,
                                                                                     RegisterStatus enabled) {
         return deliveryTaxRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private DeliveryTaxResponseDto convertToDto(DeliveryTaxEntity deliveryTaxEntity) {
-        return modelMapper.map(deliveryTaxEntity, DeliveryTaxResponseDto.class);
+    private DeliveryTaxResponseDTO convertToDto(DeliveryTaxEntity deliveryTaxEntity) {
+        return modelMapper.map(deliveryTaxEntity, DeliveryTaxResponseDTO.class);
     }
 
     private DeliveryTaxEntity convertToEntity(Object deliveryTaxRequestDto) {

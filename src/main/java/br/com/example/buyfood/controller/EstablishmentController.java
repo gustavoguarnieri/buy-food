@@ -1,7 +1,7 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.EstablishmentRequestDto;
-import br.com.example.buyfood.model.dto.response.EstablishmentResponseDto;
+import br.com.example.buyfood.model.dto.request.EstablishmentRequestDTO;
+import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
 import br.com.example.buyfood.service.EstablishmentService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,12 +36,12 @@ public class EstablishmentController {
     @ApiOperation(value = "Returns a list of establishment")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of establishment",
-                    response = EstablishmentResponseDto.class, responseContainer = "List"),
+                    response = EstablishmentResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<EstablishmentResponseDto> getEstablishmentList(@RequestParam(required = false) Integer status) {
+    public List<EstablishmentResponseDTO> getEstablishmentList(@RequestParam(required = false) Integer status) {
         log.info("getEstablishmentList: starting to consult the list of establishment");
         var establishmentResponseDtoList = establishmentService.getEstablishmentList(status);
         log.info("getEstablishmentList: finished to consult the list of establishment");
@@ -52,12 +52,12 @@ public class EstablishmentController {
     @ApiOperation(value = "Returns the informed establishment")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed establishment",
-                    response = EstablishmentResponseDto.class),
+                    response = EstablishmentResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public EstablishmentResponseDto getEstablishment(@Valid @NotBlank @PathVariable("id") Long id) {
+    public EstablishmentResponseDTO getEstablishment(@Valid @NotBlank @PathVariable("id") Long id) {
         log.info("getEstablishment: starting to consult establishment by id={}", id);
         var establishmentResponseDto = establishmentService.getEstablishment(id);
         log.info("getEstablishment: finished to consult establishment by id={}", id);
@@ -68,13 +68,13 @@ public class EstablishmentController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new establishment")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created establishment", response = EstablishmentResponseDto.class),
+            @ApiResponse(code = 201, message = "Created establishment", response = EstablishmentResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public EstablishmentResponseDto createEstablishment(
-            @Valid @RequestBody EstablishmentRequestDto establishmentRequestDto) {
+    public EstablishmentResponseDTO createEstablishment(
+            @Valid @RequestBody EstablishmentRequestDTO establishmentRequestDto) {
         log.info("createEstablishment: starting to create new establishment");
         var establishmentResponseDto = establishmentService
                 .createEstablishment(establishmentRequestDto);
@@ -91,7 +91,7 @@ public class EstablishmentController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateEstablishment(@Valid @NotBlank @PathVariable("id") Long id,
-                                    @Valid @RequestBody EstablishmentRequestDto establishmentRequestDto) {
+                                    @Valid @RequestBody EstablishmentRequestDTO establishmentRequestDto) {
         log.info("updateEstablishment: starting update establishment id={}", id);
         establishmentService.updateEstablishment(id, establishmentRequestDto);
         log.info("updateEstablishment: finished update establishment id={}", id);

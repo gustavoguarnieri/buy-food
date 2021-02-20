@@ -3,7 +3,7 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.config.Property.FileStorageProperty;
 import br.com.example.buyfood.exception.FileStorageException;
 import br.com.example.buyfood.exception.FileNotFoundException;
-import br.com.example.buyfood.model.dto.response.UploadFileResponse;
+import br.com.example.buyfood.model.dto.response.UploadFileResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -49,7 +49,7 @@ public class FileStorageService {
         }
     }
 
-    public UploadFileResponse saveFile(MultipartFile file) {
+    public UploadFileResponseDTO saveFile(MultipartFile file) {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
         try {
@@ -61,11 +61,11 @@ public class FileStorageService {
 
         String fileDownloadUri = fileDownloadURI(fileName);
 
-        return new UploadFileResponse(fileName, fileDownloadUri,
+        return new UploadFileResponseDTO(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
     }
 
-    public List<UploadFileResponse> saveFileList(MultipartFile[] files) {
+    public List<UploadFileResponseDTO> saveFileList(MultipartFile[] files) {
         return Arrays.stream(files)
                 .map(this::saveFile)
                 .collect(Collectors.toList());

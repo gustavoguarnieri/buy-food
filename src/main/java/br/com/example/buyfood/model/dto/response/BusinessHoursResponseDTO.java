@@ -1,6 +1,7 @@
-package br.com.example.buyfood.model.dto.request;
+package br.com.example.buyfood.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import lombok.Getter;
@@ -10,8 +11,11 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class BusinessHoursPutRequestDto {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class BusinessHoursResponseDTO {
 
+    private Long id;
+    private Long establishmentId;
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTimeFirstPeriodSunday;
@@ -96,5 +100,5 @@ public class BusinessHoursPutRequestDto {
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime finalTimeSecondPeriodSaturday;
-    private int status = 1;
+    private Integer status;
 }

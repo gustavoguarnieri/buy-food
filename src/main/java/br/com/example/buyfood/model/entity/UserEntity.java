@@ -85,4 +85,10 @@ public class UserEntity implements Serializable {
 
     @Embedded
     private Audit audit = new Audit();
+
+    //TODO verificar melhor forma de saber qual estabelecimento o usuário pode manipular
+    /**
+     * Ideia, todos os POST e DELETE devem ser acessados por ADMINs
+     * deve haver outra entidade com todos os estabelecimentos acessiveis para cada usuario
+     */
 }

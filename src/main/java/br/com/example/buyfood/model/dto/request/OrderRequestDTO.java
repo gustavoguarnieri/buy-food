@@ -9,13 +9,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class OrderRequestDto {
+public class OrderRequestDTO {
 
     @NotNull
     private Long establishmentId;
     @NotNull
     private Long deliveryAddressId;
-    private List<OrderItemsRequestDto> items;
+    private List<OrderItemsRequestDTO> items;
     @NotBlank
     private String paymentWay;
     private String observation;

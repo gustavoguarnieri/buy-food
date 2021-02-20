@@ -1,7 +1,7 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.ProductRequestDto;
-import br.com.example.buyfood.model.dto.response.ProductResponseDto;
+import br.com.example.buyfood.model.dto.request.ProductRequestDTO;
+import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.service.ProductService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,12 +36,12 @@ public class ProductController {
     @ApiOperation(value = "Returns a list of product")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of product",
-                    response = ProductResponseDto.class, responseContainer = "List"),
+                    response = ProductResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<ProductResponseDto> getProductList(
+    public List<ProductResponseDTO> getProductList(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @RequestParam(required = false) Integer status) {
         log.info("getProductList: starting to consult the list of product establishmentId={}", establishmentId);
@@ -54,12 +54,12 @@ public class ProductController {
     @ApiOperation(value = "Returns the informed product")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed product",
-                    response = ProductResponseDto.class),
+                    response = ProductResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public ProductResponseDto getProduct(
+    public ProductResponseDTO getProduct(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @NotBlank @PathVariable("productId") Long productId) {
         log.info("getProduct: starting to consult product by establishmentId={}, productId={}",
@@ -74,14 +74,14 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new product")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created product", response = ProductResponseDto.class),
+            @ApiResponse(code = 201, message = "Created product", response = ProductResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public ProductResponseDto createProduct(
+    public ProductResponseDTO createProduct(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-            @Valid @RequestBody ProductRequestDto productRequestDto) {
+            @Valid @RequestBody ProductRequestDTO productRequestDto) {
         log.info("createProduct: starting to create new product establishmentId={}", establishmentId);
         var productResponseDto = productService
                 .createProduct(establishmentId, productRequestDto);
@@ -99,7 +99,7 @@ public class ProductController {
     })
     public void updateProduct(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                               @Valid @NotBlank @PathVariable("productId") Long productId,
-                              @Valid @RequestBody ProductRequestDto productRequestDto) {
+                              @Valid @RequestBody ProductRequestDTO productRequestDto) {
         log.info("updateProduct: starting update product establishmentId={}, productId={}",
                 establishmentId, productId);
         productService.updateProduct(establishmentId, productId, productRequestDto);

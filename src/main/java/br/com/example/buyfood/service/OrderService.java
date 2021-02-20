@@ -3,10 +3,10 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.OrderItemsPutRequestDto;
-import br.com.example.buyfood.model.dto.request.OrderPutRequestDto;
-import br.com.example.buyfood.model.dto.request.OrderRequestDto;
-import br.com.example.buyfood.model.dto.response.OrderResponseDto;
+import br.com.example.buyfood.model.dto.request.OrderItemsPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.OrderPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.OrderRequestDTO;
+import br.com.example.buyfood.model.dto.response.OrderResponseDTO;
 import br.com.example.buyfood.model.entity.OrderEntity;
 import br.com.example.buyfood.model.entity.OrderItemsEntity;
 import br.com.example.buyfood.model.entity.UserEntity;
@@ -44,7 +44,7 @@ public class OrderService {
     @Autowired
     private ProductService productService;
 
-    public List<OrderResponseDto> getOrderList(Integer status) {
+    public List<OrderResponseDTO> getOrderList(Integer status) {
         var userEntity = getUserByUserId(getUserId());
 
         if (status == null) {
@@ -68,12 +68,12 @@ public class OrderService {
         }
     }
 
-    public OrderResponseDto getOrder(Long orderId) {
+    public OrderResponseDTO getOrder(Long orderId) {
         var userEntity = getUserByUserId(getUserId());
         return convertToDto(getOrderByIdAndUser(orderId, userEntity));
     }
 
-    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDto) {
         var userEntity = getUserByUserId(getUserId());
 
         var convertedOrderEntity = convertToEntity(orderRequestDto);
@@ -93,7 +93,7 @@ public class OrderService {
         return convertToDto(orderEntity);
     }
 
-    public void updateOrder(Long orderId, OrderPutRequestDto orderPutRequestDto) {
+    public void updateOrder(Long orderId, OrderPutRequestDTO orderPutRequestDto) {
         var userEntity = getUserByUserId(getUserId());
         var orderEntity = getOrderByIdAndUser(orderId, userEntity);
 
@@ -142,15 +142,15 @@ public class OrderService {
         return userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    private OrderResponseDto convertToDto(OrderEntity orderEntity) {
-        return modelMapper.map(orderEntity, OrderResponseDto.class);
+    private OrderResponseDTO convertToDto(OrderEntity orderEntity) {
+        return modelMapper.map(orderEntity, OrderResponseDTO.class);
     }
 
-    private OrderEntity convertToEntity(OrderRequestDto orderRequestDto) {
+    private OrderEntity convertToEntity(OrderRequestDTO orderRequestDto) {
         return modelMapper.map(orderRequestDto, OrderEntity.class);
     }
 
-    private OrderItemsEntity convertToEntity(OrderItemsPutRequestDto orderItemsPutRequestDto) {
+    private OrderItemsEntity convertToEntity(OrderItemsPutRequestDTO orderItemsPutRequestDto) {
         return modelMapper.map(orderItemsPutRequestDto, OrderItemsEntity.class);
     }
 }

@@ -3,16 +3,19 @@ package br.com.example.buyfood.model.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class UserSigninRequestDto {
+public class UserUpdateRequestDTO {
 
     @NotBlank
-    @Email
-    private String email;
+    private String firstName;
+    @NotBlank
+    private String lastName;
+    private String nickName;
+    @NotBlank
+    private String phone;
     @NotBlank
     private String password;
 }

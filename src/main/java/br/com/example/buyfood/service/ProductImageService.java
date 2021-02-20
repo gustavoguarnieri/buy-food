@@ -3,8 +3,8 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.ImageRequestDto;
-import br.com.example.buyfood.model.dto.response.ImageResponseDto;
+import br.com.example.buyfood.model.dto.request.ImageRequestDTO;
+import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ImageEntity;
 import br.com.example.buyfood.model.entity.ProductEntity;
@@ -39,7 +39,7 @@ public class ProductImageService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<ImageResponseDto> getProductImageList(Long establishmentId, Long productId, Integer status) {
+    public List<ImageResponseDTO> getProductImageList(Long establishmentId, Long productId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
             return getProductImageListByEstablishmentIdAndProductId(establishment, productId);
@@ -57,11 +57,11 @@ public class ProductImageService {
         }
     }
 
-    public ImageResponseDto getProductImage(Long establishmentId, Long productId, Long imageId) {
+    public ImageResponseDTO getProductImage(Long establishmentId, Long productId, Long imageId) {
         return convertToDto(getProductImageByEstablishmentAndIdAndProductId(establishmentId, productId, imageId));
     }
 
-    public ImageResponseDto createProductImage(Long establishmentId, Long productId, MultipartFile file) {
+    public ImageResponseDTO createProductImage(Long establishmentId, Long productId, MultipartFile file) {
         var productEntity = getProductByEstablishmentAndProductId(establishmentId, productId);
 
         var uploadFileResponse = fileStorageService.saveFile(file);
@@ -75,7 +75,7 @@ public class ProductImageService {
 
         productImageRepository.save(imageEntity);
 
-        return new ImageResponseDto(
+        return new ImageResponseDTO(
                 imageEntity.getId(),
                 uploadFileResponse.getFileName(),
                 uploadFileResponse.getFileUri(),
@@ -84,12 +84,12 @@ public class ProductImageService {
                 1);
     }
 
-    public List<ImageResponseDto> createProductImageList(Long establishmentId, Long productId, MultipartFile[] files) {
+    public List<ImageResponseDTO> createProductImageList(Long establishmentId, Long productId, MultipartFile[] files) {
         var productEntity = getProductByEstablishmentAndProductId(establishmentId, productId);
 
         var uploadFileResponse = fileStorageService.saveFileList(files);
 
-        List<ImageResponseDto> imageResponseDtoList = new ArrayList<ImageResponseDto>();
+        List<ImageResponseDTO> imageResponseDTOList = new ArrayList<ImageResponseDTO>();
 
         uploadFileResponse
                 .forEach(f -> {
@@ -98,14 +98,14 @@ public class ProductImageService {
 
                     productImageRepository.save(imageEntity);
 
-                    imageResponseDtoList.add(new ImageResponseDto(imageEntity.getId(), imageEntity.getFileName(),
+                    imageResponseDTOList.add(new ImageResponseDTO(imageEntity.getId(), imageEntity.getFileName(),
                             imageEntity.getFileUri(), f.getFileType(), imageEntity.getSize(), 1));
                 });
 
-        return imageResponseDtoList;
+        return imageResponseDTOList;
     }
 
-    public void updateProductImage(Long establishmentId, Long productId, Long imageId, ImageRequestDto imageRequestDto) {
+    public void updateProductImage(Long establishmentId, Long productId, Long imageId, ImageRequestDTO imageRequestDto) {
         getProductImage(establishmentId, productId, imageId);
         var productEntity = getProductById(productId);
         ImageEntity imageEntity = convertToEntity(imageRequestDto);
@@ -139,7 +139,7 @@ public class ProductImageService {
                 .orElseThrow(() -> new NotFoundException("Product image not found"));
     }
 
-    private List<ImageResponseDto> getProductImageListByEstablishmentIdAndProductId(EstablishmentEntity establishment,
+    private List<ImageResponseDTO> getProductImageListByEstablishmentIdAndProductId(EstablishmentEntity establishment,
                                                                                     Long productId) {
         return productImageRepository.findAllByProductId(productId).stream()
                 .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
@@ -147,7 +147,7 @@ public class ProductImageService {
                 .collect(Collectors.toList());
     }
 
-    private List<ImageResponseDto> getProductImageListByEstablishmentIdProductIdAndStatus(EstablishmentEntity establishment,
+    private List<ImageResponseDTO> getProductImageListByEstablishmentIdProductIdAndStatus(EstablishmentEntity establishment,
                                                                                           Long productId,
                                                                                           RegisterStatus enabled) {
         return productImageRepository.findAllByProductIdAndStatus(productId, enabled.getValue()).stream()
@@ -156,11 +156,11 @@ public class ProductImageService {
                 .collect(Collectors.toList());
     }
 
-    private ImageResponseDto convertToDto(ImageEntity imageEntity) {
-        return modelMapper.map(imageEntity, ImageResponseDto.class);
+    private ImageResponseDTO convertToDto(ImageEntity imageEntity) {
+        return modelMapper.map(imageEntity, ImageResponseDTO.class);
     }
 
-    private ImageEntity convertToEntity(ImageRequestDto imageRequestDto) {
+    private ImageEntity convertToEntity(ImageRequestDTO imageRequestDto) {
         return modelMapper.map(imageRequestDto, ImageEntity.class);
     }
 }

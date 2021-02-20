@@ -1,9 +1,9 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.DeliveryAddressRequestDto;
-import br.com.example.buyfood.model.dto.response.DeliveryAddressResponseDto;
-import br.com.example.buyfood.model.dto.response.ImageResponseDto;
-import br.com.example.buyfood.model.dto.response.ProductResponseDto;
+import br.com.example.buyfood.model.dto.request.DeliveryAddressRequestDTO;
+import br.com.example.buyfood.model.dto.response.DeliveryAddressResponseDTO;
+import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
+import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.service.AddressService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,12 +38,12 @@ public class AddressController {
     @ApiOperation(value = "Returns a list of user address")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of user address",
-                    response = ProductResponseDto.class, responseContainer = "List"),
+                    response = ProductResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<DeliveryAddressResponseDto> getUserAddressList(@RequestParam(required = false) Integer status) {
+    public List<DeliveryAddressResponseDTO> getUserAddressList(@RequestParam(required = false) Integer status) {
         log.info("getUserAddressList: starting to consult the list of user address");
         var addressResponseDto = addressService.getUserAddressList(status);
         log.info("getUserAddressList: finished to consult the list of user address");
@@ -54,12 +54,12 @@ public class AddressController {
     @ApiOperation(value = "Returns the informed user address")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed user address",
-                    response = ProductResponseDto.class),
+                    response = ProductResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public DeliveryAddressResponseDto getUserAddress(@Valid @NotBlank @PathVariable("addressId") Long addressId) {
+    public DeliveryAddressResponseDTO getUserAddress(@Valid @NotBlank @PathVariable("addressId") Long addressId) {
         log.info("getUserAddress: starting to consult user address by addressId={}", addressId);
         var addressResponseDto = addressService.getUserAddress(addressId);
         log.info("getUserAddress: finished to consult user address by addressId={}", addressId);
@@ -70,12 +70,12 @@ public class AddressController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new user address")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created user address", response = ImageResponseDto.class),
+            @ApiResponse(code = 201, message = "Created user address", response = ImageResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public DeliveryAddressResponseDto createUserAddress(@Valid @RequestBody DeliveryAddressRequestDto deliveryAddressRequestDto) {
+    public DeliveryAddressResponseDTO createUserAddress(@Valid @RequestBody DeliveryAddressRequestDTO deliveryAddressRequestDto) {
         log.info("createUserAddress: starting to create new user address");
         var addressResponseDto = addressService
                 .createUserAddress(deliveryAddressRequestDto);
@@ -92,7 +92,7 @@ public class AddressController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateUserAddress(@Valid @NotBlank @PathVariable("addressId") Long addressId,
-                                  @Valid @RequestBody DeliveryAddressRequestDto deliveryAddressRequestDto) {
+                                  @Valid @RequestBody DeliveryAddressRequestDTO deliveryAddressRequestDto) {
         log.info("updateUserAddress: starting update user address by addressId={}", addressId);
         addressService.updateUserAddress(addressId, deliveryAddressRequestDto);
         log.info("updateUserAddress: finished update user address by addressId={}", addressId);

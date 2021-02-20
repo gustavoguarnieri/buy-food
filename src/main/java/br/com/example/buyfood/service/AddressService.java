@@ -3,8 +3,8 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.DeliveryAddressRequestDto;
-import br.com.example.buyfood.model.dto.response.DeliveryAddressResponseDto;
+import br.com.example.buyfood.model.dto.request.DeliveryAddressRequestDTO;
+import br.com.example.buyfood.model.dto.response.DeliveryAddressResponseDTO;
 import br.com.example.buyfood.model.entity.DeliveryAddressEntity;
 import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.DeliveryAddressRepository;
@@ -33,7 +33,7 @@ public class AddressService {
     @Autowired
     private UserService userService;
 
-    public List<DeliveryAddressResponseDto> getUserAddressList(Integer status) {
+    public List<DeliveryAddressResponseDTO> getUserAddressList(Integer status) {
         var userEntity = getUserByUserId(getUserId());
 
         if (status == null) {
@@ -58,18 +58,18 @@ public class AddressService {
         }
     }
 
-    public DeliveryAddressResponseDto getUserAddress(Long addressId) {
+    public DeliveryAddressResponseDTO getUserAddress(Long addressId) {
         var userEntity = getUserByUserId(getUserId());
         return convertToDto(getUserAddressByIdAndUser(addressId, userEntity));
     }
 
-    public DeliveryAddressResponseDto createUserAddress(DeliveryAddressRequestDto deliveryAddressRequestDto) {
+    public DeliveryAddressResponseDTO createUserAddress(DeliveryAddressRequestDTO deliveryAddressRequestDto) {
         var deliveryAddressEntity = convertToEntity(deliveryAddressRequestDto);
         deliveryAddressEntity.setUser(getUserByUserId(getUserId()));
         return convertToDto(deliveryAddressRepository.save(deliveryAddressEntity));
     }
 
-    public void updateUserAddress(Long addressId, DeliveryAddressRequestDto deliveryAddressRequestDto) {
+    public void updateUserAddress(Long addressId, DeliveryAddressRequestDTO deliveryAddressRequestDto) {
         var userEntity = getUserByUserId(getUserId());
         getUserAddressByIdAndUser(addressId, userEntity);
 
@@ -108,11 +108,11 @@ public class AddressService {
         return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    private DeliveryAddressResponseDto convertToDto(DeliveryAddressEntity deliveryAddressEntity) {
-        return modelMapper.map(deliveryAddressEntity, DeliveryAddressResponseDto.class);
+    private DeliveryAddressResponseDTO convertToDto(DeliveryAddressEntity deliveryAddressEntity) {
+        return modelMapper.map(deliveryAddressEntity, DeliveryAddressResponseDTO.class);
     }
 
-    private DeliveryAddressEntity convertToEntity(DeliveryAddressRequestDto deliveryAddressRequestDto) {
+    private DeliveryAddressEntity convertToEntity(DeliveryAddressRequestDTO deliveryAddressRequestDto) {
         return modelMapper.map(deliveryAddressRequestDto, DeliveryAddressEntity.class);
     }
 }

@@ -1,8 +1,8 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.ImageRequestDto;
-import br.com.example.buyfood.model.dto.response.ImageResponseDto;
-import br.com.example.buyfood.model.dto.response.ProductResponseDto;
+import br.com.example.buyfood.model.dto.request.ImageRequestDTO;
+import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
+import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.service.ProductImageService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,12 +38,12 @@ public class ProductImageController {
     @ApiOperation(value = "Returns a list of product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of product image",
-                    response = ProductResponseDto.class, responseContainer = "List"),
+                    response = ProductResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<ImageResponseDto> getProductImageList(
+    public List<ImageResponseDTO> getProductImageList(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @NotBlank @PathVariable("productId") Long productId,
             @RequestParam(required = false) Integer status) {
@@ -59,12 +59,12 @@ public class ProductImageController {
     @ApiOperation(value = "Returns the informed product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed product image",
-                    response = ProductResponseDto.class),
+                    response = ProductResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public ImageResponseDto getProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+    public ImageResponseDTO getProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                                             @Valid @NotBlank @PathVariable("productId") Long productId,
                                             @Valid @NotBlank @PathVariable("imageId") Long imageId) {
         log.info("getProductImage: starting to consult product image by establishmentId={}, productId={}, imageId={}",
@@ -79,12 +79,12 @@ public class ProductImageController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new product image")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created product image", response = ImageResponseDto.class),
+            @ApiResponse(code = 201, message = "Created product image", response = ImageResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public ImageResponseDto createProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+    public ImageResponseDTO createProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                                                @Valid @NotBlank @PathVariable("productId") Long productId,
                                                @RequestParam MultipartFile file) {
         log.info("createProductImage: starting to create new product image, establishmentId={}, productId={}",
@@ -100,13 +100,13 @@ public class ProductImageController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new product images")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created product images", response = ProductResponseDto.class,
+            @ApiResponse(code = 201, message = "Created product images", response = ProductResponseDTO.class,
                     responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<ImageResponseDto> createProductImages(
+    public List<ImageResponseDTO> createProductImages(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @NotBlank @PathVariable("productId") Long productId,
             @RequestParam MultipartFile[] files) {
@@ -130,7 +130,7 @@ public class ProductImageController {
     public void updateProductImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                                    @Valid @NotBlank @PathVariable("productId") Long productId,
                                    @Valid @NotBlank @PathVariable("imageId") Long imageId,
-                                   @Valid @RequestBody ImageRequestDto imageRequestDto) {
+                                   @Valid @RequestBody ImageRequestDTO imageRequestDto) {
         log.info("updateProduct: starting update product image by establishmentId={}, productId={}, imageId={}",
                 establishmentId, productId, imageId);
         productImageService.updateProductImage(establishmentId, productId, imageId, imageRequestDto);

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class ProductRequestDto {
+public class ProductRequestDTO {
 
     @NotBlank
     private String name;

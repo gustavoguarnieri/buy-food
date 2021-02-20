@@ -3,8 +3,8 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.EstablishmentRequestDto;
-import br.com.example.buyfood.model.dto.response.EstablishmentResponseDto;
+import br.com.example.buyfood.model.dto.request.EstablishmentRequestDTO;
+import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.repository.EstablishmentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class EstablishmentService {
     @Autowired
     private EstablishmentRepository establishmentRepository;
 
-    public List<EstablishmentResponseDto> getEstablishmentList(Integer status) {
+    public List<EstablishmentResponseDTO> getEstablishmentList(Integer status) {
         if (status == null) {
             return establishmentRepository.findAll().stream()
                     .map(this::convertToDto)
@@ -43,18 +43,18 @@ public class EstablishmentService {
         }
     }
 
-    public EstablishmentResponseDto getEstablishment(Long id) {
+    public EstablishmentResponseDTO getEstablishment(Long id) {
         return establishmentRepository.findById(id)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
 
-    public EstablishmentResponseDto createEstablishment(EstablishmentRequestDto establishmentRequestDto) {
+    public EstablishmentResponseDTO createEstablishment(EstablishmentRequestDTO establishmentRequestDto) {
         EstablishmentEntity convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
         return convertToDto(establishmentRepository.save(convertedEstablishmentEntity));
     }
 
-    public void updateEstablishment(Long id, EstablishmentRequestDto establishmentRequestDto) {
+    public void updateEstablishment(Long id, EstablishmentRequestDTO establishmentRequestDto) {
         getEstablishmentById(id);
         EstablishmentEntity convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
         convertedEstablishmentEntity.setId(id);
@@ -72,17 +72,17 @@ public class EstablishmentService {
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
 
-    private List<EstablishmentResponseDto> getEstablishmentListByStatus(RegisterStatus enabled) {
+    private List<EstablishmentResponseDTO> getEstablishmentListByStatus(RegisterStatus enabled) {
         return establishmentRepository.findAllByStatus(enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private EstablishmentResponseDto convertToDto(EstablishmentEntity establishmentEntity) {
-        return modelMapper.map(establishmentEntity, EstablishmentResponseDto.class);
+    private EstablishmentResponseDTO convertToDto(EstablishmentEntity establishmentEntity) {
+        return modelMapper.map(establishmentEntity, EstablishmentResponseDTO.class);
     }
 
-    private EstablishmentEntity convertToEntity(EstablishmentRequestDto establishmentRequestDto) {
+    private EstablishmentEntity convertToEntity(EstablishmentRequestDTO establishmentRequestDto) {
         return modelMapper.map(establishmentRequestDto, EstablishmentEntity.class);
     }
 }

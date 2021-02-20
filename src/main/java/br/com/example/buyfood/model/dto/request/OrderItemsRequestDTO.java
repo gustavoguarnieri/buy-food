@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class OrderItemsPutRequestDto {
+public class OrderItemsRequestDTO {
 
     @NotNull
     private Long id;
@@ -16,5 +16,4 @@ public class OrderItemsPutRequestDto {
     private Integer quantity;
     @NotNull
     private Long productId;
-    private int status = 1;
 }

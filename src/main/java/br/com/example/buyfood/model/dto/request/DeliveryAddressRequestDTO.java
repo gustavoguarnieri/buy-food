@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class DeliveryAddressRequestDto {
+public class DeliveryAddressRequestDTO {
 
     @NotBlank
     private String recipientName;

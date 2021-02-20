@@ -3,8 +3,8 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.ProductRequestDto;
-import br.com.example.buyfood.model.dto.response.ProductResponseDto;
+import br.com.example.buyfood.model.dto.request.ProductRequestDTO;
+import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ProductEntity;
 import br.com.example.buyfood.model.repository.ProductRepository;
@@ -29,7 +29,7 @@ public class ProductService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<ProductResponseDto> getProductList(Long establishmentId, Integer status) {
+    public List<ProductResponseDTO> getProductList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
             return productRepository.findAllByEstablishment(establishment).stream()
@@ -48,14 +48,14 @@ public class ProductService {
         }
     }
 
-    public ProductResponseDto getProduct(Long establishmentId, Long productId) {
+    public ProductResponseDTO getProduct(Long establishmentId, Long productId) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         return productRepository.findByEstablishmentAndId(establishment, productId)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
-    public ProductResponseDto createProduct(Long establishmentId, ProductRequestDto productRequestDto) {
+    public ProductResponseDTO createProduct(Long establishmentId, ProductRequestDTO productRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
 
         ProductEntity convertedProductEntity = convertToEntity(productRequestDto);
@@ -63,7 +63,7 @@ public class ProductService {
         return convertToDto(productRepository.save(convertedProductEntity));
     }
 
-    public void updateProduct(Long establishmentId, Long productId, ProductRequestDto productRequestDto) {
+    public void updateProduct(Long establishmentId, Long productId, ProductRequestDTO productRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         ProductEntity convertedProductEntity = convertToEntity(productRequestDto);
         convertedProductEntity.setId(productId);
@@ -83,18 +83,18 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
-    private List<ProductResponseDto> getProductListByEstablishmentAndStatus(EstablishmentEntity establishment,
+    private List<ProductResponseDTO> getProductListByEstablishmentAndStatus(EstablishmentEntity establishment,
                                                                             RegisterStatus enabled) {
         return productRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private ProductResponseDto convertToDto(ProductEntity productEntity) {
-        return modelMapper.map(productEntity, ProductResponseDto.class);
+    private ProductResponseDTO convertToDto(ProductEntity productEntity) {
+        return modelMapper.map(productEntity, ProductResponseDTO.class);
     }
 
-    private ProductEntity convertToEntity(ProductRequestDto productRequestDto) {
+    private ProductEntity convertToEntity(ProductRequestDTO productRequestDto) {
         return modelMapper.map(productRequestDto, ProductEntity.class);
     }
 }

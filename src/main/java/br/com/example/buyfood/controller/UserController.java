@@ -1,9 +1,9 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.UserCreateRequestDto;
-import br.com.example.buyfood.model.dto.request.UserSigninRequestDto;
-import br.com.example.buyfood.model.dto.request.UserUpdateRequestDto;
-import br.com.example.buyfood.model.dto.response.UserCreateResponseDto;
+import br.com.example.buyfood.model.dto.request.UserCreateRequestDTO;
+import br.com.example.buyfood.model.dto.request.UserSigninRequestDTO;
+import br.com.example.buyfood.model.dto.request.UserUpdateRequestDTO;
+import br.com.example.buyfood.model.dto.response.UserCreateResponseDTO;
 import br.com.example.buyfood.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -33,12 +33,12 @@ public class UserController {
 
     @ApiOperation(value = "Create a new user")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created user", response = UserCreateResponseDto.class),
+            @ApiResponse(code = 201, message = "Created user", response = UserCreateResponseDTO.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     @PostMapping(path = "/create")
-    public UserCreateResponseDto createUser(@RequestBody UserCreateRequestDto userCreateRequestDTO) {
+    public UserCreateResponseDTO createUser(@RequestBody UserCreateRequestDTO userCreateRequestDTO) {
         log.info("createUser: starting create user firstname={} email={}",
                 userCreateRequestDTO.getFirstName(), userCreateRequestDTO.getEmail());
         var createUserResponse = userService.createUser(userCreateRequestDTO);
@@ -54,7 +54,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     @PostMapping(path = "/signin")
-    public AccessTokenResponse signin(@RequestBody UserSigninRequestDto userSignin) {
+    public AccessTokenResponse signin(@RequestBody UserSigninRequestDTO userSignin) {
         log.info("signin: starting signin user email={}", userSignin.getEmail());
         var userSigninResponse = userService.signin(userSignin);
         log.info("signin: finishing signin user email={}", userSignin.getEmail());
@@ -71,7 +71,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateUser(@Valid @NotBlank @PathVariable("userId") String userId,
-                           @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+                           @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDto) {
         log.info("updateUser: starting update user userId={}", userId);
         userService.updateCustomUser(userId, userUpdateRequestDto);
         log.info("updateUser: finished update user userId={}", userId);

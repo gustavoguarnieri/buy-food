@@ -1,9 +1,9 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.OrderPutRequestDto;
-import br.com.example.buyfood.model.dto.request.OrderRequestDto;
-import br.com.example.buyfood.model.dto.response.EstablishmentResponseDto;
-import br.com.example.buyfood.model.dto.response.OrderResponseDto;
+import br.com.example.buyfood.model.dto.request.OrderPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.OrderRequestDTO;
+import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
+import br.com.example.buyfood.model.dto.response.OrderResponseDTO;
 import br.com.example.buyfood.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,12 +38,12 @@ public class OrderController {
     @ApiOperation(value = "Returns a list of orders")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of orders",
-                    response = EstablishmentResponseDto.class, responseContainer = "List"),
+                    response = EstablishmentResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<OrderResponseDto> getOrderList(@RequestParam(required = false) Integer status) {
+    public List<OrderResponseDTO> getOrderList(@RequestParam(required = false) Integer status) {
         log.info("getOrderList: starting to consult the list of orders");
         var orderResponseDtoList = orderService.getOrderList(status);
         log.info("getOrderList: finished to consult the list of orders");
@@ -54,12 +54,12 @@ public class OrderController {
     @ApiOperation(value = "Returns the informed order")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed order",
-                    response = EstablishmentResponseDto.class),
+                    response = EstablishmentResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public OrderResponseDto getOrder(@Valid @NotBlank @PathVariable("orderId") Long orderId) {
+    public OrderResponseDTO getOrder(@Valid @NotBlank @PathVariable("orderId") Long orderId) {
         log.info("getOrder: starting to consult order by orderId={}", orderId);
         var orderResponseDtoList = orderService.getOrder(orderId);
         log.info("getOrder: finished to consult order by orderId={}", orderId);
@@ -70,13 +70,13 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new order")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created order", response = OrderResponseDto.class),
+            @ApiResponse(code = 201, message = "Created order", response = OrderResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public OrderResponseDto createOrder(
-            @Valid @RequestBody OrderRequestDto orderRequestDto) {
+    public OrderResponseDTO createOrder(
+            @Valid @RequestBody OrderRequestDTO orderRequestDto) {
         log.info("createOrder: starting to create new order");
         var orderResponseDtoList = orderService.createOrder(orderRequestDto);
         log.info("createOrder: finished to create new order");
@@ -92,7 +92,7 @@ public class OrderController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateOrder(@Valid @NotBlank @PathVariable("orderId") Long orderId,
-                                    @Valid @RequestBody OrderPutRequestDto orderPutRequestDto) {
+                                    @Valid @RequestBody OrderPutRequestDTO orderPutRequestDto) {
         log.info("updateOrder: starting update order orderId={}", orderId);
         orderService.updateOrder(orderId, orderPutRequestDto);
         log.info("updateOrder: finished update order orderId={}", orderId);

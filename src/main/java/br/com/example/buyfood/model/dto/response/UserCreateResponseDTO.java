@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserCreateResponseDto {
+public class UserCreateResponseDTO {
 
     private String userId;
     private int statusCode;

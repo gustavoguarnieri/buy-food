@@ -9,10 +9,11 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DeliveryTaxResponseDto {
+public class ProductResponseDTO {
 
     private Long id;
-    private Long establishmentId;
-    private BigDecimal taxAmount;
-    private Integer status;
+    private String name;
+    private BigDecimal price;
+    private String description;
+    private Integer status = 1;
 }

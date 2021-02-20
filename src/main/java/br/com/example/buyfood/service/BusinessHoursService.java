@@ -3,9 +3,9 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.BusinessHoursPutRequestDto;
-import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDto;
-import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDto;
+import br.com.example.buyfood.model.dto.request.BusinessHoursPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDTO;
+import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDTO;
 import br.com.example.buyfood.model.entity.BusinessHoursEntity;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.repository.BusinessHoursRepository;
@@ -30,7 +30,7 @@ public class BusinessHoursService {
     @Autowired
     private EstablishmentService establishmentService;
 
-    public List<BusinessHoursResponseDto> getBusinessHoursList(Long establishmentId, Integer status) {
+    public List<BusinessHoursResponseDTO> getBusinessHoursList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
             return businessHoursRepository.findAllByEstablishment(establishment).stream()
@@ -49,15 +49,15 @@ public class BusinessHoursService {
         }
     }
 
-    public BusinessHoursResponseDto getBusinessHours(Long establishmentId, Long businessHoursId) {
+    public BusinessHoursResponseDTO getBusinessHours(Long establishmentId, Long businessHoursId) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         return businessHoursRepository.findByEstablishmentAndId(establishment, businessHoursId)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Business hours not found"));
     }
 
-    public BusinessHoursResponseDto createBusinessHours(Long establishmentId,
-                                                        BusinessHoursRequestDto businessHoursRequestDto) {
+    public BusinessHoursResponseDTO createBusinessHours(Long establishmentId,
+                                                        BusinessHoursRequestDTO businessHoursRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
 
         if (businessHoursRepository.findByEstablishment(establishment).isPresent()) {
@@ -71,7 +71,7 @@ public class BusinessHoursService {
     }
 
     public void updateBusinessHours(Long establishmentId, Long businessHoursId,
-                                    BusinessHoursPutRequestDto businessHoursPutRequestDto) {
+                                    BusinessHoursPutRequestDTO businessHoursPutRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         BusinessHoursEntity convertedBusinessHoursEntity = convertToEntity(businessHoursPutRequestDto);
         convertedBusinessHoursEntity.setId(businessHoursId);
@@ -91,15 +91,15 @@ public class BusinessHoursService {
                 .orElseThrow(() -> new NotFoundException("Business hours not found"));
     }
 
-    private List<BusinessHoursResponseDto> getBusinessHoursListByEstablishmentAndStatus(
+    private List<BusinessHoursResponseDTO> getBusinessHoursListByEstablishmentAndStatus(
             EstablishmentEntity establishment, RegisterStatus enabled) {
         return businessHoursRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private BusinessHoursResponseDto convertToDto(BusinessHoursEntity businessEntity) {
-        return modelMapper.map(businessEntity, BusinessHoursResponseDto.class);
+    private BusinessHoursResponseDTO convertToDto(BusinessHoursEntity businessEntity) {
+        return modelMapper.map(businessEntity, BusinessHoursResponseDTO.class);
     }
 
     private BusinessHoursEntity convertToEntity(Object businessHoursRequestDto) {

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EstablishmentResponseDto {
+public class EstablishmentResponseDTO {
 
     private Long id;
     private String companyName;
@@ -17,7 +17,7 @@ public class EstablishmentResponseDto {
     private String commercialPhone;
     private String mobilePhone;
     private EstablishmentCategory category;
-    private BusinessHoursResponseDto businessHoursId;
-    private DeliveryTaxResponseDto deliveryTaxId;
+    private BusinessHoursResponseDTO businessHoursId;
+    private DeliveryTaxResponseDTO deliveryTaxId;
     private Integer status;
 }

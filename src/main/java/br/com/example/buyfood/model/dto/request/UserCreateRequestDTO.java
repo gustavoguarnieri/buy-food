@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class UserCreateRequestDto {
+public class UserCreateRequestDTO {
 
     @CPF
     private String cpf;

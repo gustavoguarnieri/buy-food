@@ -1,22 +1,25 @@
-package br.com.example.buyfood.model.dto.response;
+package br.com.example.buyfood.model.dto.request;
 
 import br.com.example.buyfood.enums.EstablishmentCategory;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryResponseDto {
+public class EstablishmentRequestDTO {
 
-    private Long id;
+    @NotBlank
     private String companyName;
+    @NotBlank
     private String tradingName;
+    @NotBlank
+    @Email
     private String email;
     private String commercialPhone;
     private String mobilePhone;
     private EstablishmentCategory category;
+    private int status = 1;
 }

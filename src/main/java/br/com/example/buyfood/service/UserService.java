@@ -3,10 +3,10 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.exception.BusinessException;
 import br.com.example.buyfood.exception.ConflitException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.UserCreateRequestDto;
-import br.com.example.buyfood.model.dto.request.UserSigninRequestDto;
-import br.com.example.buyfood.model.dto.request.UserUpdateRequestDto;
-import br.com.example.buyfood.model.dto.response.UserCreateResponseDto;
+import br.com.example.buyfood.model.dto.request.UserCreateRequestDTO;
+import br.com.example.buyfood.model.dto.request.UserSigninRequestDTO;
+import br.com.example.buyfood.model.dto.request.UserUpdateRequestDTO;
+import br.com.example.buyfood.model.dto.response.UserCreateResponseDTO;
 import br.com.example.buyfood.model.embeddable.Audit;
 import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.UserRepository;
@@ -66,7 +66,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserCreateResponseDto createUser(UserCreateRequestDto userCreateRequestDto) {
+    public UserCreateResponseDTO createUser(UserCreateRequestDTO userCreateRequestDto) {
 
         var userEntity = saveCustomUser(userCreateRequestDto);
 
@@ -84,7 +84,7 @@ public class UserService {
         var realmResource = keycloak.realm(realm);
         var usersResource = realmResource.users();
 
-        var userCreateResponseDto = new UserCreateResponseDto();
+        var userCreateResponseDto = new UserCreateResponseDTO();
 
         try {
             var response = usersResource.create(user);
@@ -143,7 +143,7 @@ public class UserService {
                 .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()).build();
     }
 
-    public AccessTokenResponse signin(UserSigninRequestDto userSignin) {
+    public AccessTokenResponse signin(UserSigninRequestDTO userSignin) {
 
         Map<String, Object> clientCredentials = getClientCredentials();
 
@@ -188,7 +188,7 @@ public class UserService {
         return customClaims;
     }
 
-    private UserEntity saveCustomUser(UserCreateRequestDto userCreateRequestDto) {
+    private UserEntity saveCustomUser(UserCreateRequestDTO userCreateRequestDto) {
 
         var user = userRepository.findByEmail(userCreateRequestDto.getEmail());
 
@@ -219,7 +219,7 @@ public class UserService {
         }
     }
 
-    public void updateCustomUser(String userId, UserUpdateRequestDto userUpdateRequestDto) {
+    public void updateCustomUser(String userId, UserUpdateRequestDTO userUpdateRequestDto) {
         var userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
@@ -282,11 +282,11 @@ public class UserService {
         }
     }
 
-    private UserCreateResponseDto convertToDto(UserEntity userEntity) {
-        return modelMapper.map(userEntity, UserCreateResponseDto.class);
+    private UserCreateResponseDTO convertToDto(UserEntity userEntity) {
+        return modelMapper.map(userEntity, UserCreateResponseDTO.class);
     }
 
-    private UserEntity convertToEntity(UserCreateRequestDto userCreateRequestDto) {
+    private UserEntity convertToEntity(UserCreateRequestDTO userCreateRequestDto) {
         return modelMapper.map(userCreateRequestDto, UserEntity.class);
     }
 }

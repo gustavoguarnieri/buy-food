@@ -1,6 +1,6 @@
 package br.com.example.buyfood.model.dto.request;
 
-import br.com.example.buyfood.model.dto.response.UploadFileResponse;
+import br.com.example.buyfood.model.dto.response.UploadFileResponseDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,12 +12,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ImageRequestDto extends UploadFileResponse {
+public class ImageRequestDTO extends UploadFileResponseDTO {
 
     private Long id;
     private Integer status;
 
-    public ImageRequestDto(Long id,
+    public ImageRequestDTO(Long id,
                            String fileName,
                            String fileUri,
                            String fileType,
