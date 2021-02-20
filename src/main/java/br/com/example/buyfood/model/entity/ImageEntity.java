@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Getter
@@ -25,7 +26,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "image")
-public class ImageEntity {
+public class ImageEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public ImageEntity(ProductEntity product, @NotBlank String fileName, @NotNull String fileUri, String fileType, long size) {
         this.product = product;

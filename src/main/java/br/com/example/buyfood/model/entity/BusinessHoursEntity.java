@@ -14,13 +14,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalTime;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "business_hours")
-public class BusinessHoursEntity {
+public class BusinessHoursEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
