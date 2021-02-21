@@ -38,13 +38,25 @@ public class ImageEntity implements Serializable {
         this.size = size;
     }
 
+    public ImageEntity(EstablishmentEntity establishment, @NotBlank String fileName, @NotNull String fileUri, String fileType, long size) {
+        this.establishment = establishment;
+        this.fileName = fileName;
+        this.fileUri = fileUri;
+        this.fileType = fileType;
+        this.size = size;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private ProductEntity product;
+
+    @ManyToOne
+    @JoinColumn(name = "establishment_id")
+    private EstablishmentEntity establishment;
 
     @NotBlank
     @Column(nullable = false, length = 50)

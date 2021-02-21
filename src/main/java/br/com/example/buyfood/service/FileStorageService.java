@@ -3,7 +3,11 @@ package br.com.example.buyfood.service;
 import br.com.example.buyfood.config.Property.FileStorageProperty;
 import br.com.example.buyfood.exception.FileStorageException;
 import br.com.example.buyfood.exception.FileNotFoundException;
+import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
 import br.com.example.buyfood.model.dto.response.UploadFileResponseDTO;
+import br.com.example.buyfood.model.entity.EstablishmentEntity;
+import br.com.example.buyfood.model.entity.ImageEntity;
+import br.com.example.buyfood.model.entity.ProductEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -127,5 +131,33 @@ public class FileStorageService {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
                         resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    public ImageEntity createImageEntity(EstablishmentEntity establishment, UploadFileResponseDTO uploadFileResponse) {
+        return new ImageEntity(
+                establishment,
+                uploadFileResponse.getFileName(),
+                uploadFileResponse.getFileUri(),
+                uploadFileResponse.getFileType(),
+                uploadFileResponse.getSize());
+    }
+
+    public ImageEntity createImageEntity(ProductEntity product, UploadFileResponseDTO uploadFileResponse) {
+        return new ImageEntity(
+                product,
+                uploadFileResponse.getFileName(),
+                uploadFileResponse.getFileUri(),
+                uploadFileResponse.getFileType(),
+                uploadFileResponse.getSize());
+    }
+
+    public ImageResponseDTO createImageResponseDTO(Long id, UploadFileResponseDTO uploadFileResponse, int i) {
+        return new ImageResponseDTO(
+                id,
+                uploadFileResponse.getFileName(),
+                uploadFileResponse.getFileUri(),
+                uploadFileResponse.getFileType(),
+                uploadFileResponse.getSize(),
+                i);
     }
 }

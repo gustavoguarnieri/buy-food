@@ -66,22 +66,10 @@ public class ProductImageService {
 
         var uploadFileResponse = fileStorageService.saveFile(file);
 
-        var imageEntity = new ImageEntity(
-                productEntity,
-                uploadFileResponse.getFileName(),
-                uploadFileResponse.getFileUri(),
-                uploadFileResponse.getFileType(),
-                uploadFileResponse.getSize());
-
+        var imageEntity = fileStorageService.createImageEntity(productEntity, uploadFileResponse);
         productImageRepository.save(imageEntity);
 
-        return new ImageResponseDTO(
-                imageEntity.getId(),
-                uploadFileResponse.getFileName(),
-                uploadFileResponse.getFileUri(),
-                uploadFileResponse.getFileType(),
-                uploadFileResponse.getSize(),
-                1);
+        return fileStorageService.createImageResponseDTO(imageEntity.getId(), uploadFileResponse, 1);
     }
 
     public List<ImageResponseDTO> createProductImageList(Long establishmentId, Long productId, MultipartFile[] files) {
@@ -89,17 +77,13 @@ public class ProductImageService {
 
         var uploadFileResponse = fileStorageService.saveFileList(files);
 
-        List<ImageResponseDTO> imageResponseDTOList = new ArrayList<ImageResponseDTO>();
+        List<ImageResponseDTO> imageResponseDTOList = new ArrayList<>();
 
         uploadFileResponse
-                .forEach(f -> {
-                    var imageEntity = new ImageEntity(productEntity, f.getFileName(), f.getFileUri(),
-                            f.getFileType(), f.getSize());
-
+                .forEach(i -> {
+                    var imageEntity = fileStorageService.createImageEntity(productEntity, i);
                     productImageRepository.save(imageEntity);
-
-                    imageResponseDTOList.add(new ImageResponseDTO(imageEntity.getId(), imageEntity.getFileName(),
-                            imageEntity.getFileUri(), f.getFileType(), imageEntity.getSize(), 1));
+                    imageResponseDTOList.add(fileStorageService.createImageResponseDTO(imageEntity.getId(), i, 1));
                 });
 
         return imageResponseDTOList;
@@ -122,9 +106,8 @@ public class ProductImageService {
     }
 
     private ImageEntity getProductImageByEstablishmentAndIdAndProductId(Long establishmentId, Long productId, Long imageId) {
-        var establishment = establishmentService.getEstablishmentById(establishmentId);
         return productImageRepository.findByIdAndProductId(imageId, productId)
-                .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
+                .filter(i -> i.getProduct().getEstablishment().getId().equals(establishmentId))
                 .orElseThrow(() -> new NotFoundException("Product image not found"));
     }
 

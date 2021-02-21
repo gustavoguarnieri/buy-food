@@ -34,6 +34,9 @@ public class EstablishmentEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToMany(mappedBy = "establishment", fetch = FetchType.LAZY)
+    private List<ImageEntity> images;
+
     @OneToOne(mappedBy = "establishment", fetch = FetchType.LAZY)
     private BusinessHoursEntity businessHours;
 
