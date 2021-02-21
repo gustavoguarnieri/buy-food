@@ -9,7 +9,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +24,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/establishment/{establishmentId}/images")
+@RequestMapping("/api/v1/establishments/{establishmentId}/images")
 public class EstablishmentImageController {
 
     @Autowired
@@ -66,13 +69,35 @@ public class EstablishmentImageController {
     })
     public ImageResponseDTO getEstablishmentImage(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                                                   @Valid @NotBlank @PathVariable("imageId") Long imageId) {
-        log.info("getEstablishmentImage: starting to consult product image by establishmentId={}, imageId={}",
+        log.info("getEstablishmentImage: starting to consult establishment image by establishmentId={}, imageId={}",
                 establishmentId, imageId);
         var imageResponseDto =
                 establishmentImageService.getEstablishmentImage(establishmentId, imageId);
-        log.info("getEstablishmentImage: finished to consult product image by establishmentId={}, imageId={}",
+        log.info("getEstablishmentImage: finished to consult establishment image by establishmentId={}, imageId={}",
                 establishmentId, imageId);
         return imageResponseDto;
+    }
+
+    @GetMapping("/download-file/{fileName}")
+    @ApiOperation(value = "Returns the informed download establishment image")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns the informed download establishment image",
+                    response = ProductResponseDTO.class),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public ResponseEntity<Resource> getDownloadEstablishmentImageList(
+            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+            @Valid @NotBlank @PathVariable("fileName") String fileName,
+            HttpServletRequest request) {
+        log.info("getDownloadEstablishmentImageList: starting to consult establishment image by " +
+                "establishmentId={}, fileName={}", establishmentId, fileName);
+        var imageResourceResponse =
+                establishmentImageService.getDownloadEstablishmentImage(establishmentId, fileName, request);
+        log.info("getDownloadEstablishmentImageList: finished to consult establishment image by " +
+                "establishmentId={}, fileName={}", establishmentId, fileName);
+        return imageResourceResponse;
     }
 
     @PostMapping("/upload-file")

@@ -1,5 +1,6 @@
 package br.com.example.buyfood.service;
 
+import br.com.example.buyfood.enums.FileStorageFolder;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -13,9 +14,12 @@ import br.com.example.buyfood.model.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,30 +62,41 @@ public class ProductImageService {
     }
 
     public ImageResponseDTO getProductImage(Long establishmentId, Long productId, Long imageId) {
-        return convertToDto(getProductImageByEstablishmentAndIdAndProductId(establishmentId, productId, imageId));
+        return convertToDto(getProductImageByEstablishmentIdAndProductIdAndId(establishmentId, productId, imageId));
     }
 
     public ImageResponseDTO createProductImage(Long establishmentId, Long productId, MultipartFile file) {
         var productEntity = getProductByEstablishmentAndProductId(establishmentId, productId);
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        return saveImage(file, establishment, productEntity);
+    }
 
-        var uploadFileResponse = fileStorageService.saveFile(file);
+    private ImageResponseDTO saveImage(MultipartFile file, EstablishmentEntity establishment, ProductEntity product) {
+        String downloadPath = getDownloadProductPath(establishment, product);
 
-        var imageEntity = fileStorageService.createImageEntity(productEntity, uploadFileResponse);
+        var uploadFileResponse =
+                fileStorageService.saveFile(file, FileStorageFolder.PRODUCTS, product.getId(), downloadPath);
+
+        var imageEntity = fileStorageService.createImageEntity(product, uploadFileResponse);
         productImageRepository.save(imageEntity);
 
         return fileStorageService.createImageResponseDTO(imageEntity.getId(), uploadFileResponse, 1);
     }
 
     public List<ImageResponseDTO> createProductImageList(Long establishmentId, Long productId, MultipartFile[] files) {
-        var productEntity = getProductByEstablishmentAndProductId(establishmentId, productId);
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        var product = getProductByEstablishmentAndProductId(establishmentId, productId);
 
-        var uploadFileResponse = fileStorageService.saveFileList(files);
+        String downloadPath = getDownloadProductPath(establishment, product);
+
+        var uploadFileResponse =
+                fileStorageService.saveFileList(files, FileStorageFolder.PRODUCTS, productId, downloadPath);
 
         List<ImageResponseDTO> imageResponseDTOList = new ArrayList<>();
 
         uploadFileResponse
                 .forEach(i -> {
-                    var imageEntity = fileStorageService.createImageEntity(productEntity, i);
+                    var imageEntity = fileStorageService.createImageEntity(product, i);
                     productImageRepository.save(imageEntity);
                     imageResponseDTOList.add(fileStorageService.createImageResponseDTO(imageEntity.getId(), i, 1));
                 });
@@ -99,14 +114,19 @@ public class ProductImageService {
     }
 
     public void deleteProductImage(Long establishmentId, Long productId, Long imageId) {
-        var imageEntity = getProductImageByEstablishmentAndIdAndProductId(establishmentId, productId, imageId);
+        var imageEntity = getProductImageByEstablishmentIdAndProductIdAndId(establishmentId, productId, imageId);
         imageEntity.setStatus(RegisterStatus.DISABLED.getValue());
         productImageRepository.save(imageEntity);
-
     }
 
-    private ImageEntity getProductImageByEstablishmentAndIdAndProductId(Long establishmentId, Long productId, Long imageId) {
-        return productImageRepository.findByIdAndProductId(imageId, productId)
+    public ResponseEntity<Resource> getDownloadProductImage(Long productId, String fileName,
+                                                            HttpServletRequest request) {
+        return fileStorageService.downloadFile(FileStorageFolder.PRODUCTS, productId, fileName, request);
+    }
+
+    private ImageEntity getProductImageByEstablishmentIdAndProductIdAndId(Long establishmentId, Long productId, Long imageId) {
+        return productImageRepository.findById(imageId)
+                .filter(i -> i.getProduct().getId().equals(productId))
                 .filter(i -> i.getProduct().getEstablishment().getId().equals(establishmentId))
                 .orElseThrow(() -> new NotFoundException("Product image not found"));
     }
@@ -137,6 +157,10 @@ public class ProductImageService {
                 .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    private String getDownloadProductPath(EstablishmentEntity establishment, ProductEntity product) {
+        return "/api/v1/establishments/" + establishment.getId() + "/products/" + product.getId() + "/images/download-file/";
     }
 
     private ImageResponseDTO convertToDto(ImageEntity imageEntity) {

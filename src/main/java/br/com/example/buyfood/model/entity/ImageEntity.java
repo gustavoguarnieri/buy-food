@@ -59,7 +59,7 @@ public class ImageEntity implements Serializable {
     private EstablishmentEntity establishment;
 
     @NotBlank
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 150)
     private String fileName;
 
     @NotNull

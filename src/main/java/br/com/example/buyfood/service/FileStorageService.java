@@ -1,15 +1,16 @@
 package br.com.example.buyfood.service;
 
 import br.com.example.buyfood.config.Property.FileStorageProperty;
-import br.com.example.buyfood.exception.FileStorageException;
+import br.com.example.buyfood.enums.FileStorageFolder;
 import br.com.example.buyfood.exception.FileNotFoundException;
+import br.com.example.buyfood.exception.FileStorageException;
 import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
 import br.com.example.buyfood.model.dto.response.UploadFileResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ImageEntity;
 import br.com.example.buyfood.model.entity.ProductEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +31,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,15 +39,26 @@ import java.util.stream.Collectors;
 public class FileStorageService {
 
     private Path fileStorageLocation;
+    private FileStorageProperty fileStorageProperty;
 
-    @Autowired
     public FileStorageService(FileStorageProperty fileStorageProperty) {
+        this.fileStorageProperty = fileStorageProperty;
         getFileStorageLocation(fileStorageProperty);
+    }
+
+    private void getFileStorageLocation(FileStorageProperty fileStorageProperty, FileStorageFolder fileStorageFolder, Long id) {
+        fileStorageLocation =
+                Paths.get(fileStorageProperty.getUploadDir() + fileStorageFolder.getValue() + id)
+                        .toAbsolutePath().normalize();
+        createDirectories();
     }
 
     private void getFileStorageLocation(FileStorageProperty fileStorageProperty) {
         fileStorageLocation = Paths.get(fileStorageProperty.getUploadDir()).toAbsolutePath().normalize();
+        createDirectories();
+    }
 
+    private void createDirectories() {
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
@@ -53,8 +66,14 @@ public class FileStorageService {
         }
     }
 
-    public UploadFileResponseDTO saveFile(MultipartFile file) {
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+    public UploadFileResponseDTO saveFile(MultipartFile file, FileStorageFolder fileStorageFolder, Long id, String fileUri) {
+        var uuidImage = UUID.randomUUID();
+
+        var extension = FilenameUtils.getExtension(Objects.requireNonNull(file.getOriginalFilename()));
+
+        String fileName = StringUtils.cleanPath(uuidImage.toString() + "." + extension);
+
+        getFileStorageLocation(fileStorageProperty, fileStorageFolder, id);
 
         try {
             isValidFilePath(fileName);
@@ -63,22 +82,22 @@ public class FileStorageService {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!");
         }
 
-        String fileDownloadUri = fileDownloadURI(fileName);
+        String fileDownloadUri = fileDownloadURI(fileUri, fileName);
 
         return new UploadFileResponseDTO(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
     }
 
-    public List<UploadFileResponseDTO> saveFileList(MultipartFile[] files) {
+    public List<UploadFileResponseDTO> saveFileList(MultipartFile[] files, FileStorageFolder fileStorageFolder,
+                                                    Long id, String fileUri) {
         return Arrays.stream(files)
-                .map(this::saveFile)
+                .map(i -> saveFile(i, fileStorageFolder, id, fileUri))
                 .collect(Collectors.toList());
     }
 
-    private String fileDownloadURI(String fileName) {
-        String downloadFileEndpoint = "download-file";
+    private String fileDownloadURI(String fileUri, String fileName) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/" + downloadFileEndpoint + "/")
+                .path("/" + fileUri + "/")
                 .path(fileName)
                 .toUriString();
     }
@@ -94,15 +113,16 @@ public class FileStorageService {
         }
     }
 
-    public Resource loadFileAsResource(String fileName) {
+    public Resource loadFileAsResource(FileStorageFolder fileStorageFolder, Long id, String fileName) {
         try {
-            return getResource(fileName);
+            return getResource(fileStorageFolder, id, fileName);
         } catch (MalformedURLException ex) {
             throw new FileNotFoundException("File not found " + fileName);
         }
     }
 
-    private Resource getResource(String fileName) throws MalformedURLException {
+    private Resource getResource(FileStorageFolder fileStorageFolder, Long id, String fileName) throws MalformedURLException {
+        getFileStorageLocation(fileStorageProperty, fileStorageFolder, id);
         Path filePath = fileStorageLocation.resolve(fileName).normalize();
         Resource resource = new UrlResource(filePath.toUri());
         if (resource.exists()) {
@@ -112,8 +132,9 @@ public class FileStorageService {
         }
     }
 
-    public ResponseEntity<Resource> downloadFile(String fileName, HttpServletRequest request) {
-        Resource resource = loadFileAsResource(fileName);
+    public ResponseEntity<Resource> downloadFile(FileStorageFolder fileStorageFolder, Long id, String fileName,
+                                                 HttpServletRequest request) {
+        Resource resource = loadFileAsResource(fileStorageFolder, id, fileName);
 
         String contentType = null;
         try {

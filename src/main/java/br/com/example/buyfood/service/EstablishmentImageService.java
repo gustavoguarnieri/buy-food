@@ -1,5 +1,6 @@
 package br.com.example.buyfood.service;
 
+import br.com.example.buyfood.enums.FileStorageFolder;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -8,13 +9,15 @@ import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ImageEntity;
 import br.com.example.buyfood.model.repository.EstablishmentImageRepository;
-import br.com.example.buyfood.model.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,9 +28,6 @@ public class EstablishmentImageService {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private ProductRepository productRepository;
 
     @Autowired
     private EstablishmentImageRepository establishmentImageRepository;
@@ -62,11 +62,15 @@ public class EstablishmentImageService {
 
     public ImageResponseDTO createEstablishmentImage(Long establishmentId, MultipartFile file) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
-        return getSaveImageResponseDTO(file, establishment);
+        return saveImage(file, establishment);
     }
 
-    private ImageResponseDTO getSaveImageResponseDTO(MultipartFile file, EstablishmentEntity establishment) {
-        var uploadFileResponse = fileStorageService.saveFile(file);
+    private ImageResponseDTO saveImage(MultipartFile file, EstablishmentEntity establishment) {
+
+        String downloadPath = getDownloadEstablishmentPath(establishment);
+
+        var uploadFileResponse =
+                fileStorageService.saveFile(file, FileStorageFolder.ESTABLISHMENTS, establishment.getId(), downloadPath);
 
         var imageEntity = fileStorageService.createImageEntity(establishment, uploadFileResponse);
         establishmentImageRepository.save(imageEntity);
@@ -77,7 +81,10 @@ public class EstablishmentImageService {
     public List<ImageResponseDTO> createEstablishmentImageList(Long establishmentId, MultipartFile[] files) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
 
-        var uploadFileResponse = fileStorageService.saveFileList(files);
+        String downloadPath = getDownloadEstablishmentPath(establishment);
+
+        var uploadFileResponse =
+                fileStorageService.saveFileList(files, FileStorageFolder.ESTABLISHMENTS, establishmentId, downloadPath);
 
         List<ImageResponseDTO> imageResponseDTOList = new ArrayList<>();
 
@@ -106,6 +113,11 @@ public class EstablishmentImageService {
         establishmentImageRepository.save(imageEntity);
     }
 
+    public ResponseEntity<Resource> getDownloadEstablishmentImage(Long establishmentId, String fileName,
+                                                                  HttpServletRequest request) {
+        return fileStorageService.downloadFile(FileStorageFolder.ESTABLISHMENTS, establishmentId, fileName, request);
+    }
+
     private ImageEntity getEstablishmentImageByEstablishmentAndImage(Long establishmentId, Long imageId) {
         return establishmentImageRepository.findByIdAndEstablishmentId(imageId, establishmentId)
                 .orElseThrow(() -> new NotFoundException("Establishment image not found"));
@@ -122,6 +134,10 @@ public class EstablishmentImageService {
         return establishmentImageRepository.findAllByEstablishmentIdAndStatus(establishment.getId(), enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    private String getDownloadEstablishmentPath(EstablishmentEntity establishment) {
+        return "/api/v1/establishments/" + establishment.getId() + "/images/download-file/";
     }
 
     private ImageResponseDTO convertToDto(ImageEntity imageEntity) {
