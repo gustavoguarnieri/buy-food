@@ -8,5 +8,5 @@ import lombok.Getter;
 public enum EstablishmentCategory {
     RESTAURANT,
     PIZZERIA,
-    BAR;
+    BAR
 }
