@@ -1,5 +1,6 @@
 package br.com.example.buyfood.model.dto.request;
 
+import br.com.example.buyfood.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -30,4 +31,6 @@ public class UserCreateRequestDTO {
     private String email;
     @NotBlank
     private String password;
+    @NotBlank
+    private Role role;
 }

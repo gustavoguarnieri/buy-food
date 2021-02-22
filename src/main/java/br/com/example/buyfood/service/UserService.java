@@ -25,10 +25,10 @@ import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -61,16 +61,13 @@ public class UserService {
     private String adminPass;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     private UserRepository userRepository;
 
     public UserCreateResponseDTO createUser(UserCreateRequestDTO userCreateRequestDto) {
 
         var userEntity = saveCustomUser(userCreateRequestDto);
 
-        String ROLE = "user";
+        String ROLE = userCreateRequestDto.getRole().name();
 
         var keycloak = getKeycloakBuilder(adminUser, adminPass);
 
@@ -140,11 +137,10 @@ public class UserService {
                 .clientSecret(clientSecret)
                 .username(USER)
                 .password(PASS)
-                .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()).build();
+                .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(15).build()).build();
     }
 
     public AccessTokenResponse signin(UserSigninRequestDTO userSignin) {
-
         Map<String, Object> clientCredentials = getClientCredentials();
 
         AccessTokenResponse response = null;
@@ -156,7 +152,6 @@ public class UserService {
         } catch (Exception ex) {
             log.error("signin: An error occurred when signing user={}", userSignin.getEmail(), ex);
         }
-
         return response;
     }
 
@@ -169,7 +164,8 @@ public class UserService {
 
     public Optional<String> getUserId() {
         try {
-            return Optional.ofNullable(getKeycloakClaims().get("user_id").toString());
+            var keycloakClaims = getKeycloakClaims();
+            return keycloakClaims == null ? Optional.empty() : Optional.ofNullable(keycloakClaims.get("user_id").toString());
         } catch (Exception ex) {
             log.error("getUserId: An error occurred when getUserId, user ", ex);
             return Optional.empty();
@@ -177,6 +173,11 @@ public class UserService {
     }
 
     private Map<String, Object> getKeycloakClaims() {
+
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+
         KeycloakAuthenticationToken authentication = (KeycloakAuthenticationToken)
                 SecurityContextHolder.getContext().getAuthentication();
 
@@ -184,8 +185,7 @@ public class UserService {
 
         var keycloakPrincipal = (KeycloakPrincipal) principal;
         var token = keycloakPrincipal.getKeycloakSecurityContext().getToken();
-        Map<String, Object> customClaims = token.getOtherClaims();
-        return customClaims;
+        return token.getOtherClaims();
     }
 
     private UserEntity saveCustomUser(UserCreateRequestDTO userCreateRequestDto) {
@@ -280,13 +280,5 @@ public class UserService {
             log.error("deleteCustomUser: An error occurred when update keycloak user={} ", userEntity.getEmail(), ex);
             throw new BusinessException(ex.getMessage());
         }
-    }
-
-    private UserCreateResponseDTO convertToDto(UserEntity userEntity) {
-        return modelMapper.map(userEntity, UserCreateResponseDTO.class);
-    }
-
-    private UserEntity convertToEntity(UserCreateRequestDTO userCreateRequestDto) {
-        return modelMapper.map(userCreateRequestDto, UserEntity.class);
     }
 }
