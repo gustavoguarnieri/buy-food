@@ -68,7 +68,7 @@ public class DeliveryTaxService {
             throw new BadRequestException("Establishment already exist");
         }
 
-        DeliveryTaxEntity convertedDeliveryTaxEntity = convertToEntity(deliveryTaxRequestDto);
+        var convertedDeliveryTaxEntity = convertToEntity(deliveryTaxRequestDto);
         convertedDeliveryTaxEntity.setEstablishment(establishment);
         return convertToDto(deliveryTaxRepository.save(convertedDeliveryTaxEntity));
     }
@@ -78,7 +78,7 @@ public class DeliveryTaxService {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         validUserOwnerOfEstablishment(establishment);
 
-        DeliveryTaxEntity convertedDeliveryTaxEntity = convertToEntity(deliveryTaxPutRequestDto);
+        var convertedDeliveryTaxEntity = convertToEntity(deliveryTaxPutRequestDto);
         convertedDeliveryTaxEntity.setId(deliveryTaxId);
         convertedDeliveryTaxEntity.setEstablishment(establishment);
         deliveryTaxRepository.save(convertedDeliveryTaxEntity);
@@ -88,7 +88,7 @@ public class DeliveryTaxService {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         validUserOwnerOfEstablishment(establishment);
 
-        DeliveryTaxEntity deliveryTaxEntity = getDeliveryTaxById(deliveryTaxId);
+        var deliveryTaxEntity = getDeliveryTaxById(deliveryTaxId);
         deliveryTaxEntity.setStatus(RegisterStatus.DISABLED.getValue());
         deliveryTaxRepository.save(deliveryTaxEntity);
     }

@@ -67,7 +67,7 @@ public class UserService {
 
         var userEntity = saveCustomUser(userCreateRequestDto);
 
-        String ROLE = userCreateRequestDto.getRole().name();
+        var ROLE = userCreateRequestDto.getRole().name();
 
         var keycloak = getKeycloakBuilder(adminUser, adminPass);
 
@@ -90,17 +90,17 @@ public class UserService {
             userCreateResponseDto.setStatus(response.getStatusInfo().toString());
 
             if (response.getStatus() == HttpStatus.CREATED.value()) {
-                String userId = CreatedResponseUtil.getCreatedId(response);
+                var userId = CreatedResponseUtil.getCreatedId(response);
                 userCreateResponseDto.setUserId(userId);
 
                 log.info("createUser: Created user userId={} userMail={}", userId, userCreateRequestDto.getEmail());
 
-                CredentialRepresentation passwordCred = getCredentialRepresentation(userCreateRequestDto.getPassword());
+                var passwordCred = getCredentialRepresentation(userCreateRequestDto.getPassword());
 
                 UserResource userResource = usersResource.get(userId);
                 userResource.resetPassword(passwordCred);
 
-                RoleRepresentation realmRoleUser = realmResource.roles().get(ROLE).toRepresentation();
+                var realmRoleUser = realmResource.roles().get(ROLE).toRepresentation();
                 userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
 
                 userEntity.setUserId(userId);
@@ -141,7 +141,7 @@ public class UserService {
     }
 
     public AccessTokenResponse signin(UserSigninRequestDTO userSignin) {
-        Map<String, Object> clientCredentials = getClientCredentials();
+        var clientCredentials = getClientCredentials();
 
         AccessTokenResponse response = null;
         try {
@@ -240,12 +240,12 @@ public class UserService {
             var realmResource = keycloak.realm(realm);
             var usersResource = realmResource.users();
 
-            UserRepresentation user = usersResource.get(userEntity.getUserId()).toRepresentation();
+            var user = usersResource.get(userEntity.getUserId()).toRepresentation();
             user.setFirstName(userUpdateRequestDto.getFirstName());
             user.setLastName(userUpdateRequestDto.getLastName());
 
-            CredentialRepresentation passwordCred = getCredentialRepresentation(userUpdateRequestDto.getPassword());
-            UserResource userResource = usersResource.get(userId);
+            var passwordCred = getCredentialRepresentation(userUpdateRequestDto.getPassword());
+            var userResource = usersResource.get(userId);
             userResource.resetPassword(passwordCred);
 
             usersResource.get(userEntity.getUserId()).update(user);
@@ -273,7 +273,7 @@ public class UserService {
             var realmResource = keycloak.realm(realm);
             var usersResource = realmResource.users();
 
-            UserRepresentation user = usersResource.get(userEntity.getUserId()).toRepresentation();
+            var user = usersResource.get(userEntity.getUserId()).toRepresentation();
             user.setEnabled(false);
             usersResource.get(userEntity.getUserId()).update(user);
         } catch (Exception ex) {

@@ -61,7 +61,7 @@ public class ProductService {
 
     public ProductResponseDTO createProduct(Long establishmentId, ProductRequestDTO productRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
-        ProductEntity convertedProductEntity = convertToEntity(productRequestDto);
+        var convertedProductEntity = convertToEntity(productRequestDto);
         convertedProductEntity.setEstablishment(establishment);
         return convertToDto(productRepository.save(convertedProductEntity));
     }
@@ -80,7 +80,7 @@ public class ProductService {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         validUserOwnerOfEstablishment(establishment);
 
-        ProductEntity productEntity = getProductById(productId);
+        var productEntity = getProductById(productId);
         productEntity.setStatus(RegisterStatus.DISABLED.getValue());
         productRepository.save(productEntity);
     }

@@ -76,7 +76,7 @@ public class ProductImageService {
     }
 
     private ImageResponseDTO saveImage(MultipartFile file, EstablishmentEntity establishment, ProductEntity product) {
-        String downloadPath = getDownloadProductPath(establishment, product);
+        var downloadPath = getDownloadProductPath(establishment, product);
 
         var uploadFileResponse =
                 fileStorageService.saveFile(file, FileStorageFolder.PRODUCTS, product.getId(), downloadPath);
@@ -91,7 +91,7 @@ public class ProductImageService {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         var product = getProductByEstablishmentAndProductId(establishmentId, productId);
 
-        String downloadPath = getDownloadProductPath(establishment, product);
+        var downloadPath = getDownloadProductPath(establishment, product);
 
         var uploadFileResponse =
                 fileStorageService.saveFileList(files, FileStorageFolder.PRODUCTS, productId, downloadPath);
@@ -115,7 +115,7 @@ public class ProductImageService {
         getProductImage(establishmentId, productId, imageId);
 
         var productEntity = getProductById(productId);
-        ImageEntity imageEntity = convertToEntity(imageRequestDto);
+        var imageEntity = convertToEntity(imageRequestDto);
         imageEntity.setId(imageId);
         imageEntity.setProduct(productEntity);
         productImageRepository.save(imageEntity);
@@ -144,13 +144,13 @@ public class ProductImageService {
 
     public ProductEntity getProductById(Long productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product image not found"));
+                .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
     public ProductEntity getProductByEstablishmentAndProductId(Long establishmentId, Long productId) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         return productRepository.findByEstablishmentAndId(establishment, productId)
-                .orElseThrow(() -> new NotFoundException("Product image not found"));
+                .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
     private List<ImageResponseDTO> getProductImageListByEstablishmentIdAndProductId(EstablishmentEntity establishment,

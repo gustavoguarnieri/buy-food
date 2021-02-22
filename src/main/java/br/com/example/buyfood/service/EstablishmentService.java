@@ -54,20 +54,20 @@ public class EstablishmentService {
     }
 
     public EstablishmentResponseDTO createEstablishment(EstablishmentRequestDTO establishmentRequestDto) {
-        EstablishmentEntity convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
+        var convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
         return convertToDto(establishmentRepository.save(convertedEstablishmentEntity));
     }
 
     public void updateEstablishment(Long id, EstablishmentRequestDTO establishmentRequestDto) {
         getEstablishmentById(id);
-        EstablishmentEntity convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
+        var convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
         validUserOwnerOfEstablishment(convertedEstablishmentEntity);
         convertedEstablishmentEntity.setId(id);
         establishmentRepository.save(convertedEstablishmentEntity);
     }
 
     public void deleteEstablishment(Long id) {
-        EstablishmentEntity establishmentEntity = getEstablishmentById(id);
+        var establishmentEntity = getEstablishmentById(id);
         validUserOwnerOfEstablishment(establishmentEntity);
         establishmentEntity.setStatus(RegisterStatus.DISABLED.getValue());
         establishmentRepository.save(establishmentEntity);

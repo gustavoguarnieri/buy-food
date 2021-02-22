@@ -71,7 +71,7 @@ public class EstablishmentImageService {
 
     private ImageResponseDTO saveImage(MultipartFile file, EstablishmentEntity establishment) {
 
-        String downloadPath = getDownloadEstablishmentPath(establishment);
+        var downloadPath = getDownloadEstablishmentPath(establishment);
 
         var uploadFileResponse =
                 fileStorageService.saveFile(file, FileStorageFolder.ESTABLISHMENTS, establishment.getId(), downloadPath);
@@ -85,7 +85,7 @@ public class EstablishmentImageService {
     public List<ImageResponseDTO> createEstablishmentImageList(Long establishmentId, MultipartFile[] files) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
 
-        String downloadPath = getDownloadEstablishmentPath(establishment);
+        var downloadPath = getDownloadEstablishmentPath(establishment);
 
         var uploadFileResponse =
                 fileStorageService.saveFileList(files, FileStorageFolder.ESTABLISHMENTS, establishmentId, downloadPath);
@@ -108,7 +108,7 @@ public class EstablishmentImageService {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         validUserOwnerOfEstablishment(establishment);
 
-        ImageEntity imageEntity = convertToEntity(imageRequestDto);
+        var imageEntity = convertToEntity(imageRequestDto);
         imageEntity.setId(imageId);
         imageEntity.setEstablishment(establishment);
         establishmentImageRepository.save(imageEntity);

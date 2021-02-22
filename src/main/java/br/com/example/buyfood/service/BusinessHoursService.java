@@ -69,7 +69,7 @@ public class BusinessHoursService {
             throw new BadRequestException("Establishment already exist");
         }
 
-        BusinessHoursEntity convertedBusinessHoursEntity = convertToEntity(businessHoursRequestDto);
+        var convertedBusinessHoursEntity = convertToEntity(businessHoursRequestDto);
         convertedBusinessHoursEntity.setEstablishment(establishment);
         return convertToDto(businessHoursRepository.save(convertedBusinessHoursEntity));
     }
@@ -79,7 +79,7 @@ public class BusinessHoursService {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         validUserOwnerOfEstablishment(establishment);
 
-        BusinessHoursEntity convertedBusinessHoursEntity = convertToEntity(businessHoursPutRequestDto);
+        var convertedBusinessHoursEntity = convertToEntity(businessHoursPutRequestDto);
         convertedBusinessHoursEntity.setId(businessHoursId);
         convertedBusinessHoursEntity.setEstablishment(establishment);
         businessHoursRepository.save(convertedBusinessHoursEntity);
@@ -89,7 +89,7 @@ public class BusinessHoursService {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         validUserOwnerOfEstablishment(establishment);
 
-        BusinessHoursEntity businessHoursEntity = getBusinessHoursById(businessHoursId);
+        var businessHoursEntity = getBusinessHoursById(businessHoursId);
         businessHoursEntity.setStatus(RegisterStatus.DISABLED.getValue());
         businessHoursRepository.save(businessHoursEntity);
     }

@@ -71,7 +71,7 @@ public class FileStorageService {
 
         var extension = FilenameUtils.getExtension(Objects.requireNonNull(file.getOriginalFilename()));
 
-        String fileName = StringUtils.cleanPath(uuidImage.toString() + "." + extension);
+        var fileName = StringUtils.cleanPath(uuidImage.toString() + "." + extension);
 
         getFileStorageLocation(fileStorageProperty, fileStorageFolder, id);
 
@@ -82,7 +82,7 @@ public class FileStorageService {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!");
         }
 
-        String fileDownloadUri = fileDownloadURI(fileUri, fileName);
+        var fileDownloadUri = fileDownloadURI(fileUri, fileName);
 
         return new UploadFileResponseDTO(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
@@ -103,7 +103,7 @@ public class FileStorageService {
     }
 
     private void copyFileToTargetLocation(MultipartFile file, String fileName) throws IOException {
-        Path targetLocation = fileStorageLocation.resolve(fileName);
+        var targetLocation = fileStorageLocation.resolve(fileName);
         Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -123,7 +123,7 @@ public class FileStorageService {
 
     private Resource getResource(FileStorageFolder fileStorageFolder, Long id, String fileName) throws MalformedURLException {
         getFileStorageLocation(fileStorageProperty, fileStorageFolder, id);
-        Path filePath = fileStorageLocation.resolve(fileName).normalize();
+        var filePath = fileStorageLocation.resolve(fileName).normalize();
         Resource resource = new UrlResource(filePath.toUri());
         if (resource.exists()) {
             return resource;
@@ -134,7 +134,7 @@ public class FileStorageService {
 
     public ResponseEntity<Resource> downloadFile(FileStorageFolder fileStorageFolder, Long id, String fileName,
                                                  HttpServletRequest request) {
-        Resource resource = loadFileAsResource(fileStorageFolder, id, fileName);
+        var resource = loadFileAsResource(fileStorageFolder, id, fileName);
 
         String contentType = null;
         try {
