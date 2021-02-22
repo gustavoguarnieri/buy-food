@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/establishment/{establishmentId}/business-hours")
+@RequestMapping("/api/v1/establishments/{establishmentId}/business-hours")
 public class BusinessHoursController {
 
     @Autowired
@@ -75,6 +76,7 @@ public class BusinessHoursController {
         return businessHoursResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new business hours")
@@ -95,6 +97,7 @@ public class BusinessHoursController {
         return businessHoursResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PutMapping("/{businessHoursId}")
     @ApiOperation(value = "Update business hours")
     @ApiResponses(value = {
@@ -114,6 +117,7 @@ public class BusinessHoursController {
                 establishmentId, businessHoursId);
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @DeleteMapping("/{businessHoursId}")
     @ApiOperation(value = "Delete business hours")
     @ApiResponses(value = {

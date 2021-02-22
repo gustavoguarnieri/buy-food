@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +65,7 @@ public class EstablishmentController {
         return establishmentResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new establishment")
@@ -82,6 +84,7 @@ public class EstablishmentController {
         return establishmentResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PutMapping("/{id}")
     @ApiOperation(value = "Update establishment")
     @ApiResponses(value = {
@@ -97,6 +100,7 @@ public class EstablishmentController {
         log.info("updateEstablishment: finished update establishment id={}", id);
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete establishment")
     @ApiResponses(value = {

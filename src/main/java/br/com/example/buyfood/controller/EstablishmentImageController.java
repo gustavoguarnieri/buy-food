@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,6 +101,7 @@ public class EstablishmentImageController {
         return imageResourceResponse;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PostMapping("/upload-file")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new establishment image")
@@ -120,6 +122,7 @@ public class EstablishmentImageController {
         return productImageResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PostMapping("/upload-files")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new establishment images")
@@ -142,6 +145,7 @@ public class EstablishmentImageController {
         return imageResponseDtoList;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PutMapping("/{imageId}")
     @ApiOperation(value = "Update establishment image")
     @ApiResponses(value = {
@@ -160,6 +164,7 @@ public class EstablishmentImageController {
                 establishmentId, imageId);
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @DeleteMapping("/{imageId}")
     @ApiOperation(value = "Delete establishment image")
     @ApiResponses(value = {

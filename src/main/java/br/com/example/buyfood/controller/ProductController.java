@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/establishment/{establishmentId}/products")
+@RequestMapping("/api/v1/establishments/{establishmentId}/products")
 public class ProductController {
 
     @Autowired
@@ -89,6 +90,7 @@ public class ProductController {
         return productResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PutMapping("/{productId}")
     @ApiOperation(value = "Update product")
     @ApiResponses(value = {
@@ -107,6 +109,7 @@ public class ProductController {
                 establishmentId, productId);
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @DeleteMapping("/{productId}")
     @ApiOperation(value = "Delete product")
     @ApiResponses(value = {
