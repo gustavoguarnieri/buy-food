@@ -13,19 +13,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "product")
-public class ProductEntity implements Serializable {
+@Table(name = "ingredient")
+public class IngredientEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,27 +29,14 @@ public class ProductEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "product")
-    private List<ImageEntity> images;
-
     @ManyToOne
-    @JoinColumn(name = "establishment_id", referencedColumnName = "id")
-    private EstablishmentEntity establishment;
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private ProductEntity product;
 
-    @OneToMany(mappedBy = "product")
-    private List<IngredientEntity> ingredients;
-
-    @NotBlank
-    @Column(nullable = false, length = 50)
-    private String name;
-
-    @NotNull
     @Column(nullable = false)
-    private BigDecimal price;
+    private String ingredient;
 
-    @NotNull
-    @Column(nullable = false)
-    private String description;
+    private String portion;
 
     @Column(nullable = false)
     private int status = RegisterStatus.ENABLED.getValue();
