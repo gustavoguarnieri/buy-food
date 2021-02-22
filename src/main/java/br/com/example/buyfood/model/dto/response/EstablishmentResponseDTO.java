@@ -19,5 +19,5 @@ public class EstablishmentResponseDTO {
     private EstablishmentCategory category;
     private BusinessHoursResponseDTO businessHoursId;
     private DeliveryTaxResponseDTO deliveryTaxId;
-    private Integer status;
+    private int status;
 }

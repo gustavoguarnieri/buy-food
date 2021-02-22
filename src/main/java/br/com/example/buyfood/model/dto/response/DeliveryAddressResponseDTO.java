@@ -18,5 +18,5 @@ public class DeliveryAddressResponseDTO {
     private String city;
     private String state;
     private String observation;
-    private int status = 1;
+    private int status;
 }

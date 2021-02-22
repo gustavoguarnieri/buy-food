@@ -100,5 +100,5 @@ public class BusinessHoursResponseDTO {
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime finalTimeSecondPeriodSaturday;
-    private Integer status;
+    private int status;
 }

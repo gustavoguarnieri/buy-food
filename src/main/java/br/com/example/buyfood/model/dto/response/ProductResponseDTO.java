@@ -15,5 +15,5 @@ public class ProductResponseDTO {
     private String name;
     private BigDecimal price;
     private String description;
-    private Integer status = 1;
+    private int status;
 }

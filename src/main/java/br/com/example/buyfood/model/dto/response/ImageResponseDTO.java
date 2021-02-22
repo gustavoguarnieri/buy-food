@@ -14,14 +14,14 @@ import lombok.Setter;
 public class ImageResponseDTO extends UploadFileResponseDTO {
 
     private Long id;
-    private Integer status;
+    private int status;
 
     public ImageResponseDTO(Long id,
                             String fileName,
                             String fileUri,
                             String fileType,
                             long size,
-                            Integer status) {
+                            int status) {
         super(fileName, fileUri, fileType, size);
         this.id = id;
         this.status = status;
