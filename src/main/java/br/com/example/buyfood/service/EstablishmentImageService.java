@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.ForbiddenException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +38,9 @@ public class EstablishmentImageService {
 
     @Autowired
     private EstablishmentService establishmentService;
+
+    @Autowired
+    private UserService userService;
 
     public List<ImageResponseDTO> getEstablishmentImageList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
@@ -100,7 +104,10 @@ public class EstablishmentImageService {
 
     public void updateEstablishmentImage(Long establishmentId, Long imageId, ImageRequestDTO imageRequestDto) {
         getEstablishmentImage(establishmentId, imageId);
+
         var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         ImageEntity imageEntity = convertToEntity(imageRequestDto);
         imageEntity.setId(imageId);
         imageEntity.setEstablishment(establishment);
@@ -108,6 +115,9 @@ public class EstablishmentImageService {
     }
 
     public void deleteEstablishmentImage(Long establishmentId, Long imageId) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         var imageEntity = getEstablishmentImageByEstablishmentAndImage(establishmentId, imageId);
         imageEntity.setStatus(RegisterStatus.DISABLED.getValue());
         establishmentImageRepository.save(imageEntity);
@@ -138,6 +148,16 @@ public class EstablishmentImageService {
 
     private String getDownloadEstablishmentPath(EstablishmentEntity establishment) {
         return "/api/v1/establishments/" + establishment.getId() + "/images/download-file/";
+    }
+
+    private String getUserId() {
+        return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
+        if (!establishmentEntity.getAudit().getCreatedBy().equals(getUserId())) {
+            throw new ForbiddenException("User is not owner of establishment");
+        }
     }
 
     private ImageResponseDTO convertToDto(ImageEntity imageEntity) {

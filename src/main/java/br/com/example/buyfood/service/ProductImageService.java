@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.ForbiddenException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +43,9 @@ public class ProductImageService {
 
     @Autowired
     private EstablishmentService establishmentService;
+
+    @Autowired
+    private UserService userService;
 
     public List<ImageResponseDTO> getProductImageList(Long establishmentId, Long productId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
@@ -105,7 +109,11 @@ public class ProductImageService {
     }
 
     public void updateProductImage(Long establishmentId, Long productId, Long imageId, ImageRequestDTO imageRequestDto) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         getProductImage(establishmentId, productId, imageId);
+
         var productEntity = getProductById(productId);
         ImageEntity imageEntity = convertToEntity(imageRequestDto);
         imageEntity.setId(imageId);
@@ -114,6 +122,9 @@ public class ProductImageService {
     }
 
     public void deleteProductImage(Long establishmentId, Long productId, Long imageId) {
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         var imageEntity = getProductImageByEstablishmentIdAndProductIdAndId(establishmentId, productId, imageId);
         imageEntity.setStatus(RegisterStatus.DISABLED.getValue());
         productImageRepository.save(imageEntity);
@@ -161,6 +172,16 @@ public class ProductImageService {
 
     private String getDownloadProductPath(EstablishmentEntity establishment, ProductEntity product) {
         return "/api/v1/establishments/" + establishment.getId() + "/products/" + product.getId() + "/images/download-file/";
+    }
+
+    private String getUserId() {
+        return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
+        if (!establishmentEntity.getAudit().getCreatedBy().equals(getUserId())) {
+            throw new ForbiddenException("User is not owner of establishment");
+        }
     }
 
     private ImageResponseDTO convertToDto(ImageEntity imageEntity) {

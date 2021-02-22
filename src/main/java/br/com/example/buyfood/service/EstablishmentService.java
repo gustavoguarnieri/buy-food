@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.ForbiddenException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,9 @@ public class EstablishmentService {
 
     @Autowired
     private EstablishmentRepository establishmentRepository;
+
+    @Autowired
+    private UserService userService;
 
     public List<EstablishmentResponseDTO> getEstablishmentList(Integer status) {
         if (status == null) {
@@ -57,12 +61,14 @@ public class EstablishmentService {
     public void updateEstablishment(Long id, EstablishmentRequestDTO establishmentRequestDto) {
         getEstablishmentById(id);
         EstablishmentEntity convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
+        validUserOwnerOfEstablishment(convertedEstablishmentEntity);
         convertedEstablishmentEntity.setId(id);
         establishmentRepository.save(convertedEstablishmentEntity);
     }
 
     public void deleteEstablishment(Long id) {
         EstablishmentEntity establishmentEntity = getEstablishmentById(id);
+        validUserOwnerOfEstablishment(establishmentEntity);
         establishmentEntity.setStatus(RegisterStatus.DISABLED.getValue());
         establishmentRepository.save(establishmentEntity);
     }
@@ -76,6 +82,16 @@ public class EstablishmentService {
         return establishmentRepository.findAllByStatus(enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    private String getUserId() {
+        return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
+        if (!establishmentEntity.getAudit().getCreatedBy().equals(getUserId())) {
+            throw new ForbiddenException("User is not owner of establishment");
+        }
     }
 
     private EstablishmentResponseDTO convertToDto(EstablishmentEntity establishmentEntity) {

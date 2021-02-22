@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.ForbiddenException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,9 @@ public class DeliveryTaxService {
 
     @Autowired
     private EstablishmentService establishmentService;
+
+    @Autowired
+    private UserService userService;
 
     public List<DeliveryTaxResponseDTO> getDeliveryTaxList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
@@ -72,6 +76,8 @@ public class DeliveryTaxService {
     public void updateDeliveryTax(Long establishmentId, Long deliveryTaxId,
                                   DeliveryTaxPutRequestDTO deliveryTaxPutRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         DeliveryTaxEntity convertedDeliveryTaxEntity = convertToEntity(deliveryTaxPutRequestDto);
         convertedDeliveryTaxEntity.setId(deliveryTaxId);
         convertedDeliveryTaxEntity.setEstablishment(establishment);
@@ -79,7 +85,9 @@ public class DeliveryTaxService {
     }
 
     public void deleteDeliveryTax(Long establishmentId, Long deliveryTaxId) {
-        establishmentService.getEstablishmentById(establishmentId);
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         DeliveryTaxEntity deliveryTaxEntity = getDeliveryTaxById(deliveryTaxId);
         deliveryTaxEntity.setStatus(RegisterStatus.DISABLED.getValue());
         deliveryTaxRepository.save(deliveryTaxEntity);
@@ -95,6 +103,16 @@ public class DeliveryTaxService {
         return deliveryTaxRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    private String getUserId() {
+        return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
+        if (!establishmentEntity.getAudit().getCreatedBy().equals(getUserId())) {
+            throw new ForbiddenException("User is not owner of establishment");
+        }
     }
 
     private DeliveryTaxResponseDTO convertToDto(DeliveryTaxEntity deliveryTaxEntity) {

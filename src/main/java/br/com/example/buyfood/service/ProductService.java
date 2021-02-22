@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.ForbiddenException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,9 @@ public class ProductService {
 
     @Autowired
     private EstablishmentService establishmentService;
+
+    @Autowired
+    private UserService userService;
 
     public List<ProductResponseDTO> getProductList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
@@ -57,7 +61,6 @@ public class ProductService {
 
     public ProductResponseDTO createProduct(Long establishmentId, ProductRequestDTO productRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
-
         ProductEntity convertedProductEntity = convertToEntity(productRequestDto);
         convertedProductEntity.setEstablishment(establishment);
         return convertToDto(productRepository.save(convertedProductEntity));
@@ -65,6 +68,8 @@ public class ProductService {
 
     public void updateProduct(Long establishmentId, Long productId, ProductRequestDTO productRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         ProductEntity convertedProductEntity = convertToEntity(productRequestDto);
         convertedProductEntity.setId(productId);
         convertedProductEntity.setEstablishment(establishment);
@@ -72,7 +77,9 @@ public class ProductService {
     }
 
     public void deleteProduct(Long establishmentId, Long productId) {
-        establishmentService.getEstablishmentById(establishmentId);
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         ProductEntity productEntity = getProductById(productId);
         productEntity.setStatus(RegisterStatus.DISABLED.getValue());
         productRepository.save(productEntity);
@@ -88,6 +95,16 @@ public class ProductService {
         return productRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    private String getUserId() {
+        return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
+        if (!establishmentEntity.getAudit().getCreatedBy().equals(getUserId())) {
+            throw new ForbiddenException("User is not owner of establishment");
+        }
     }
 
     private ProductResponseDTO convertToDto(ProductEntity productEntity) {

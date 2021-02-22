@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.ForbiddenException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,9 @@ public class BusinessHoursService {
 
     @Autowired
     private EstablishmentService establishmentService;
+
+    @Autowired
+    private UserService userService;
 
     public List<BusinessHoursResponseDTO> getBusinessHoursList(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
@@ -73,6 +77,8 @@ public class BusinessHoursService {
     public void updateBusinessHours(Long establishmentId, Long businessHoursId,
                                     BusinessHoursPutRequestDTO businessHoursPutRequestDto) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         BusinessHoursEntity convertedBusinessHoursEntity = convertToEntity(businessHoursPutRequestDto);
         convertedBusinessHoursEntity.setId(businessHoursId);
         convertedBusinessHoursEntity.setEstablishment(establishment);
@@ -80,7 +86,9 @@ public class BusinessHoursService {
     }
 
     public void deleteBusinessHours(Long establishmentId, Long businessHoursId) {
-        establishmentService.getEstablishmentById(establishmentId);
+        var establishment = establishmentService.getEstablishmentById(establishmentId);
+        validUserOwnerOfEstablishment(establishment);
+
         BusinessHoursEntity businessHoursEntity = getBusinessHoursById(businessHoursId);
         businessHoursEntity.setStatus(RegisterStatus.DISABLED.getValue());
         businessHoursRepository.save(businessHoursEntity);
@@ -96,6 +104,16 @@ public class BusinessHoursService {
         return businessHoursRepository.findAllByEstablishmentAndStatus(establishment, enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    private String getUserId() {
+        return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
+        if (!establishmentEntity.getAudit().getCreatedBy().equals(getUserId())) {
+            throw new ForbiddenException("User is not owner of establishment");
+        }
     }
 
     private BusinessHoursResponseDTO convertToDto(BusinessHoursEntity businessEntity) {
