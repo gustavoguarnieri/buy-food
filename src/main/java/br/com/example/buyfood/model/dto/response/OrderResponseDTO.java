@@ -15,6 +15,7 @@ public class OrderResponseDTO {
     private List<OrderItemsResponseDTO> items;
     private String paymentWay;
     private String paymentStatus;
+    private String preparationStatus;
     private String observation;
     private int status;
 }

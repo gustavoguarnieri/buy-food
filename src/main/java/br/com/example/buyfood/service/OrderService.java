@@ -100,6 +100,7 @@ public class OrderService {
         orderEntity.setPaymentWay(orderPutRequestDto.getPaymentWay());
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
         orderEntity.setStatus(orderPutRequestDto.getStatus());
+        orderEntity.setPreparationStatus(orderPutRequestDto.getPreparationStatus());
         orderRepository.save(orderEntity);
 
         orderPutRequestDto.getItems().forEach(i -> {

@@ -1,6 +1,7 @@
 package br.com.example.buyfood.model.entity;
 
 import br.com.example.buyfood.enums.PaymentStatus;
+import br.com.example.buyfood.enums.PreparationStatus;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.model.embeddable.Audit;
 import lombok.Getter;
@@ -17,12 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -49,7 +47,7 @@ public class OrderEntity implements Serializable {
     @JoinColumn(name = "establishment_id", referencedColumnName = "id")
     private EstablishmentEntity establishment;
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany(mappedBy = "order")
     private List<OrderItemsEntity> items;
 
     @NotBlank
@@ -59,6 +57,10 @@ public class OrderEntity implements Serializable {
     @NotBlank
     @Column(nullable = false)
     private String paymentStatus = PaymentStatus.PENDING.name();
+
+    @NotBlank
+    @Column(nullable = false)
+    private String preparationStatus = PreparationStatus.PENDING.name();
 
     private String observation;
 
