@@ -12,6 +12,18 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      mysql-host: ${{ secrets.MYSQL_HOST }}
+      musql-db-name: ${{ secrets.MYSQL_DB_NAME }}
+      mysql-db-user: ${{ secrets.MYSQL_DB_USER }}
+      mysql-db-password: ${{ secrets.MYSQL_DB_PASSWORD }}
+      keycloak-realm: ${{ secrets.KEYCLOAK_REALM }}
+      keycloak-server: ${{ secrets.KEYCLOAK_SERVER }}
+      keycloak-credentials-secret: ${{ secrets.KEYCLOAK_CREDENTIALS_SECRET }}
+      keycloak-admin-user: ${{ secrets.KEYCLOACK_ADMIN_USER }}
+      keycloak-admin-password: ${{ secrets.KEYCLOACK_ADMIN_PASSWORD }}
+      file-upload-dir: ${{ secrets.FILE_UPLOAD_DIR }}
+
     steps:
     - uses: actions/checkout@v2
 
@@ -32,14 +44,4 @@ jobs:
         app-name: 'buy-food'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_ed76fd8905dd4316b6711eb5098ac26d }}
-        mysql-host: ${{ secrets.MYSQL_HOST }}
-        musql-db-name: ${{ secrets.MYSQL_DB_NAME }}
-        mysql-db-user: ${{ secrets.MYSQL_DB_USER }}
-        mysql-db-password: ${{ secrets.MYSQL_DB_PASSWORD }}
-        keycloak-realm: ${{ secrets.KEYCLOAK_REALM }}
-        keycloak-server: ${{ secrets.KEYCLOAK_SERVER }}
-        keycloak-credentials-secret: ${{ secrets.KEYCLOAK_CREDENTIALS_SECRET }}
-        keycloak-admin-user: ${{ secrets.KEYCLOACK_ADMIN_USER }}
-        keycloak-admin-password: ${{ secrets.KEYCLOACK_ADMIN_PASSWORD }}
-        file-upload-dir: ${{ secrets.FILE_UPLOAD_DIR }}
         package: '${{ github.workspace }}/target/*.jar'
