@@ -12,20 +12,32 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    env:
-      mysql-host: ${{ secrets.MYSQL_HOST }}
-      musql-db-name: ${{ secrets.MYSQL_DB_NAME }}
-      mysql-db-user: ${{ secrets.MYSQL_DB_USER }}
-      mysql-db-password: ${{ secrets.MYSQL_DB_PASSWORD }}
-      keycloak-realm: ${{ secrets.KEYCLOAK_REALM }}
-      keycloak-server: ${{ secrets.KEYCLOAK_SERVER }}
-      keycloak-credentials-secret: ${{ secrets.KEYCLOAK_CREDENTIALS_SECRET }}
-      keycloak-admin-user: ${{ secrets.KEYCLOACK_ADMIN_USER }}
-      keycloak-admin-password: ${{ secrets.KEYCLOACK_ADMIN_PASSWORD }}
-      file-upload-dir: ${{ secrets.FILE_UPLOAD_DIR }}
-
     steps:
     - uses: actions/checkout@v2
+
+    - name: set secrets action
+#      with: # Configura o segredo como uma entrada
+#        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+#        MYSQL_DB_NAME: ${{ secrets.MYSQL_DB_NAME }}
+#        MYSQL_DB_USER: ${{ secrets.MYSQL_DB_USER }}
+#        MYSQL_DB_PASSWORD: ${{ secrets.MYSQL_DB_PASSWORD }}
+#        KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
+#        KEYCLOAK_SERVER: ${{ secrets.KEYCLOAK_SERVER }}
+#        KEYCLOAK_CREDENTIALS_SECRET: ${{ secrets.KEYCLOAK_CREDENTIALS_SECRET }}
+#        KEYCLOACK_ADMIN_USER: ${{ secrets.KEYCLOACK_ADMIN_USER }}
+#        KEYCLOACK_ADMIN_PASSWORD: ${{ secrets.KEYCLOACK_ADMIN_PASSWORD }}
+#        FILE_UPLOAD_DIR: ${{ secrets.FILE_UPLOAD_DIR }}
+      env: # variável de ambiente
+        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+        MYSQL_DB_NAME: ${{ secrets.MYSQL_DB_NAME }}
+        MYSQL_DB_USER: ${{ secrets.MYSQL_DB_USER }}
+        MYSQL_DB_PASSWORD: ${{ secrets.MYSQL_DB_PASSWORD }}
+        KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
+        KEYCLOAK_SERVER: ${{ secrets.KEYCLOAK_SERVER }}
+        KEYCLOAK_CREDENTIALS_SECRET: ${{ secrets.KEYCLOAK_CREDENTIALS_SECRET }}
+        KEYCLOACK_ADMIN_USER: ${{ secrets.KEYCLOACK_ADMIN_USER }}
+        KEYCLOACK_ADMIN_PASSWORD: ${{ secrets.KEYCLOACK_ADMIN_PASSWORD }}
+        FILE_UPLOAD_DIR: ${{ secrets.FILE_UPLOAD_DIR }}
 
     - name: Set up Java version
       uses: actions/setup-java@v1
