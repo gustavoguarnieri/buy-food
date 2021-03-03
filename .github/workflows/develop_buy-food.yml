@@ -49,4 +49,4 @@ jobs:
         app-name: 'buy-food'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_4fcbf28d7e6b4767a3d1709c1588059d }}
-        package: '${{ github.workspace }}/target/*.war'
+        package: '${{ github.workspace }}/build/libs/*.war'
