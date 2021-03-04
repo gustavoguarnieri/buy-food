@@ -66,7 +66,7 @@ public class UserService {
 
         var userEntity = saveCustomUser(userCreateRequestDto);
 
-        var ROLE = userCreateRequestDto.getRole().name();
+        var ROLE = userCreateRequestDto.getRole().name().toLowerCase();
 
         var keycloak = getKeycloakBuilder(adminUser, adminPass);
 
