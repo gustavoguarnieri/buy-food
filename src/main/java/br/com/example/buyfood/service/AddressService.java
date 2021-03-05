@@ -91,7 +91,7 @@ public class AddressService {
         return userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    private DeliveryAddressEntity getUserAddressByIdAndUser(Long addressId, UserEntity user) {
+    public DeliveryAddressEntity getUserAddressByIdAndUser(Long addressId, UserEntity user) {
         return deliveryAddressRepository.findByIdAndUser(addressId, user)
                 .orElseThrow(() -> new NotFoundException("User address not found"));
     }

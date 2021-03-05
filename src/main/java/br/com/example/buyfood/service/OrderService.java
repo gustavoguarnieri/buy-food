@@ -44,6 +44,9 @@ public class OrderService {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private AddressService addressService;
+
     public List<OrderResponseDTO> getOrderList(Integer status) {
         var userEntity = getUserByUserId(getUserId());
 
@@ -75,10 +78,13 @@ public class OrderService {
 
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDto) {
         var userEntity = getUserByUserId(getUserId());
+        var deliveryAddress =
+                addressService.getUserAddressByIdAndUser(orderRequestDto.getDeliveryAddressId(), userEntity);
 
         var convertedOrderEntity = convertToEntity(orderRequestDto);
         convertedOrderEntity.setId(null);
         convertedOrderEntity.setUser(userEntity);
+        convertedOrderEntity.setDeliveryAddress(deliveryAddress);
 
         var count = new AtomicInteger(1);
         convertedOrderEntity.getItems().forEach(i -> {
