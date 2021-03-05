@@ -61,7 +61,7 @@ public class UserController {
         return userSigninResponse;
     }
 
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @Secured({"ROLE_ESTABLISMENT", "ROLE_USER", "ROLE_ADMIN"})
     @PutMapping("/{userId}")
     @ApiOperation(value = "Update user")
     @ApiResponses(value = {

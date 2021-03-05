@@ -1,5 +1,6 @@
 package br.com.example.buyfood.service;
 
+import br.com.example.buyfood.enums.Role;
 import br.com.example.buyfood.exception.BusinessException;
 import br.com.example.buyfood.exception.ConflitException;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -18,11 +19,13 @@ import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.authorization.client.AuthzClient;
 import org.keycloak.authorization.client.Configuration;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +35,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -96,11 +101,10 @@ public class UserService {
 
                 var passwordCred = getCredentialRepresentation(userCreateRequestDto.getPassword());
 
-                UserResource userResource = usersResource.get(userId);
+                var userResource = usersResource.get(userId);
                 userResource.resetPassword(passwordCred);
 
-                var realmRoleUser = realmResource.roles().get(ROLE).toRepresentation();
-                userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
+                insertNewRole(ROLE, realmResource, userResource);
 
                 userEntity.setUserId(userId);
                 userEntity.getAudit().setCreatedBy(userId);
@@ -117,6 +121,29 @@ public class UserService {
         }
 
         return userCreateResponseDto;
+    }
+
+    private void insertNewRole(String newRole, RealmResource realmResource, UserResource userResource) {
+        if (newRole.isBlank()) {
+            return;
+        }
+        var realmRoleUser = realmResource.roles().get(newRole).toRepresentation();
+        userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
+
+        removeOldRoles(newRole, realmResource, userResource);
+    }
+
+    private void removeOldRoles(String newRole, RealmResource realmResource, UserResource userResource) {
+        List<RoleRepresentation> roleRepresentationList = new ArrayList<>();
+
+        Role.stream()
+                .filter(i -> !i.name().equals(newRole.toUpperCase()))
+                .forEach(i -> {
+                    var realmRoleUser = realmResource.roles().get(i.name()).toRepresentation();
+                    roleRepresentationList.add(realmRoleUser);
+                });
+
+        userResource.roles().realmLevel().remove(roleRepresentationList);
     }
 
     private CredentialRepresentation getCredentialRepresentation(String password) {
@@ -238,16 +265,18 @@ public class UserService {
             var keycloak = getKeycloakBuilder(adminUser, adminPass);
             var realmResource = keycloak.realm(realm);
             var usersResource = realmResource.users();
+            var userResource = usersResource.get(userEntity.getUserId());
 
-            var user = usersResource.get(userEntity.getUserId()).toRepresentation();
+            var user = userResource.toRepresentation();
             user.setFirstName(userUpdateRequestDto.getFirstName());
             user.setLastName(userUpdateRequestDto.getLastName());
 
             var passwordCred = getCredentialRepresentation(userUpdateRequestDto.getPassword());
-            var userResource = usersResource.get(userId);
             userResource.resetPassword(passwordCred);
 
             usersResource.get(userEntity.getUserId()).update(user);
+
+            insertNewRole(userUpdateRequestDto.getRole().name(), realmResource, userResource);
         } catch (Exception ex) {
             log.error("updateCustomUser: An error occurred when update keycloak user={} ", userEntity.getEmail(), ex);
             throw new BusinessException(ex.getMessage());
