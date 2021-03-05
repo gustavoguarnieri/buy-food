@@ -8,6 +8,8 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/${MYSQL_DB_NAME:bd_buy_food}?useTimezone=true&serverTimezone=America/Sao_Paulo
     username: ${MYSQL_DB_USER:admin}
     password: ${MYSQL_DB_PASSWORD:masterkey}
+    hikari:
+      max-lifetime: 25000
     initialization-mode: always
   jpa:
     show-sql: false
