@@ -96,7 +96,7 @@ public class ProductImageController {
         log.info("getDownloadProductImageList: starting to consult product image by " +
                 "establishmentId={}, productId={}, fileName={}", establishmentId, productId, fileName);
         var imageResourceResponse =
-                productImageService.getDownloadProductImage(establishmentId, fileName, request);
+                productImageService.getDownloadProductImage(productId, fileName, request);
         log.info("getDownloadProductImageList: finished to consult product image by " +
                 "establishmentId={}, productId={}, fileName={}", establishmentId, productId, fileName);
         return imageResourceResponse;
