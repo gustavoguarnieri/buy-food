@@ -3,6 +3,7 @@ package br.com.example.buyfood.api;
 import br.com.example.buyfood.exception.ApiException;
 import br.com.example.buyfood.exception.BusinessException;
 import br.com.example.buyfood.exception.ConflitException;
+import br.com.example.buyfood.exception.FileNotFoundException;
 import br.com.example.buyfood.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -46,6 +47,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
+        var status = HttpStatus.NOT_FOUND;
+        var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<Object> handleFileNotFound(FileNotFoundException ex, WebRequest request) {
         var status = HttpStatus.NOT_FOUND;
         var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
 
