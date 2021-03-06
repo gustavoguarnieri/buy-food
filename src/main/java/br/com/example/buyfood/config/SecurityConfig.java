@@ -39,6 +39,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().sessionManagement().
                 sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers(swaggerConfig.swaggerAuthWhiteList()).permitAll()
+                .antMatchers("/index.html").permitAll()
                 .antMatchers("/api/v1/users/create").permitAll()
                 .antMatchers("/api/v1/users/signin").permitAll()
                 .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
