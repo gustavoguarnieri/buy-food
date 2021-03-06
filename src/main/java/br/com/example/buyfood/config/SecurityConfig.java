@@ -40,6 +40,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers(swaggerConfig.swaggerAuthWhiteList()).permitAll()
                 .antMatchers("/index.html").permitAll()
+                .antMatchers("/actuator/health").permitAll()
                 .antMatchers("/api/v1/users/create").permitAll()
                 .antMatchers("/api/v1/users/signin").permitAll()
                 .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
