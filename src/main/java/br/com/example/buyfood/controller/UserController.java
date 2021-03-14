@@ -39,7 +39,7 @@ public class UserController {
     @ApiOperation(value = "Returns the informed user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed user",
-                    response = EstablishmentResponseDTO.class),
+                    response = UserResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
