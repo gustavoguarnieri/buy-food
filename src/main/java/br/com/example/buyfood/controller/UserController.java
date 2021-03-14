@@ -44,10 +44,10 @@ public class UserController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public UserResponseDTO getUser(@Valid @NotBlank @PathVariable("id") String id) {
-        log.info("getUser: starting to consult user by id={}", id);
-        var userResponseDTO = userService.getUser(id);
-        log.info("getUser: finished to consult user by id={}", id);
+    public UserResponseDTO getUser(@Valid @NotBlank @PathVariable("userId") String userId) {
+        log.info("getUser: starting to consult user by userId={}", userId);
+        var userResponseDTO = userService.getUser(userId);
+        log.info("getUser: finished to consult user by userId={}", userId);
         return userResponseDTO;
     }
 

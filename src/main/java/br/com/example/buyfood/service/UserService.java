@@ -72,8 +72,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserResponseDTO getUser(String id) {
-        var userEntity = userRepository.findByUserId(id)
+    public UserResponseDTO getUser(String userId) {
+        var userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         return convertToDto(userEntity);
