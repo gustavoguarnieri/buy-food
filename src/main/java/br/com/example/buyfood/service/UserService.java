@@ -8,6 +8,7 @@ import br.com.example.buyfood.model.dto.request.UserCreateRequestDTO;
 import br.com.example.buyfood.model.dto.request.UserSigninRequestDTO;
 import br.com.example.buyfood.model.dto.request.UserUpdateRequestDTO;
 import br.com.example.buyfood.model.dto.response.UserCreateResponseDTO;
+import br.com.example.buyfood.model.dto.response.UserResponseDTO;
 import br.com.example.buyfood.model.embeddable.Audit;
 import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.UserRepository;
@@ -27,6 +28,7 @@ import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -65,7 +67,17 @@ public class UserService {
     private String adminPass;
 
     @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
     private UserRepository userRepository;
+
+    public UserResponseDTO getUser(String id) {
+        var userEntity = userRepository.findByUserId(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        return convertToDto(userEntity);
+    }
 
     public UserCreateResponseDTO createUser(UserCreateRequestDTO userCreateRequestDto) {
 
@@ -246,10 +258,13 @@ public class UserService {
     }
 
     public void updateCustomUser(String userId, UserUpdateRequestDTO userUpdateRequestDto) {
-        var userEntity = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        var optionalUserEntity = userRepository.findByUserId(userId);
+
+        var userEntity = optionalUserEntity.orElseGet(UserEntity::new);
 
         try {
+            userEntity.setUserId(userId);
             userEntity.setFirstName(userUpdateRequestDto.getFirstName());
             userEntity.setLastName(userUpdateRequestDto.getLastName());
             userEntity.setNickName(userUpdateRequestDto.getNickName());
@@ -257,7 +272,7 @@ public class UserService {
             userEntity.getAudit().setLastUpdatedBy(userId);
             userRepository.save(userEntity);
         } catch (Exception ex) {
-            log.error("deleteCustomUser: An error occurred when update userId={} ", userId, ex);
+            log.error("updateCustomUser: An error occurred when update userId={} ", userId, ex);
             throw new BusinessException(ex.getMessage());
         }
 
@@ -265,7 +280,7 @@ public class UserService {
             var keycloak = getKeycloakBuilder(adminUser, adminPass);
             var realmResource = keycloak.realm(realm);
             var usersResource = realmResource.users();
-            var userResource = usersResource.get(userEntity.getUserId());
+            var userResource = usersResource.get(userId);
 
             var user = userResource.toRepresentation();
             user.setFirstName(userUpdateRequestDto.getFirstName());
@@ -274,14 +289,13 @@ public class UserService {
             var passwordCred = getCredentialRepresentation(userUpdateRequestDto.getPassword());
             userResource.resetPassword(passwordCred);
 
-            usersResource.get(userEntity.getUserId()).update(user);
+            usersResource.get(userId).update(user);
 
             insertNewRole(userUpdateRequestDto.getRole().name(), realmResource, userResource);
         } catch (Exception ex) {
             log.error("updateCustomUser: An error occurred when update keycloak user={} ", userEntity.getEmail(), ex);
             throw new BusinessException(ex.getMessage());
         }
-
     }
 
     public void deleteCustomUser(String userId) {
@@ -308,5 +322,9 @@ public class UserService {
             log.error("deleteCustomUser: An error occurred when update keycloak user={} ", userEntity.getEmail(), ex);
             throw new BusinessException(ex.getMessage());
         }
+    }
+
+    private UserResponseDTO convertToDto(UserEntity userEntity) {
+        return modelMapper.map(userEntity, UserResponseDTO.class);
     }
 }

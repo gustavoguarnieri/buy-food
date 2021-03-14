@@ -3,7 +3,9 @@ package br.com.example.buyfood.controller;
 import br.com.example.buyfood.model.dto.request.UserCreateRequestDTO;
 import br.com.example.buyfood.model.dto.request.UserSigninRequestDTO;
 import br.com.example.buyfood.model.dto.request.UserUpdateRequestDTO;
+import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
 import br.com.example.buyfood.model.dto.response.UserCreateResponseDTO;
+import br.com.example.buyfood.model.dto.response.UserResponseDTO;
 import br.com.example.buyfood.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -13,6 +15,7 @@ import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,6 +33,23 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Secured({"ROLE_ESTABLISMENT", "ROLE_USER", "ROLE_ADMIN"})
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Returns the informed user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns the informed user",
+                    response = EstablishmentResponseDTO.class),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public UserResponseDTO getUser(@Valid @NotBlank @PathVariable("id") String id) {
+        log.info("getUser: starting to consult user by id={}", id);
+        var userResponseDTO = userService.getUser(id);
+        log.info("getUser: finished to consult user by id={}", id);
+        return userResponseDTO;
+    }
 
     @ApiOperation(value = "Create a new user")
     @ApiResponses(value = {
