@@ -3,7 +3,6 @@ package br.com.example.buyfood.controller;
 import br.com.example.buyfood.model.dto.request.UserCreateRequestDTO;
 import br.com.example.buyfood.model.dto.request.UserSigninRequestDTO;
 import br.com.example.buyfood.model.dto.request.UserUpdateRequestDTO;
-import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
 import br.com.example.buyfood.model.dto.response.UserCreateResponseDTO;
 import br.com.example.buyfood.model.dto.response.UserResponseDTO;
 import br.com.example.buyfood.service.UserService;
@@ -35,7 +34,7 @@ public class UserController {
     private UserService userService;
 
     @Secured({"ROLE_ESTABLISMENT", "ROLE_USER", "ROLE_ADMIN"})
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     @ApiOperation(value = "Returns the informed user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed user",
