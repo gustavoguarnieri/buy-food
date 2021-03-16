@@ -286,8 +286,11 @@ public class UserService {
             user.setFirstName(userUpdateRequestDto.getFirstName());
             user.setLastName(userUpdateRequestDto.getLastName());
 
-            var passwordCred = getCredentialRepresentation(userUpdateRequestDto.getPassword());
-            userResource.resetPassword(passwordCred);
+            CredentialRepresentation passwordCred;
+            if (!userUpdateRequestDto.getPassword().isBlank()){
+                passwordCred = getCredentialRepresentation(userUpdateRequestDto.getPassword());
+                userResource.resetPassword(passwordCred);
+            }
 
             usersResource.get(userId).update(user);
 

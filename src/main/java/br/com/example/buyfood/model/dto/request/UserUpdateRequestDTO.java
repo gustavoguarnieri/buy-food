@@ -17,7 +17,6 @@ public class UserUpdateRequestDTO {
     private String nickName;
     @NotBlank
     private String phone;
-    @NotBlank
     private String password;
     private Role role;
 }
