@@ -53,6 +53,12 @@ public class EstablishmentService {
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
 
+    public List<EstablishmentResponseDTO> getMyEstablishmentList() {
+        return establishmentRepository.findAllByAuditCreatedBy(new UserService().getUserId().orElse("-1")).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     public EstablishmentResponseDTO createEstablishment(EstablishmentRequestDTO establishmentRequestDto) {
         var convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
         return convertToDto(establishmentRepository.save(convertedEstablishmentEntity));

@@ -67,6 +67,22 @@ public class EstablishmentController {
         return establishmentResponseDto;
     }
 
+    @GetMapping("/mine")
+    @ApiOperation(value = "Returns my establishment")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns my establishment",
+                    response = EstablishmentResponseDTO.class),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public List<EstablishmentResponseDTO> getMyEstablishmentList() {
+        log.info("getMyEstablishmentList: starting to consult my establishment");
+        var establishmentResponseDto = establishmentService.getMyEstablishmentList();
+        log.info("getMyEstablishmentList: finished to consult my establishment");
+        return establishmentResponseDto;
+    }
+
     @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
