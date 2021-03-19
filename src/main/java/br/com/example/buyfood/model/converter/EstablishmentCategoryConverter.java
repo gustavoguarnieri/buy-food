@@ -12,10 +12,10 @@ public class EstablishmentCategoryConverter implements AttributeConverter<Establ
             return null;
 
         switch (attribute) {
-            case RESTAURANT:
+            case RESTAURANTE:
                 return 1;
 
-            case PIZZERIA:
+            case PIZZARIA:
                 return 2;
 
             case BAR:
@@ -33,10 +33,10 @@ public class EstablishmentCategoryConverter implements AttributeConverter<Establ
 
         switch (dbData) {
             case 1:
-                return EstablishmentCategory.RESTAURANT;
+                return EstablishmentCategory.RESTAURANTE;
 
             case 2:
-                return EstablishmentCategory.PIZZERIA;
+                return EstablishmentCategory.PIZZARIA;
 
             case 3:
                 return EstablishmentCategory.BAR;

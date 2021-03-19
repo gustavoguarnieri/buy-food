@@ -17,7 +17,7 @@ public class EstablishmentResponseDTO {
     private String commercialPhone;
     private String mobilePhone;
     private EstablishmentCategory category;
-    private BusinessHoursResponseDTO businessHoursId;
-    private DeliveryTaxResponseDTO deliveryTaxId;
+    private BusinessHoursResponseDTO businessHours;
+    private DeliveryTaxResponseDTO deliveryTax;
     private int status;
 }
