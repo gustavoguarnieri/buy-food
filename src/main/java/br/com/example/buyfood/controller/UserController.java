@@ -35,7 +35,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Secured({"ROLE_ESTABLISMENT", "ROLE_USER", "ROLE_ADMIN"})
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{userId}")
     @ApiOperation(value = "Returns the informed user")
     @ApiResponses(value = {
@@ -82,7 +82,7 @@ public class UserController {
         return userSigninResponse;
     }
 
-    @Secured({"ROLE_ESTABLISMENT", "ROLE_USER", "ROLE_ADMIN"})
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_USER", "ROLE_ADMIN"})
     @PutMapping("/{userId}")
     @ApiOperation(value = "Update user")
     @ApiResponses(value = {
