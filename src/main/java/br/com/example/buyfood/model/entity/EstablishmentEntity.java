@@ -1,14 +1,11 @@
 package br.com.example.buyfood.model.entity;
 
-import br.com.example.buyfood.enums.EstablishmentCategory;
 import br.com.example.buyfood.enums.RegisterStatus;
-import br.com.example.buyfood.model.converter.EstablishmentCategoryConverter;
 import br.com.example.buyfood.model.embeddable.Audit;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,6 +43,9 @@ public class EstablishmentEntity implements Serializable {
     @OneToMany(mappedBy = "establishment", fetch = FetchType.LAZY)
     private List<ProductEntity> product;
 
+    @OneToMany(mappedBy = "establishment")
+    private List<EstablishmentCategoryEntity> category;
+
     @NotBlank
     @Column(nullable = false)
     private String companyName;
@@ -63,9 +63,6 @@ public class EstablishmentEntity implements Serializable {
 
     @NotBlank
     private String mobilePhone;
-
-    @Convert(converter = EstablishmentCategoryConverter.class)
-    private EstablishmentCategory category;
 
     @Column(nullable = false)
     private int status = RegisterStatus.ENABLED.getValue();
