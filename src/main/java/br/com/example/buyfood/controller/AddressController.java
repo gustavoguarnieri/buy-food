@@ -2,8 +2,6 @@ package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.request.DeliveryAddressRequestDTO;
 import br.com.example.buyfood.model.dto.response.DeliveryAddressResponseDTO;
-import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
-import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.service.AddressService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -40,7 +38,7 @@ public class AddressController {
     @ApiOperation(value = "Returns a list of user address")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of user address",
-                    response = ProductResponseDTO.class, responseContainer = "List"),
+                    response = DeliveryAddressResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -56,7 +54,7 @@ public class AddressController {
     @ApiOperation(value = "Returns the informed user address")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed user address",
-                    response = ProductResponseDTO.class),
+                    response = DeliveryAddressResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -72,7 +70,7 @@ public class AddressController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new user address")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created user address", response = ImageResponseDTO.class),
+            @ApiResponse(code = 201, message = "Created user address", response = DeliveryAddressResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),

@@ -44,7 +44,7 @@ public class EstablishmentImageController {
     @ApiOperation(value = "Returns a list of establishment image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of establishment image",
-                    response = ProductResponseDTO.class, responseContainer = "List"),
+                    response = ImageResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -65,7 +65,7 @@ public class EstablishmentImageController {
     @ApiOperation(value = "Returns the informed establishment image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed establishment image",
-                    response = ProductResponseDTO.class),
+                    response = ImageResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -84,8 +84,7 @@ public class EstablishmentImageController {
     @GetMapping("/download-file/{fileName}")
     @ApiOperation(value = "Returns the informed download establishment image")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns the informed download establishment image",
-                    response = ProductResponseDTO.class),
+            @ApiResponse(code = 200, message = "Returns the informed download establishment image"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -129,7 +128,7 @@ public class EstablishmentImageController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new establishment images")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created establishment images", response = ProductResponseDTO.class,
+            @ApiResponse(code = 201, message = "Created establishment images", response = ImageResponseDTO.class,
                     responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),

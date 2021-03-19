@@ -44,7 +44,7 @@ public class ProductImageController {
     @ApiOperation(value = "Returns a list of product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of product image",
-                    response = ProductResponseDTO.class, responseContainer = "List"),
+                    response = ImageResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -65,7 +65,7 @@ public class ProductImageController {
     @ApiOperation(value = "Returns the informed product image")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed product image",
-                    response = ProductResponseDTO.class),
+                    response = ImageResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -84,8 +84,7 @@ public class ProductImageController {
     @GetMapping("/download-file/{fileName}")
     @ApiOperation(value = "Returns the informed download product image")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns the informed download product image",
-                    response = ProductResponseDTO.class),
+            @ApiResponse(code = 200, message = "Returns the informed download product image"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -131,7 +130,7 @@ public class ProductImageController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new product images")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created product images", response = ProductResponseDTO.class,
+            @ApiResponse(code = 201, message = "Created product images", response = ImageResponseDTO.class,
                     responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
