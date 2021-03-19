@@ -5,7 +5,9 @@ import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.EstablishmentRequestDTO;
 import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
+import br.com.example.buyfood.model.entity.EstablishmentCategoryEntity;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
+import br.com.example.buyfood.model.repository.EstablishmentCategoryRepository;
 import br.com.example.buyfood.model.repository.EstablishmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,9 @@ public class EstablishmentService {
 
     @Autowired
     private EstablishmentRepository establishmentRepository;
+
+    @Autowired
+    private EstablishmentCategoryRepository establishmentCategoryRepository;
 
     @Autowired
     private UserService userService;
@@ -60,15 +65,20 @@ public class EstablishmentService {
     }
 
     public EstablishmentResponseDTO createEstablishment(EstablishmentRequestDTO establishmentRequestDto) {
+        getEstablishmentCategoryById(establishmentRequestDto.getCategory().getId());
         var convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
         return convertToDto(establishmentRepository.save(convertedEstablishmentEntity));
     }
 
     public void updateEstablishment(Long id, EstablishmentRequestDTO establishmentRequestDto) {
-        getEstablishmentById(id);
+        var establishmentEntity = getEstablishmentById(id);
+        var establishmentCategoryEntity = getEstablishmentCategoryById(establishmentRequestDto.getCategory().getId());
         var convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
+
+        convertedEstablishmentEntity.setAudit(establishmentEntity.getAudit());
         validUserOwnerOfEstablishment(convertedEstablishmentEntity);
         convertedEstablishmentEntity.setId(id);
+        convertedEstablishmentEntity.setCategory(establishmentCategoryEntity);
         establishmentRepository.save(convertedEstablishmentEntity);
     }
 
@@ -82,6 +92,11 @@ public class EstablishmentService {
     public EstablishmentEntity getEstablishmentById(Long id) {
         return establishmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
+    }
+
+    public EstablishmentCategoryEntity getEstablishmentCategoryById(Long id) {
+        return establishmentCategoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Establishment category not found"));
     }
 
     private List<EstablishmentResponseDTO> getEstablishmentListByStatus(RegisterStatus enabled) {

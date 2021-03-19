@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -43,8 +44,8 @@ public class EstablishmentEntity implements Serializable {
     @OneToMany(mappedBy = "establishment", fetch = FetchType.LAZY)
     private List<ProductEntity> product;
 
-    @OneToMany(mappedBy = "establishment")
-    private List<EstablishmentCategoryEntity> category;
+    @ManyToOne
+    private EstablishmentCategoryEntity category;
 
     @NotBlank
     @Column(nullable = false)
