@@ -20,5 +20,6 @@ public class EstablishmentRequestDTO {
     private String commercialPhone;
     private String mobilePhone;
     private EstablishmentCategoryRequestDTO category;
+    private EstablishmentDeliveryTaxRequestDTO deliveryTax;
     private int status = 1;
 }

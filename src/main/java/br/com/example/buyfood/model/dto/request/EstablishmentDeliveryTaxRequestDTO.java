@@ -8,8 +8,9 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class DeliveryTaxRequestDTO {
+public class EstablishmentDeliveryTaxRequestDTO {
 
+    private Long id;
     @NotNull
     private BigDecimal taxAmount;
     private int status = 1;

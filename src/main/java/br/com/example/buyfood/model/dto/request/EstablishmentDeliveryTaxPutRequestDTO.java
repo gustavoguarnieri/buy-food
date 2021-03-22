@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class DeliveryTaxPutRequestDTO {
+public class EstablishmentDeliveryTaxPutRequestDTO {
 
     @NotNull
     private BigDecimal taxAmount;

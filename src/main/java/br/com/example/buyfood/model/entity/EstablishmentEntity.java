@@ -38,14 +38,14 @@ public class EstablishmentEntity implements Serializable {
     @OneToOne(mappedBy = "establishment", fetch = FetchType.LAZY)
     private BusinessHoursEntity businessHours;
 
-    @OneToOne(mappedBy = "establishment", fetch = FetchType.LAZY)
-    private DeliveryTaxEntity deliveryTax;
-
     @OneToMany(mappedBy = "establishment", fetch = FetchType.LAZY)
     private List<ProductEntity> product;
 
     @ManyToOne
     private EstablishmentCategoryEntity category;
+
+    @ManyToOne
+    private EstablishmentDeliveryTaxEntity delivery;
 
     @NotBlank
     @Column(nullable = false)

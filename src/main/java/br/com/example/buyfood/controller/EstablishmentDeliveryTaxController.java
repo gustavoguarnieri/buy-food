@@ -1,9 +1,9 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.DeliveryTaxPutRequestDTO;
-import br.com.example.buyfood.model.dto.request.DeliveryTaxRequestDTO;
-import br.com.example.buyfood.model.dto.response.DeliveryTaxResponseDTO;
-import br.com.example.buyfood.service.DeliveryTaxService;
+import br.com.example.buyfood.model.dto.request.EstablishmentDeliveryTaxPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.EstablishmentDeliveryTaxRequestDTO;
+import br.com.example.buyfood.model.dto.response.EstablishmentDeliveryTaxResponseDTO;
+import br.com.example.buyfood.service.EstablishmentDeliveryTaxService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -30,30 +30,26 @@ import java.util.List;
 @CrossOrigin
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/establishments/{establishmentId}/delivery-tax")
-public class DeliveryTaxController {
+@RequestMapping("/api/v1/establishments/delivery-tax")
+public class EstablishmentDeliveryTaxController {
 
     @Autowired
-    private DeliveryTaxService deliveryTaxService;
+    private EstablishmentDeliveryTaxService establishmentDeliveryTaxService;
 
     @GetMapping
     @ApiOperation(value = "Returns a list of delivery tax")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of delivery tax",
-                    response = DeliveryTaxResponseDTO.class, responseContainer = "List"),
+                    response = EstablishmentDeliveryTaxResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thRrown"),
     })
-    public List<DeliveryTaxResponseDTO> getDeliveryTaxList(
-            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-            @RequestParam(required = false) Integer status) {
-        log.info("getDeliveryTaxList: starting to consult the list of delivery tax " +
-                "establishmentId={}", establishmentId);
+    public List<EstablishmentDeliveryTaxResponseDTO> getDeliveryTaxList(@RequestParam(required = false) Integer status) {
+        log.info("getDeliveryTaxList: starting to consult the list of delivery tax");
         var deliveryTaxResponseDto =
-                deliveryTaxService.getDeliveryTaxList(establishmentId, status);
-        log.info("getDeliveryTaxList: finished to consult the list of delivery tax " +
-                "establishmentId={}", establishmentId);
+                establishmentDeliveryTaxService.getDeliveryTaxList(status);
+        log.info("getDeliveryTaxList: finished to consult the list of delivery tax");
         return deliveryTaxResponseDto;
     }
 
@@ -61,20 +57,34 @@ public class DeliveryTaxController {
     @ApiOperation(value = "Returns the informed delivery tax")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed delivery tax",
-                    response = DeliveryTaxResponseDTO.class),
+                    response = EstablishmentDeliveryTaxResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public DeliveryTaxResponseDTO getDeliveryTax(
-            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
+    public EstablishmentDeliveryTaxResponseDTO getDeliveryTax(
             @Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId) {
-        log.info("getDeliveryTax: starting to consult delivery tax by establishmentId={}, deliveryTaxId={}",
-                establishmentId, deliveryTaxId);
+        log.info("getDeliveryTax: starting to consult delivery tax by deliveryTaxId={}", deliveryTaxId);
         var deliveryTaxResponseDto =
-                deliveryTaxService.getDeliveryTax(establishmentId, deliveryTaxId);
-        log.info("getDeliveryTax: finished to consult delivery tax by establishmentId={}, deliveryTaxId={}",
-                establishmentId, deliveryTaxId);
+                establishmentDeliveryTaxService.getDeliveryTax(deliveryTaxId);
+        log.info("getDeliveryTax: finished to consult delivery tax by deliveryTaxId={}", deliveryTaxId);
+        return deliveryTaxResponseDto;
+    }
+
+    @GetMapping("/mine")
+    @ApiOperation(value = "Returns my establishment delivery tax")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns my establishment delivery tax",
+                    response = EstablishmentDeliveryTaxResponseDTO.class),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public List<EstablishmentDeliveryTaxResponseDTO> getMyDeliveryTax(@RequestParam(required = false) Integer status) {
+        log.info("getMyDeliveryTax: starting to consult the list of my delivery tax");
+        var deliveryTaxResponseDto =
+                establishmentDeliveryTaxService.getMyDeliveryTaxList(status);
+        log.info("getMyDeliveryTax: finished to consult the list of my delivery tax");
         return deliveryTaxResponseDto;
     }
 
@@ -83,19 +93,17 @@ public class DeliveryTaxController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new delivery tax")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created delivery tax", response = DeliveryTaxResponseDTO.class),
+            @ApiResponse(code = 201, message = "Created delivery tax", response = EstablishmentDeliveryTaxResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public DeliveryTaxResponseDTO createDeliveryTax(
-            @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-            @Valid @RequestBody DeliveryTaxRequestDTO deliveryTaxRequestDto) {
+    public EstablishmentDeliveryTaxResponseDTO createDeliveryTax(@Valid @RequestBody EstablishmentDeliveryTaxRequestDTO establishmentDeliveryTaxRequestDto) {
 
-        log.info("createDeliveryTax: starting to create new delivery tax, establishmentId={}", establishmentId);
-        var deliveryTaxResponseDto = deliveryTaxService
-                .createDeliveryTax(establishmentId, deliveryTaxRequestDto);
-        log.info("createDeliveryTax: finished to create new delivery tax, establishmentId={}", establishmentId);
+        log.info("createDeliveryTax: starting to create new delivery tax");
+        var deliveryTaxResponseDto = establishmentDeliveryTaxService
+                .createDeliveryTax(establishmentDeliveryTaxRequestDto);
+        log.info("createDeliveryTax: finished to create new delivery tax");
         return deliveryTaxResponseDto;
     }
 
@@ -108,15 +116,12 @@ public class DeliveryTaxController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void updateDeliveryTax(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-                                  @Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId,
-                                  @Valid @RequestBody DeliveryTaxPutRequestDTO deliveryTaxPutRequestDto) {
+    public void updateDeliveryTax(@Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId,
+                                  @Valid @RequestBody EstablishmentDeliveryTaxPutRequestDTO establishmentDeliveryTaxPutRequestDto) {
 
-        log.info("updateDeliveryTax: starting update delivery tax establishmentId={}, deliveryTaxId={}",
-                establishmentId, deliveryTaxId);
-        deliveryTaxService.updateDeliveryTax(establishmentId, deliveryTaxId, deliveryTaxPutRequestDto);
-        log.info("updateDeliveryTax: finished update delivery tax establishmentId={}, deliveryTaxId={}",
-                establishmentId, deliveryTaxId);
+        log.info("updateDeliveryTax: starting update delivery tax deliveryTaxId={}", deliveryTaxId);
+        establishmentDeliveryTaxService.updateDeliveryTax(deliveryTaxId, establishmentDeliveryTaxPutRequestDto);
+        log.info("updateDeliveryTax: finished update delivery tax deliveryTaxId={}", deliveryTaxId);
     }
 
     @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
@@ -128,12 +133,9 @@ public class DeliveryTaxController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public void deleteDeliveryTax(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-                                  @Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId) {
-        log.info("deleteDeliveryTax: starting delete delivery tax establishmentId={}, deliveryTaxId={}",
-                establishmentId, deliveryTaxId);
-        deliveryTaxService.deleteDeliveryTax(establishmentId, deliveryTaxId);
-        log.info("deleteDeliveryTax: finished delete delivery tax establishmentId={}, deliveryTaxId={}",
-                establishmentId, deliveryTaxId);
+    public void deleteDeliveryTax(@Valid @NotBlank @PathVariable("deliveryTaxId") Long deliveryTaxId) {
+        log.info("deleteDeliveryTax: starting delete delivery tax deliveryTaxId={}", deliveryTaxId);
+        establishmentDeliveryTaxService.deleteDeliveryTax(deliveryTaxId);
+        log.info("deleteDeliveryTax: finished delete delivery tax deliveryTaxId={}", deliveryTaxId);
     }
 }

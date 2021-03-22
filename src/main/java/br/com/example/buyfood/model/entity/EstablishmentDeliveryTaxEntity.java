@@ -11,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,18 +18,14 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
-@Table(name = "delivery_tax")
-public class DeliveryTaxEntity implements Serializable {
+@Table(name = "establishment_delivery_tax")
+public class EstablishmentDeliveryTaxEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "establishment_id", referencedColumnName = "id")
-    private EstablishmentEntity establishment;
 
     @Column(nullable = false)
     private BigDecimal taxAmount;
