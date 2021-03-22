@@ -18,7 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,7 +32,7 @@ public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public UserEntity(String userId, @NotBlank String firstName, @NotBlank String lastName, String nickName, @NotBlank String email, @NotBlank String phone, LocalDate birthDate, @CPF String cpf, @CNPJ String cnpj, Audit audit) {
+    public UserEntity(String userId, String firstName, String lastName, String nickName, String email, String phone, LocalDate birthDate, @CPF String cpf, @CNPJ String cnpj, Audit audit) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -55,21 +54,17 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<DeliveryAddressEntity> deliveryAddresses;
 
-    @NotBlank
     @Column(nullable = false)
     private String firstName;
 
-    @NotBlank
     @Column(nullable = false)
     private String lastName;
 
     private String nickName;
 
-    @NotBlank
     @Column(nullable = false)
     private String email;
 
-    @NotBlank
     private String phone;
 
     private LocalDate birthDate;

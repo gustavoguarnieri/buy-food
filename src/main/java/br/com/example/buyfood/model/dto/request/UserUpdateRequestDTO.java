@@ -10,12 +10,11 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class UserUpdateRequestDTO {
 
+    private String email;
     @NotBlank
     private String firstName;
-    @NotBlank
     private String lastName;
     private String nickName;
-    @NotBlank
     private String phone;
     private String password;
     private Role role;

@@ -265,6 +265,7 @@ public class UserService {
 
         try {
             userEntity.setUserId(userId);
+            userEntity.setEmail(userUpdateRequestDto.getEmail());
             userEntity.setFirstName(userUpdateRequestDto.getFirstName());
             userEntity.setLastName(userUpdateRequestDto.getLastName());
             userEntity.setNickName(userUpdateRequestDto.getNickName());
