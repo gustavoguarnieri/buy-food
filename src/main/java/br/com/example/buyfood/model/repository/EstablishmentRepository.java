@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface EstablishmentRepository extends JpaRepository<EstablishmentEntity, Long> {
     List<EstablishmentEntity> findAllByStatus(int status);
     List<EstablishmentEntity> findAllByAuditCreatedBy(String userId);
-    Optional<EstablishmentEntity> findByIdAndStatus(Long id, int status);
+    List<EstablishmentEntity> findAllByAuditCreatedByAndStatus(String userId, int status);
 }

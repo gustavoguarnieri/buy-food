@@ -58,10 +58,23 @@ public class EstablishmentService {
                 .orElseThrow(() -> new NotFoundException("Establishment not found"));
     }
 
-    public List<EstablishmentResponseDTO> getMyEstablishmentList() {
-        return establishmentRepository.findAllByAuditCreatedBy(new UserService().getUserId().orElse("-1")).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<EstablishmentResponseDTO> getMyEstablishmentList(Integer status) {
+
+        if (status == null) {
+            return establishmentRepository.findAllByAuditCreatedBy(new UserService().getUserId().orElse("-1")).stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return getMyEstablishmentListByStatus(RegisterStatus.ENABLED);
+                case 0: {
+                    return getMyEstablishmentListByStatus(RegisterStatus.DISABLED);
+                }
+                default:
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
     }
 
     public EstablishmentResponseDTO createEstablishment(EstablishmentRequestDTO establishmentRequestDto) {
@@ -72,13 +85,17 @@ public class EstablishmentService {
 
     public void updateEstablishment(Long id, EstablishmentRequestDTO establishmentRequestDto) {
         var establishmentEntity = getEstablishmentById(id);
-        var establishmentCategoryEntity = getEstablishmentCategoryById(establishmentRequestDto.getCategory().getId());
+
         var convertedEstablishmentEntity = convertToEntity(establishmentRequestDto);
+
+        if (convertedEstablishmentEntity.getCategory() == null) {
+            convertedEstablishmentEntity.setCategory(establishmentEntity.getCategory());
+        }
 
         convertedEstablishmentEntity.setAudit(establishmentEntity.getAudit());
         validUserOwnerOfEstablishment(convertedEstablishmentEntity);
         convertedEstablishmentEntity.setId(id);
-        convertedEstablishmentEntity.setCategory(establishmentCategoryEntity);
+
         establishmentRepository.save(convertedEstablishmentEntity);
     }
 
@@ -101,6 +118,12 @@ public class EstablishmentService {
 
     private List<EstablishmentResponseDTO> getEstablishmentListByStatus(RegisterStatus enabled) {
         return establishmentRepository.findAllByStatus(enabled.getValue()).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private List<EstablishmentResponseDTO> getMyEstablishmentListByStatus(RegisterStatus enabled) {
+        return establishmentRepository.findAllByAuditCreatedByAndStatus(new UserService().getUserId().orElse("-1"), enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }

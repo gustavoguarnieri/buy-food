@@ -76,9 +76,9 @@ public class EstablishmentController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<EstablishmentResponseDTO> getMyEstablishmentList() {
+    public List<EstablishmentResponseDTO> getMyEstablishmentList(@RequestParam(required = false) Integer status) {
         log.info("getMyEstablishmentList: starting to consult my establishment");
-        var establishmentResponseDto = establishmentService.getMyEstablishmentList();
+        var establishmentResponseDto = establishmentService.getMyEstablishmentList(status);
         log.info("getMyEstablishmentList: finished to consult my establishment");
         return establishmentResponseDto;
     }
