@@ -32,7 +32,7 @@ import java.util.List;
 @CrossOrigin
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/establishments/category")
+@RequestMapping("/api/v1/establishments/categories")
 public class EstablishmentCategoryController {
 
     @Autowired
@@ -49,7 +49,8 @@ public class EstablishmentCategoryController {
     })
     public List<EstablishmentCategoryResponseDTO> getEstablishmentCategoryList(@RequestParam(required = false) Integer status) {
         log.info("getEstablishmentCategoryList: starting to consult the list of establishment category");
-        var establishmentCategoryResponseDtoList = establishmentCategoryService.getEstablishmentCategoryList(status);
+        var establishmentCategoryResponseDtoList =
+                establishmentCategoryService.getEstablishmentCategoryList(status);
         log.info("getEstablishmentCategoryList: finished to consult the list of establishment");
         return establishmentCategoryResponseDtoList;
     }
@@ -65,7 +66,8 @@ public class EstablishmentCategoryController {
     })
     public EstablishmentCategoryResponseDTO getEstablishmentCategory(@Valid @NotBlank @PathVariable("id") Long id) {
         log.info("getEstablishmentCategory: starting to consult establishment category by id={}", id);
-        var establishmentCategoryResponseDto = establishmentCategoryService.getEstablishmentCategory(id);
+        var establishmentCategoryResponseDto =
+                establishmentCategoryService.getEstablishmentCategory(id);
         log.info("getEstablishmentCategory: finished to consult establishment by id={}", id);
         return establishmentCategoryResponseDto;
     }
@@ -83,8 +85,8 @@ public class EstablishmentCategoryController {
     public EstablishmentCategoryResponseDTO createEstablishmentCategory(
             @Valid @RequestBody EstablishmentCategoryRequestDTO establishmentCategoryRequestDto) {
         log.info("createEstablishmentCategory: starting to create new establishment category");
-        var establishmentCategoryResponseDto = establishmentCategoryService
-                .createEstablishmentCategory(establishmentCategoryRequestDto);
+        var establishmentCategoryResponseDto =
+                establishmentCategoryService.createEstablishmentCategory(establishmentCategoryRequestDto);
         log.info("createEstablishmentCategory: finished to create new establishment category");
         return establishmentCategoryResponseDto;
     }
