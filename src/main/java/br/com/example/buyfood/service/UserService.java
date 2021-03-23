@@ -288,7 +288,7 @@ public class UserService {
             user.setLastName(userUpdateRequestDto.getLastName());
 
             CredentialRepresentation passwordCred;
-            if (!userUpdateRequestDto.getPassword().isBlank()){
+            if (!userUpdateRequestDto.getPassword().isBlank()) {
                 passwordCred = getCredentialRepresentation(userUpdateRequestDto.getPassword());
                 userResource.resetPassword(passwordCred);
             }

@@ -10,7 +10,10 @@ import java.util.Optional;
 @Repository
 public interface EstablishmentDeliveryTaxRepository extends JpaRepository<EstablishmentDeliveryTaxEntity, Long> {
     List<EstablishmentDeliveryTaxEntity> findAllByStatus(int status);
+
     Optional<EstablishmentDeliveryTaxEntity> findById(Long deliveryTaxId);
+
     List<EstablishmentDeliveryTaxEntity> findAllByAuditCreatedBy(String userId);
+
     List<EstablishmentDeliveryTaxEntity> findAllByAuditCreatedByAndStatus(String userId, int status);
 }

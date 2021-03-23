@@ -94,7 +94,7 @@ public class OrderController {
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
     public void updateOrder(@Valid @NotBlank @PathVariable("orderId") Long orderId,
-                                    @Valid @RequestBody OrderPutRequestDTO orderPutRequestDto) {
+                            @Valid @RequestBody OrderPutRequestDTO orderPutRequestDto) {
         log.info("updateOrder: starting update order orderId={}", orderId);
         orderService.updateOrder(orderId, orderPutRequestDto);
         log.info("updateOrder: finished update order orderId={}", orderId);
