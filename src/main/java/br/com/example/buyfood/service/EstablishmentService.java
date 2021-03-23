@@ -67,9 +67,9 @@ public class EstablishmentService {
         } else {
             switch (status) {
                 case 1:
-                    return getMyEstablishmentListByStatus(RegisterStatus.ENABLED);
+                    return getMyEstablishmentListByAuditCreatedByAndStatus(RegisterStatus.ENABLED);
                 case 0: {
-                    return getMyEstablishmentListByStatus(RegisterStatus.DISABLED);
+                    return getMyEstablishmentListByAuditCreatedByAndStatus(RegisterStatus.DISABLED);
                 }
                 default:
                     throw new BadRequestException("Status incompatible");
@@ -122,7 +122,7 @@ public class EstablishmentService {
                 .collect(Collectors.toList());
     }
 
-    private List<EstablishmentResponseDTO> getMyEstablishmentListByStatus(RegisterStatus enabled) {
+    private List<EstablishmentResponseDTO> getMyEstablishmentListByAuditCreatedByAndStatus(RegisterStatus enabled) {
         return establishmentRepository.findAllByAuditCreatedByAndStatus(new UserService().getUserId().orElse("-1"), enabled.getValue()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

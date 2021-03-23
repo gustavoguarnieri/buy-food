@@ -67,6 +67,7 @@ public class EstablishmentController {
         return establishmentResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @GetMapping("/mine")
     @ApiOperation(value = "Returns my establishment")
     @ApiResponses(value = {

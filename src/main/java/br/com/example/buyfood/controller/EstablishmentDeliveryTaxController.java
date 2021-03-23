@@ -71,6 +71,7 @@ public class EstablishmentDeliveryTaxController {
         return deliveryTaxResponseDto;
     }
 
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
     @GetMapping("/mine")
     @ApiOperation(value = "Returns my establishment delivery tax")
     @ApiResponses(value = {
