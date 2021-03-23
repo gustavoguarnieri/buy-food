@@ -58,9 +58,9 @@ public class EstablishmentDeliveryTaxService {
         } else {
             switch (status) {
                 case 1:
-                    return getMyDeliveryTaxListByStatus(RegisterStatus.ENABLED);
+                    return getMyDeliveryTaxListByAuditCreatedByAndStatus(RegisterStatus.ENABLED);
                 case 0: {
-                    return getMyDeliveryTaxListByStatus(RegisterStatus.DISABLED);
+                    return getMyDeliveryTaxListByAuditCreatedByAndStatus(RegisterStatus.DISABLED);
                 }
                 default:
                     throw new BadRequestException("Status incompatible");
@@ -97,7 +97,7 @@ public class EstablishmentDeliveryTaxService {
                 .collect(Collectors.toList());
     }
 
-    private List<EstablishmentDeliveryTaxResponseDTO> getMyDeliveryTaxListByStatus(RegisterStatus enabled) {
+    private List<EstablishmentDeliveryTaxResponseDTO> getMyDeliveryTaxListByAuditCreatedByAndStatus(RegisterStatus enabled) {
         return establishmentDeliveryTaxRepository.findAllByAuditCreatedByAndStatus(
                 new UserService().getUserId().orElse("-1"), enabled.getValue()).stream()
                 .map(this::convertToDto)
