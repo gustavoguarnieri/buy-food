@@ -12,10 +12,10 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BusinessHoursResponseDTO {
+public class EstablishmentBusinessHoursResponseDTO {
 
     private Long id;
-    private Long establishmentId;
+    private EstablishmentResponseForBusinessHoursDTO establishment;
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTimeFirstPeriodSunday;

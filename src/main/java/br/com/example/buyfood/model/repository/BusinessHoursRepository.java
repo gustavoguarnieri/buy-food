@@ -17,4 +17,8 @@ public interface BusinessHoursRepository extends JpaRepository<BusinessHoursEnti
     Optional<BusinessHoursEntity> findByEstablishmentAndId(EstablishmentEntity establishment, Long businessHoursId);
 
     Optional<BusinessHoursEntity> findByEstablishment(EstablishmentEntity establishment);
+
+    List<BusinessHoursEntity> findAllByAuditCreatedBy(String userId);
+
+    List<BusinessHoursEntity> findAllByAuditCreatedByAndStatus(String userId, int status);
 }

@@ -6,11 +6,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 @Getter
 @Setter
-public class BusinessHoursPutRequestDTO {
+public class EstablishmentBusinessHoursRequestDTO {
 
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")

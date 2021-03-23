@@ -1,9 +1,10 @@
 package br.com.example.buyfood.controller;
 
-import br.com.example.buyfood.model.dto.request.BusinessHoursPutRequestDTO;
-import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDTO;
-import br.com.example.buyfood.model.dto.response.BusinessHoursResponseDTO;
-import br.com.example.buyfood.service.BusinessHoursService;
+import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursRequestDTO;
+import br.com.example.buyfood.model.dto.response.EstablishmentBusinessHoursResponseDTO;
+import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
+import br.com.example.buyfood.service.EstablishmentBusinessHoursService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -30,77 +31,95 @@ import java.util.List;
 @CrossOrigin
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/establishments/{establishmentId}/business-hours")
-public class BusinessHoursController {
+@RequestMapping("/api/v1/establishments")
+public class EstablishmentBusinessHoursController {
 
     @Autowired
-    private BusinessHoursService businessHoursService;
+    private EstablishmentBusinessHoursService establishmentBusinessHoursService;
 
-    @GetMapping
+    @GetMapping("/{establishmentId}/business-hours")
     @ApiOperation(value = "Returns a list of business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of business hours",
-                    response = BusinessHoursResponseDTO.class, responseContainer = "List"),
+                    response = EstablishmentBusinessHoursResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<BusinessHoursResponseDTO> getBusinessHoursList(
+    public List<EstablishmentBusinessHoursResponseDTO> getBusinessHoursList(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @RequestParam(required = false) Integer status) {
         log.info("getBusinessHoursList: starting to consult the list of business hours, " +
                 "establishmentId={}", establishmentId);
         var businessHoursResponseDtoList =
-                businessHoursService.getBusinessHoursList(establishmentId, status);
+                establishmentBusinessHoursService.getBusinessHoursList(establishmentId, status);
         log.info("getBusinessHoursList: finished to consult the list of business hours, " +
                 "establishmentId={}", establishmentId);
         return businessHoursResponseDtoList;
     }
 
-    @GetMapping("/{businessHoursId}")
+    @GetMapping("/{establishmentId}/business-hours/{businessHoursId}")
     @ApiOperation(value = "Returns the informed business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed business hours",
-                    response = BusinessHoursResponseDTO.class),
+                    response = EstablishmentBusinessHoursResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public BusinessHoursResponseDTO getBusinessHours(
+    public EstablishmentBusinessHoursResponseDTO getBusinessHours(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId) {
         log.info("getBusinessHours: starting to consult business hours by establishmentId={}, businessHoursId={}",
                 establishmentId, businessHoursId);
         var businessHoursResponseDto =
-                businessHoursService.getBusinessHours(establishmentId, businessHoursId);
+                establishmentBusinessHoursService.getBusinessHours(establishmentId, businessHoursId);
         log.info("getBusinessHours: finished to consult business hours by establishmentId={}, businessHoursId={}",
                 establishmentId, businessHoursId);
         return businessHoursResponseDto;
     }
 
     @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create a new business hours")
+    @GetMapping("/business-hours/mine")
+    @ApiOperation(value = "Returns my business-hours establishment")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created business hours", response = BusinessHoursResponseDTO.class),
+            @ApiResponse(code = 200, message = "Returns my business-hours establishment",
+                    response = EstablishmentResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public BusinessHoursResponseDTO createBusinessHours(
+    public List<EstablishmentBusinessHoursResponseDTO> getMyBusinessHoursList(@RequestParam(required = false) Integer status) {
+        log.info("getMyBusinessHoursList: starting to consult my business hours");
+        var businessHoursResponseDtoList =
+                establishmentBusinessHoursService.getMyBusinessHoursList(status);
+        log.info("getMyBusinessHoursList: finished to consult my business hours");
+        return businessHoursResponseDtoList;
+    }
+
+    @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
+    @PostMapping("/{establishmentId}/business-hours")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create a new business hours")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created business hours", response = EstablishmentBusinessHoursResponseDTO.class),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public EstablishmentBusinessHoursResponseDTO createBusinessHours(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-            @Valid @RequestBody BusinessHoursRequestDTO businessHoursRequestDto) {
+            @Valid @RequestBody EstablishmentBusinessHoursRequestDTO establishmentBusinessHoursRequestDto) {
 
         log.info("createBusinessHours: starting to create new business hours, establishmentId={}", establishmentId);
-        var businessHoursResponseDto = businessHoursService
-                .createBusinessHours(establishmentId, businessHoursRequestDto);
+        var businessHoursResponseDto = establishmentBusinessHoursService
+                .createBusinessHours(establishmentId, establishmentBusinessHoursRequestDto);
         log.info("createBusinessHours: finished to create new business hours, establishmentId={}", establishmentId);
         return businessHoursResponseDto;
     }
 
     @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
-    @PutMapping("/{businessHoursId}")
+    @PutMapping("/{establishmentId}/business-hours/{businessHoursId}")
     @ApiOperation(value = "Update business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated business hours"),
@@ -110,17 +129,17 @@ public class BusinessHoursController {
     })
     public void updateBusinessHours(@Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
                                     @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId,
-                                    @Valid @RequestBody BusinessHoursPutRequestDTO businessHoursPutRequestDto) {
+                                    @Valid @RequestBody EstablishmentBusinessHoursPutRequestDTO establishmentBusinessHoursPutRequestDto) {
 
         log.info("updateBusinessHours: starting update business hours establishmentId={}, businessHoursId={}",
                 establishmentId, businessHoursId);
-        businessHoursService.updateBusinessHours(establishmentId, businessHoursId, businessHoursPutRequestDto);
+        establishmentBusinessHoursService.updateBusinessHours(establishmentId, businessHoursId, establishmentBusinessHoursPutRequestDto);
         log.info("updateBusinessHours: finished update business hours establishmentId={}, businessHoursId={}",
                 establishmentId, businessHoursId);
     }
 
     @Secured({"ROLE_ESTABLISHMENT", "ROLE_ADMIN"})
-    @DeleteMapping("/{businessHoursId}")
+    @DeleteMapping("/{establishmentId}/business-hours/{businessHoursId}")
     @ApiOperation(value = "Delete business hours")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Deleted business hours"),
@@ -133,7 +152,7 @@ public class BusinessHoursController {
 
         log.info("deleteBusinessHours: starting delete business hours establishmentId={}, businessHoursId={}",
                 establishmentId, businessHoursId);
-        businessHoursService.deleteBusinessHours(establishmentId, businessHoursId);
+        establishmentBusinessHoursService.deleteBusinessHours(establishmentId, businessHoursId);
         log.info("deleteBusinessHours: finished delete business hours establishmentId={}, businessHoursId={}",
                 establishmentId, businessHoursId);
     }

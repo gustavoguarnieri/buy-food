@@ -7,16 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EstablishmentResponseDTO {
+public class EstablishmentResponseForBusinessHoursDTO {
 
     private Long id;
     private String companyName;
     private String tradingName;
-    private String email;
-    private String commercialPhone;
-    private String mobilePhone;
-    private EstablishmentCategoryResponseDTO category;
-    private EstablishmentBusinessHoursResponseDTO businessHours;
-    private EstablishmentDeliveryTaxResponseDTO deliveryTax;
     private int status;
 }
