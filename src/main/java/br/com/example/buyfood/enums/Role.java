@@ -10,7 +10,8 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum Role {
     ESTABLISHMENT,
-    USER;
+    USER,
+    ADMIN;
 
     public static Stream<Role> stream() {
         return Arrays.stream(Role.values());
