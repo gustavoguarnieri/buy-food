@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class DeliveryAddressRequestDTO {
 
-    @NotBlank
     private String recipientName;
     @NotBlank
     private String zipCode;

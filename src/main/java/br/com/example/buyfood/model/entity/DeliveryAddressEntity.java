@@ -34,8 +34,6 @@ public class DeliveryAddressEntity implements Serializable {
     @JoinColumn(name = "keycloack_user_id", referencedColumnName = "userId")
     private UserEntity user;
 
-    @NotBlank
-    @Column(nullable = false)
     private String recipientName;
 
     @NotBlank
