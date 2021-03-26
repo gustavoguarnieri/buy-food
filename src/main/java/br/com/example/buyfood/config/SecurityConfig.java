@@ -43,6 +43,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/actuator/health").permitAll()
                 .antMatchers("/api/v1/users/create").permitAll()
                 .antMatchers("/api/v1/users/signin").permitAll()
+                .antMatchers("/api/v1/establishments/{establishmentId}/products/{productId}/images/download-file/**").permitAll()
+                .antMatchers("/api/v1/establishments/{establishmentId}/images/download-file/**").permitAll()
                 .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/v1/users/**").hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
                 .antMatchers("/api/v1/establishments/**").hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
