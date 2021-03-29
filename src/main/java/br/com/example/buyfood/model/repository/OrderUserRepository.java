@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
+public interface OrderUserRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findAllByUser(UserEntity user);
 
     List<OrderEntity> findAllByUserAndStatus(UserEntity user, int status);

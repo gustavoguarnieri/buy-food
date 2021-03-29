@@ -2,9 +2,8 @@ package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.request.OrderPutRequestDTO;
 import br.com.example.buyfood.model.dto.request.OrderRequestDTO;
-import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
 import br.com.example.buyfood.model.dto.response.OrderResponseDTO;
-import br.com.example.buyfood.service.OrderService;
+import br.com.example.buyfood.service.OrderUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -31,10 +30,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/users/orders")
-public class OrderController {
+public class OrderUserController {
 
     @Autowired
-    private OrderService orderService;
+    private OrderUserService orderUserService;
 
     @GetMapping
     @ApiOperation(value = "Returns a list of orders")
@@ -47,7 +46,7 @@ public class OrderController {
     })
     public List<OrderResponseDTO> getOrderList(@RequestParam(required = false) Integer status) {
         log.info("getOrderList: starting to consult the list of orders");
-        var orderResponseDtoList = orderService.getOrderList(status);
+        var orderResponseDtoList = orderUserService.getOrderList(status);
         log.info("getOrderList: finished to consult the list of orders");
         return orderResponseDtoList;
     }
@@ -63,7 +62,7 @@ public class OrderController {
     })
     public OrderResponseDTO getOrder(@Valid @NotBlank @PathVariable("orderId") Long orderId) {
         log.info("getOrder: starting to consult order by orderId={}", orderId);
-        var orderResponseDtoList = orderService.getOrder(orderId);
+        var orderResponseDtoList = orderUserService.getOrder(orderId);
         log.info("getOrder: finished to consult order by orderId={}", orderId);
         return orderResponseDtoList;
     }
@@ -80,7 +79,7 @@ public class OrderController {
     public OrderResponseDTO createOrder(
             @Valid @RequestBody OrderRequestDTO orderRequestDto) {
         log.info("createOrder: starting to create new order");
-        var orderResponseDtoList = orderService.createOrder(orderRequestDto);
+        var orderResponseDtoList = orderUserService.createOrder(orderRequestDto);
         log.info("createOrder: finished to create new order");
         return orderResponseDtoList;
     }
@@ -96,7 +95,7 @@ public class OrderController {
     public void updateOrder(@Valid @NotBlank @PathVariable("orderId") Long orderId,
                             @Valid @RequestBody OrderPutRequestDTO orderPutRequestDto) {
         log.info("updateOrder: starting update order orderId={}", orderId);
-        orderService.updateOrder(orderId, orderPutRequestDto);
+        orderUserService.updateOrder(orderId, orderPutRequestDto);
         log.info("updateOrder: finished update order orderId={}", orderId);
     }
 
@@ -110,7 +109,7 @@ public class OrderController {
     })
     public void deleteOrder(@Valid @NotBlank @PathVariable("orderId") Long orderId) {
         log.info("deleteOrder: starting delete order orderId={}", orderId);
-        orderService.deleteOrder(orderId);
+        orderUserService.deleteOrder(orderId);
         log.info("deleteOrder: finished delete order orderId={}", orderId);
     }
 }

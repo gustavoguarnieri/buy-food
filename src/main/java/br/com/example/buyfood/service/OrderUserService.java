@@ -11,7 +11,7 @@ import br.com.example.buyfood.model.entity.OrderEntity;
 import br.com.example.buyfood.model.entity.OrderItemsEntity;
 import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.OrderItemsRepository;
-import br.com.example.buyfood.model.repository.OrderRepository;
+import br.com.example.buyfood.model.repository.OrderUserRepository;
 import br.com.example.buyfood.model.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class OrderService {
+public class OrderUserService {
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderUserRepository orderUserRepository;
 
     @Autowired
     private OrderItemsRepository orderItemsRepository;
@@ -94,7 +94,7 @@ public class OrderService {
             i.setOrder(convertedOrderEntity);
         });
 
-        var orderEntity = orderRepository.save(convertedOrderEntity);
+        var orderEntity = orderUserRepository.save(convertedOrderEntity);
         orderItemsRepository.saveAll(convertedOrderEntity.getItems());
         return convertToDto(orderEntity);
     }
@@ -107,7 +107,7 @@ public class OrderService {
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
         orderEntity.setStatus(orderPutRequestDto.getStatus());
         orderEntity.setPreparationStatus(orderPutRequestDto.getPreparationStatus());
-        orderRepository.save(orderEntity);
+        orderUserRepository.save(orderEntity);
 
         orderPutRequestDto.getItems().forEach(i -> {
             var convertedOrderItemEntity = convertToEntity(i);
@@ -125,19 +125,19 @@ public class OrderService {
         var userEntity = getUserByUserId(getUserId());
         var orderEntity = getOrderByIdAndUser(orderId, userEntity);
         orderEntity.setStatus(RegisterStatus.DISABLED.getValue());
-        orderRepository.save(orderEntity);
+        orderUserRepository.save(orderEntity);
     }
 
     private List<OrderEntity> getOrderListByUserAndStatus(UserEntity user, RegisterStatus enabled) {
-        return orderRepository.findAllByUserAndStatus(user, enabled.getValue());
+        return orderUserRepository.findAllByUserAndStatus(user, enabled.getValue());
     }
 
     private List<OrderEntity> getOrderByUser(UserEntity user) {
-        return orderRepository.findAllByUser(user);
+        return orderUserRepository.findAllByUser(user);
     }
 
     private OrderEntity getOrderByIdAndUser(Long orderId, UserEntity user) {
-        return orderRepository.findByIdAndUser(orderId, user)
+        return orderUserRepository.findByIdAndUser(orderId, user)
                 .orElseThrow(() -> new NotFoundException("User order not found"));
     }
 
