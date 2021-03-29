@@ -10,7 +10,7 @@ import java.util.List;
 public class OrderResponseDTO {
 
     private Long id;
-    private Long establishmentId;
+    private EstablishmentResponseDTO establishment;
     private Long deliveryAddressId;
     private List<OrderItemsResponseDTO> items;
     private String paymentWay;
