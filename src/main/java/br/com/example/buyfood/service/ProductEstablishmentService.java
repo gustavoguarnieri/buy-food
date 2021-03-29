@@ -4,6 +4,7 @@ import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.ProductRequestDTO;
+import br.com.example.buyfood.model.dto.response.Product.EstablishmentProductResponseDTO;
 import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ProductEntity;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ProductService {
+public class ProductEstablishmentService {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -33,7 +34,7 @@ public class ProductService {
     @Autowired
     private UserService userService;
 
-    public List<ProductResponseDTO> getProductList(Long establishmentId, Integer status) {
+    public List<ProductResponseDTO> getProductListByEstablishment(Long establishmentId, Integer status) {
         var establishment = establishmentService.getEstablishmentById(establishmentId);
         if (status == null) {
             return productRepository.findAllByEstablishment(establishment).stream()

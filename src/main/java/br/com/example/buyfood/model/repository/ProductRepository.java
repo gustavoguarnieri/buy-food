@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     List<ProductEntity> findAllByEstablishmentAndStatus(EstablishmentEntity establishment, int status);
 
-    Optional<ProductEntity> findByEstablishmentAndId(EstablishmentEntity establishment, Long productId);
+    List<ProductEntity> findAllByStatus(int status);
 
-    Optional<ProductEntity> findByEstablishment(EstablishmentEntity establishment);
+    Optional<ProductEntity> findByEstablishmentAndId(EstablishmentEntity establishment, Long productId);
 }

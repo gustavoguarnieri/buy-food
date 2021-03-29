@@ -42,7 +42,7 @@ public class OrderService {
     private UserService userService;
 
     @Autowired
-    private ProductService productService;
+    private ProductEstablishmentService productEstablishmentService;
 
     @Autowired
     private AddressService addressService;
@@ -90,7 +90,7 @@ public class OrderService {
         convertedOrderEntity.getItems().forEach(i -> {
             i.setId(null);
             i.setLineCode(count.getAndIncrement());
-            i.setPrice(productService.getProduct(orderRequestDto.getEstablishmentId(), i.getProduct().getId()).getPrice());
+            i.setPrice(productEstablishmentService.getProduct(orderRequestDto.getEstablishmentId(), i.getProduct().getId()).getPrice());
             i.setOrder(convertedOrderEntity);
         });
 
@@ -113,7 +113,7 @@ public class OrderService {
             var convertedOrderItemEntity = convertToEntity(i);
             convertedOrderItemEntity.setOrder(orderEntity);
             convertedOrderItemEntity.setPrice(
-                    productService.getProduct(orderPutRequestDto.getEstablishmentId(),
+                    productEstablishmentService.getProduct(orderPutRequestDto.getEstablishmentId(),
                             i.getProductId()).getPrice()
             );
             convertedOrderItemEntity.setStatus(i.getStatus());

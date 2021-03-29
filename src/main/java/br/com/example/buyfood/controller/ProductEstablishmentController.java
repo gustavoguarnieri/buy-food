@@ -2,7 +2,7 @@ package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.request.ProductRequestDTO;
 import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
-import br.com.example.buyfood.service.ProductService;
+import br.com.example.buyfood.service.ProductEstablishmentService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -30,10 +30,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/establishments/{establishmentId}/products")
-public class ProductController {
+public class ProductEstablishmentController {
 
     @Autowired
-    private ProductService productService;
+    private ProductEstablishmentService productEstablishmentService;
 
     @GetMapping
     @ApiOperation(value = "Returns a list of product")
@@ -44,12 +44,12 @@ public class ProductController {
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
     })
-    public List<ProductResponseDTO> getProductList(
+    public List<ProductResponseDTO> getProductListByEstablishment(
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @RequestParam(required = false) Integer status) {
-        log.info("getProductList: starting to consult the list of product establishmentId={}", establishmentId);
-        var productResponseDtoList = productService.getProductList(establishmentId, status);
-        log.info("getProductList: finished to consult the list of product establishmentId={}", establishmentId);
+        log.info("getProductList: starting to consult the list of product by establishmentId={}", establishmentId);
+        var productResponseDtoList = productEstablishmentService.getProductListByEstablishment(establishmentId, status);
+        log.info("getProductList: finished to consult the list of product by establishmentId={}", establishmentId);
         return productResponseDtoList;
     }
 
@@ -67,7 +67,7 @@ public class ProductController {
             @Valid @NotBlank @PathVariable("productId") Long productId) {
         log.info("getProduct: starting to consult product by establishmentId={}, productId={}",
                 establishmentId, productId);
-        var productResponseDto = productService.getProduct(establishmentId, productId);
+        var productResponseDto = productEstablishmentService.getProduct(establishmentId, productId);
         log.info("getProduct: finished to consult product by establishmentId={}, productId={}",
                 establishmentId, productId);
         return productResponseDto;
@@ -87,7 +87,7 @@ public class ProductController {
             @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
             @Valid @RequestBody ProductRequestDTO productRequestDto) {
         log.info("createProduct: starting to create new product establishmentId={}", establishmentId);
-        var productResponseDto = productService
+        var productResponseDto = productEstablishmentService
                 .createProduct(establishmentId, productRequestDto);
         log.info("createProduct: finished to create new product establishmentId={}", establishmentId);
         return productResponseDto;
@@ -107,7 +107,7 @@ public class ProductController {
                               @Valid @RequestBody ProductRequestDTO productRequestDto) {
         log.info("updateProduct: starting update product establishmentId={}, productId={}",
                 establishmentId, productId);
-        productService.updateProduct(establishmentId, productId, productRequestDto);
+        productEstablishmentService.updateProduct(establishmentId, productId, productRequestDto);
         log.info("updateProduct: finished update product establishmentId={}, productId={}",
                 establishmentId, productId);
     }
@@ -125,7 +125,7 @@ public class ProductController {
                               @Valid @NotBlank @PathVariable("productId") Long productId) {
         log.info("deleteProduct: starting delete product establishmentId={}, productId={}",
                 establishmentId, productId);
-        productService.deleteProduct(establishmentId, productId);
+        productEstablishmentService.deleteProduct(establishmentId, productId);
         log.info("deleteProduct: finished delete product establishmentId={}, productId={}",
                 establishmentId, productId);
     }
