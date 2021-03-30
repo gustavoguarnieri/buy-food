@@ -2,10 +2,14 @@ package br.com.example.buyfood.service;
 
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.NotFoundException;
+import br.com.example.buyfood.model.dto.request.OrderItemsPutRequestDTO;
+import br.com.example.buyfood.model.dto.request.OrderPutRequestDTO;
 import br.com.example.buyfood.model.dto.response.OrderResponseDTO;
 import br.com.example.buyfood.model.entity.OrderEntity;
+import br.com.example.buyfood.model.entity.OrderItemsEntity;
 import br.com.example.buyfood.model.repository.EstablishmentRepository;
 import br.com.example.buyfood.model.repository.OrderEstablishmentRepository;
+import br.com.example.buyfood.model.repository.OrderItemsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,12 @@ public class OrderEstablishmentService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private ProductEstablishmentService productEstablishmentService;
+
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
 
     @Autowired
     private OrderEstablishmentRepository orderEstablishmentRepository;
@@ -63,6 +73,32 @@ public class OrderEstablishmentService {
         }
     }
 
+    public void updateOrder(Long orderId, OrderPutRequestDTO orderPutRequestDto) {
+        var orderEntity = getOrderById(orderId);
+
+        orderEntity.setPaymentWay(orderPutRequestDto.getPaymentWay());
+        orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
+        orderEntity.setStatus(orderPutRequestDto.getStatus());
+        orderEntity.setPreparationStatus(orderPutRequestDto.getPreparationStatus());
+        orderEstablishmentRepository.save(orderEntity);
+
+        orderPutRequestDto.getItems().forEach(i -> {
+            var convertedOrderItemEntity = convertToEntity(i);
+            convertedOrderItemEntity.setOrder(orderEntity);
+            convertedOrderItemEntity.setPrice(
+                    productEstablishmentService.getProduct(orderPutRequestDto.getEstablishmentId(),
+                            i.getProductId()).getPrice()
+            );
+            convertedOrderItemEntity.setStatus(i.getStatus());
+            orderItemsRepository.save(convertedOrderItemEntity);
+        });
+    }
+
+    private OrderEntity getOrderById(Long orderId) {
+        return orderEstablishmentRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
+    }
+
     public OrderResponseDTO getOrder(Long orderId) {
         var establishmentOrder = orderEstablishmentRepository
                 .findById(orderId).orElseThrow(() -> new NotFoundException("User not found"));
@@ -71,5 +107,9 @@ public class OrderEstablishmentService {
 
     private OrderResponseDTO convertToDto(OrderEntity orderEntity) {
         return modelMapper.map(orderEntity, OrderResponseDTO.class);
+    }
+
+    private OrderItemsEntity convertToEntity(OrderItemsPutRequestDTO orderItemsPutRequestDto) {
+        return modelMapper.map(orderItemsPutRequestDto, OrderItemsEntity.class);
     }
 }

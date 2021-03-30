@@ -12,6 +12,7 @@ public class OrderResponseDTO {
     private Long id;
     private EstablishmentResponseDTO establishment;
     private Long deliveryAddressId;
+    private EstablishmentDeliveryTaxResponseDTO delivery;
     private List<OrderItemsResponseDTO> items;
     private String paymentWay;
     private String paymentStatus;
