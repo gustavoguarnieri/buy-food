@@ -24,7 +24,7 @@ services:
       DB_DATABASE: bd_buy_food
       DB_USER: admin
       DB_PASSWORD: masterkey
-      KEYCLOAK_USER: admin
+      KEYCLOAK_USER: admingu
       KEYCLOAK_PASSWORD: Pa55w0rd
     ports:
       - 8080:8080
