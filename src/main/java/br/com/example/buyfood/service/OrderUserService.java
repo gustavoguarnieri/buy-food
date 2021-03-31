@@ -79,7 +79,7 @@ public class OrderUserService {
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDto) {
         var userEntity = getUserByUserId(getUserId());
         var deliveryAddress =
-                addressService.getUserAddressByIdAndUser(orderRequestDto.getDeliveryAddressId(), userEntity);
+                addressService.getUserAddressById(orderRequestDto.getDeliveryAddressId());
 
         var convertedOrderEntity = convertToEntity(orderRequestDto);
         convertedOrderEntity.setId(null);

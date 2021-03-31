@@ -51,9 +51,6 @@ public class UserEntity implements Serializable {
 
     private String userId;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<DeliveryAddressEntity> deliveryAddresses;
-
     @Column(nullable = false)
     private String firstName;
 

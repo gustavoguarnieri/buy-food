@@ -50,6 +50,22 @@ public class AddressController {
         return addressResponseDto;
     }
 
+    @GetMapping("/addresses/mine")
+    @ApiOperation(value = "Returns a list of user address")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns a list of my user address",
+                    response = DeliveryAddressResponseDTO.class, responseContainer = "List"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public List<DeliveryAddressResponseDTO> getUserAddressMineList(@RequestParam(required = false) Integer status) {
+        log.info("getUserAddressList: starting to consult the list of user address");
+        var addressResponseDto = addressService.getMyUserAddressList(status);
+        log.info("getUserAddressList: finished to consult the list of user address");
+        return addressResponseDto;
+    }
+
     @GetMapping("/address/{addressId}")
     @ApiOperation(value = "Returns the informed user address")
     @ApiResponses(value = {

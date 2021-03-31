@@ -6,9 +6,7 @@ import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.DeliveryAddressRequestDTO;
 import br.com.example.buyfood.model.dto.response.DeliveryAddressResponseDTO;
 import br.com.example.buyfood.model.entity.DeliveryAddressEntity;
-import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.DeliveryAddressRepository;
-import br.com.example.buyfood.model.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,26 +26,48 @@ public class AddressService {
     private DeliveryAddressRepository deliveryAddressRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserService userService;
 
     public List<DeliveryAddressResponseDTO> getUserAddressList(Integer status) {
-        var userEntity = getUserByUserId(getUserId());
-
         if (status == null) {
-            return getUserAddressByUserId(userEntity).stream()
+            return deliveryAddressRepository.findAll().stream()
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
         } else {
             switch (status) {
                 case 1:
-                    return getUserAddressListByUserAndStatus(userEntity, RegisterStatus.ENABLED).stream()
+                    return deliveryAddressRepository
+                            .findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
                             .map(this::convertToDto)
                             .collect(Collectors.toList());
                 case 0: {
-                    return getUserAddressListByUserAndStatus(userEntity, RegisterStatus.DISABLED).stream()
+                    return deliveryAddressRepository
+                            .findAllByStatus(RegisterStatus.DISABLED.getValue()).stream()
+                            .map(this::convertToDto)
+                            .collect(Collectors.toList());
+                }
+                default:
+                    log.error("getUserAddressList: Status incompatible, status:{}", status);
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
+    }
+
+    public List<DeliveryAddressResponseDTO> getMyUserAddressList(Integer status) {
+        if (status == null) {
+            return deliveryAddressRepository.findAllByAuditCreatedBy(getUserId()).stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return deliveryAddressRepository
+                            .findAllByAuditCreatedByAndStatus(getUserId(), RegisterStatus.ENABLED.getValue()).stream()
+                            .map(this::convertToDto)
+                            .collect(Collectors.toList());
+                case 0: {
+                    return deliveryAddressRepository
+                            .findAllByAuditCreatedByAndStatus(getUserId(), RegisterStatus.DISABLED.getValue()).stream()
                             .map(this::convertToDto)
                             .collect(Collectors.toList());
                 }
@@ -59,49 +79,30 @@ public class AddressService {
     }
 
     public DeliveryAddressResponseDTO getUserAddress(Long addressId) {
-        var userEntity = getUserByUserId(getUserId());
-        return convertToDto(getUserAddressByIdAndUser(addressId, userEntity));
+        return convertToDto(getUserAddressById(addressId));
     }
 
     public DeliveryAddressResponseDTO createUserAddress(DeliveryAddressRequestDTO deliveryAddressRequestDto) {
         var deliveryAddressEntity = convertToEntity(deliveryAddressRequestDto);
-        deliveryAddressEntity.setUser(getUserByUserId(getUserId()));
         return convertToDto(deliveryAddressRepository.save(deliveryAddressEntity));
     }
 
     public void updateUserAddress(Long addressId, DeliveryAddressRequestDTO deliveryAddressRequestDto) {
-        var userEntity = getUserByUserId(getUserId());
-        getUserAddressByIdAndUser(addressId, userEntity);
-
+        getUserAddressById(addressId);
         var deliveryAddressEntity = convertToEntity(deliveryAddressRequestDto);
-
         deliveryAddressEntity.setId(addressId);
-        deliveryAddressEntity.setUser(userEntity);
         deliveryAddressRepository.save(deliveryAddressEntity);
     }
 
     public void deleteUserAddress(Long addressId) {
-        var userEntity = getUserByUserId(getUserId());
-        var userAddress = getUserAddressByIdAndUser(addressId, userEntity);
+        var userAddress = getUserAddressById(addressId);
         userAddress.setStatus(RegisterStatus.DISABLED.getValue());
         deliveryAddressRepository.save(userAddress);
     }
 
-    public UserEntity getUserByUserId(String userId) {
-        return userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("User not found"));
-    }
-
-    public DeliveryAddressEntity getUserAddressByIdAndUser(Long addressId, UserEntity user) {
-        return deliveryAddressRepository.findByIdAndUser(addressId, user)
-                .orElseThrow(() -> new NotFoundException("User address not found"));
-    }
-
-    private List<DeliveryAddressEntity> getUserAddressByUserId(UserEntity user) {
-        return deliveryAddressRepository.findAllByUser(user);
-    }
-
-    private List<DeliveryAddressEntity> getUserAddressListByUserAndStatus(UserEntity user, RegisterStatus enabled) {
-        return deliveryAddressRepository.findAllByUserAndStatus(user, enabled.getValue());
+    public DeliveryAddressEntity getUserAddressById(Long addressId) {
+        return deliveryAddressRepository.findById(addressId)
+                .orElseThrow(() -> new NotFoundException("Address not found"));
     }
 
     private String getUserId() {
