@@ -59,10 +59,8 @@ public class EstablishmentEntity implements Serializable {
     @Column(nullable = false)
     private String email;
 
-    @NotBlank
     private String commercialPhone;
 
-    @NotBlank
     private String mobilePhone;
 
     @Column(nullable = false)
