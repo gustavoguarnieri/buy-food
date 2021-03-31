@@ -37,7 +37,7 @@ keycloak:
   bearer-only: true
 
 keycloak-custom:
-  admin-user: ${KEYCLOACK_ADMIN_USER:admin}
+  admin-user: ${KEYCLOACK_ADMIN_USER:admingu}
   admin-password: ${KEYCLOACK_ADMIN_PASSWORD:Pa55w0rd}
 
 swagger:
