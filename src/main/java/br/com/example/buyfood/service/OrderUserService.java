@@ -9,10 +9,8 @@ import br.com.example.buyfood.model.dto.request.OrderRequestDTO;
 import br.com.example.buyfood.model.dto.response.OrderResponseDTO;
 import br.com.example.buyfood.model.entity.OrderEntity;
 import br.com.example.buyfood.model.entity.OrderItemsEntity;
-import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.OrderItemsRepository;
 import br.com.example.buyfood.model.repository.OrderUserRepository;
-import br.com.example.buyfood.model.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +34,6 @@ public class OrderUserService {
     private OrderItemsRepository orderItemsRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -48,20 +43,44 @@ public class OrderUserService {
     private AddressService addressService;
 
     public List<OrderResponseDTO> getOrderList(Integer status) {
-        var userEntity = getUserByUserId(getUserId());
-
         if (status == null) {
-            return getOrderByUser(userEntity).stream()
+            return orderUserRepository.findAll().stream()
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
         } else {
             switch (status) {
                 case 1:
-                    return getOrderListByUserAndStatus(userEntity, RegisterStatus.ENABLED).stream()
+                    return orderUserRepository
+                            .findAllByStatus(RegisterStatus.ENABLED.getValue()).stream()
                             .map(this::convertToDto)
                             .collect(Collectors.toList());
                 case 0: {
-                    return getOrderListByUserAndStatus(userEntity, RegisterStatus.DISABLED).stream()
+                    return orderUserRepository
+                            .findAllByStatus(RegisterStatus.DISABLED.getValue()).stream()
+                            .map(this::convertToDto)
+                            .collect(Collectors.toList());
+                }
+                default:
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
+    }
+
+    public List<OrderResponseDTO> getMyOrderList(Integer status) {
+        if (status == null) {
+            return orderUserRepository.findAllByAuditCreatedBy(getUserId()).stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return orderUserRepository
+                            .findAllByAuditCreatedByAndStatus(getUserId(), RegisterStatus.ENABLED.getValue()).stream()
+                            .map(this::convertToDto)
+                            .collect(Collectors.toList());
+                case 0: {
+                    return orderUserRepository
+                            .findAllByAuditCreatedByAndStatus(getUserId(), RegisterStatus.DISABLED.getValue()).stream()
                             .map(this::convertToDto)
                             .collect(Collectors.toList());
                 }
@@ -72,18 +91,15 @@ public class OrderUserService {
     }
 
     public OrderResponseDTO getOrder(Long orderId) {
-        var userEntity = getUserByUserId(getUserId());
-        return convertToDto(getOrderByIdAndUser(orderId, userEntity));
+        return convertToDto(getOrderById(orderId));
     }
 
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDto) {
-        var userEntity = getUserByUserId(getUserId());
         var deliveryAddress =
                 addressService.getUserAddressById(orderRequestDto.getDeliveryAddressId());
 
         var convertedOrderEntity = convertToEntity(orderRequestDto);
         convertedOrderEntity.setId(null);
-        convertedOrderEntity.setUser(userEntity);
         convertedOrderEntity.setDeliveryAddress(deliveryAddress);
 
         var count = new AtomicInteger(1);
@@ -100,8 +116,7 @@ public class OrderUserService {
     }
 
     public void updateOrder(Long orderId, OrderPutRequestDTO orderPutRequestDto) {
-        var userEntity = getUserByUserId(getUserId());
-        var orderEntity = getOrderByIdAndUser(orderId, userEntity);
+        var orderEntity = getOrderById(orderId);
 
         orderEntity.setPaymentWay(orderPutRequestDto.getPaymentWay());
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
@@ -122,31 +137,18 @@ public class OrderUserService {
     }
 
     public void deleteOrder(Long orderId) {
-        var userEntity = getUserByUserId(getUserId());
-        var orderEntity = getOrderByIdAndUser(orderId, userEntity);
+        var orderEntity = getOrderById(orderId);
         orderEntity.setStatus(RegisterStatus.DISABLED.getValue());
         orderUserRepository.save(orderEntity);
     }
 
-    private List<OrderEntity> getOrderListByUserAndStatus(UserEntity user, RegisterStatus enabled) {
-        return orderUserRepository.findAllByUserAndStatus(user, enabled.getValue());
-    }
-
-    private List<OrderEntity> getOrderByUser(UserEntity user) {
-        return orderUserRepository.findAllByUser(user);
-    }
-
-    private OrderEntity getOrderByIdAndUser(Long orderId, UserEntity user) {
-        return orderUserRepository.findByIdAndUser(orderId, user)
-                .orElseThrow(() -> new NotFoundException("User order not found"));
+    private OrderEntity getOrderById(Long orderId) {
+        return orderUserRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
     }
 
     private String getUserId() {
         return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
-    }
-
-    public UserEntity getUserByUserId(String userId) {
-        return userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     private OrderResponseDTO convertToDto(OrderEntity orderEntity) {

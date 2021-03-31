@@ -51,6 +51,22 @@ public class OrderUserController {
         return orderResponseDtoList;
     }
 
+    @GetMapping("/mine")
+    @ApiOperation(value = "Returns a list of orders")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns a list of orders",
+                    response = OrderResponseDTO.class, responseContainer = "List"),
+            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+            @ApiResponse(code = 500, message = "An exception was thrown"),
+    })
+    public List<OrderResponseDTO> getMyOrderList(@RequestParam(required = false) Integer status) {
+        log.info("getOrderList: starting to consult the list of orders");
+        var orderResponseDtoList = orderUserService.getMyOrderList(status);
+        log.info("getOrderList: finished to consult the list of orders");
+        return orderResponseDtoList;
+    }
+
     @GetMapping("/{orderId}")
     @ApiOperation(value = "Returns the informed order")
     @ApiResponses(value = {

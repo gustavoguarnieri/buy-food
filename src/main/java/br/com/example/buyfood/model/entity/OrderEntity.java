@@ -36,10 +36,6 @@ public class OrderEntity implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "keycloack_user_id", referencedColumnName = "userId")
-    private UserEntity user;
-
-    @ManyToOne
     @JoinColumn(name = "delivery_address_id", referencedColumnName = "id")
     private DeliveryAddressEntity deliveryAddress;
 
