@@ -20,7 +20,7 @@ public class OrderPutRequestDTO {
     private String paymentWay;
     @NotBlank
     private String paymentStatus;
-    private String preparationStatus;
+    private PreparationStatusRequestDTO preparationStatus;
     private String observation;
     private int status = 1;
 }

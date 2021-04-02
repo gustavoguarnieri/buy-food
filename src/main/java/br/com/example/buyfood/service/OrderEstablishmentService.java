@@ -29,6 +29,9 @@ public class OrderEstablishmentService {
     private ProductEstablishmentService productEstablishmentService;
 
     @Autowired
+    private PreparationStatusService preparationStatusService;
+
+    @Autowired
     private OrderItemsRepository orderItemsRepository;
 
     @Autowired
@@ -79,7 +82,11 @@ public class OrderEstablishmentService {
         orderEntity.setPaymentWay(orderPutRequestDto.getPaymentWay());
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
         orderEntity.setStatus(orderPutRequestDto.getStatus());
-        orderEntity.setPreparationStatus(orderPutRequestDto.getPreparationStatus());
+
+        var preparationStatus =
+                preparationStatusService.getPreparationStatusById(orderPutRequestDto.getPreparationStatus().getId());
+        orderEntity.setPreparationStatus(preparationStatus);
+
         orderEstablishmentRepository.save(orderEntity);
 
         orderPutRequestDto.getItems().forEach(i -> {

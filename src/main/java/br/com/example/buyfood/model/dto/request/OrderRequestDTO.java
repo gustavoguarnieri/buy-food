@@ -18,5 +18,6 @@ public class OrderRequestDTO {
     private List<OrderItemsRequestDTO> items;
     @NotBlank
     private String paymentWay;
+    private PreparationStatusRequestDTO preparationStatus;
     private String observation;
 }

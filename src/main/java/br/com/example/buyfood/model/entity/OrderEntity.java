@@ -1,7 +1,6 @@
 package br.com.example.buyfood.model.entity;
 
 import br.com.example.buyfood.enums.PaymentStatus;
-import br.com.example.buyfood.enums.PreparationStatus;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.model.embeddable.Audit;
 import lombok.Getter;
@@ -54,9 +53,8 @@ public class OrderEntity implements Serializable {
     @Column(nullable = false)
     private String paymentStatus = PaymentStatus.PENDING.name();
 
-    @NotBlank
-    @Column(nullable = false)
-    private String preparationStatus = PreparationStatus.PENDING.name();
+    @ManyToOne
+    private PreparationStatusEntity preparationStatus;
 
     private String observation;
 

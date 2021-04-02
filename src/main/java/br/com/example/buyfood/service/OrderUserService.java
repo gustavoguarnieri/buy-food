@@ -28,19 +28,22 @@ public class OrderUserService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private OrderUserRepository orderUserRepository;
-
-    @Autowired
-    private OrderItemsRepository orderItemsRepository;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
     private ProductEstablishmentService productEstablishmentService;
 
     @Autowired
+    private PreparationStatusService preparationStatusService;
+
+    @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private OrderUserRepository orderUserRepository;
+
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
 
     public List<OrderResponseDTO> getOrderList(Integer status) {
         if (status == null) {
@@ -95,12 +98,16 @@ public class OrderUserService {
     }
 
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDto) {
-        var deliveryAddress =
-                addressService.getUserAddressById(orderRequestDto.getDeliveryAddressId());
-
         var convertedOrderEntity = convertToEntity(orderRequestDto);
         convertedOrderEntity.setId(null);
+
+        var deliveryAddress =
+                addressService.getUserAddressById(orderRequestDto.getDeliveryAddressId());
         convertedOrderEntity.setDeliveryAddress(deliveryAddress);
+
+        var preparationStatus =
+                preparationStatusService.getPreparationStatusById(orderRequestDto.getPreparationStatus().getId());
+        convertedOrderEntity.setPreparationStatus(preparationStatus);
 
         var count = new AtomicInteger(1);
         convertedOrderEntity.getItems().forEach(i -> {
@@ -121,7 +128,11 @@ public class OrderUserService {
         orderEntity.setPaymentWay(orderPutRequestDto.getPaymentWay());
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
         orderEntity.setStatus(orderPutRequestDto.getStatus());
-        orderEntity.setPreparationStatus(orderPutRequestDto.getPreparationStatus());
+
+        var preparationStatus =
+                preparationStatusService.getPreparationStatusById(orderPutRequestDto.getPreparationStatus().getId());
+        orderEntity.setPreparationStatus(preparationStatus);
+
         orderUserRepository.save(orderEntity);
 
         orderPutRequestDto.getItems().forEach(i -> {
