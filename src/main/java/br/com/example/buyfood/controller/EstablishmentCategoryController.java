@@ -42,7 +42,7 @@ public class EstablishmentCategoryController {
     @ApiOperation(value = "Returns a list of establishment category")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of establishment category",
-                    response = EstablishmentCategoryService.class, responseContainer = "List"),
+                    response = EstablishmentCategoryResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -59,7 +59,7 @@ public class EstablishmentCategoryController {
     @ApiOperation(value = "Returns the informed establishment category")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns the informed establishment category",
-                    response = EstablishmentCategoryService.class),
+                    response = EstablishmentCategoryResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -77,7 +77,8 @@ public class EstablishmentCategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new establishment category")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created establishment category", response = EstablishmentCategoryResponseDTO.class),
+            @ApiResponse(code = 201, message = "Created establishment category",
+                    response = EstablishmentCategoryResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
