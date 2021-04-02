@@ -94,7 +94,8 @@ public class EstablishmentDeliveryTaxController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new delivery tax")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created delivery tax", response = EstablishmentDeliveryTaxResponseDTO.class),
+            @ApiResponse(code = 201, message = "Created delivery tax",
+                    response = EstablishmentDeliveryTaxResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
