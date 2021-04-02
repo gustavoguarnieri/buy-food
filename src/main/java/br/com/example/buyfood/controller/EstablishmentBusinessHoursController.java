@@ -84,7 +84,7 @@ public class EstablishmentBusinessHoursController {
     @ApiOperation(value = "Returns my business-hours establishment")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns my business-hours establishment",
-                    response = EstablishmentResponseDTO.class),
+                    response = EstablishmentBusinessHoursResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
@@ -102,7 +102,8 @@ public class EstablishmentBusinessHoursController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new business hours")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created business hours", response = EstablishmentBusinessHoursResponseDTO.class),
+            @ApiResponse(code = 201, message = "Created business hours",
+                    response = EstablishmentBusinessHoursResponseDTO.class),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
