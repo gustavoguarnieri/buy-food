@@ -1,7 +1,6 @@
 package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.response.Product.EstablishmentProductResponseDTO;
-import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.service.ProductUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -29,7 +28,7 @@ public class ProductUserController {
     @ApiOperation(value = "Returns a list of product")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Returns a list of product",
-                    response = ProductResponseDTO.class, responseContainer = "List"),
+                    response = EstablishmentProductResponseDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
             @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
             @ApiResponse(code = 500, message = "An exception was thrown"),
