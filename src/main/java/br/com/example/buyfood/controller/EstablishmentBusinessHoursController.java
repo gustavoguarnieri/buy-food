@@ -3,7 +3,6 @@ package br.com.example.buyfood.controller;
 import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursPutRequestDTO;
 import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursRequestDTO;
 import br.com.example.buyfood.model.dto.response.EstablishmentBusinessHoursResponseDTO;
-import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
 import br.com.example.buyfood.service.EstablishmentBusinessHoursService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

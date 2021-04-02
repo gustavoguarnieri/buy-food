@@ -1,10 +1,7 @@
 package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.request.EstablishmentCategoryRequestDTO;
-import br.com.example.buyfood.model.dto.request.EstablishmentRequestDTO;
 import br.com.example.buyfood.model.dto.response.EstablishmentCategoryResponseDTO;
-import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
-import br.com.example.buyfood.model.entity.EstablishmentCategoryEntity;
 import br.com.example.buyfood.service.EstablishmentCategoryService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

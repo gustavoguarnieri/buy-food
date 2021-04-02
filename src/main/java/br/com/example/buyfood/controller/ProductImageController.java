@@ -2,7 +2,6 @@ package br.com.example.buyfood.controller;
 
 import br.com.example.buyfood.model.dto.request.ImageRequestDTO;
 import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
-import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.service.ProductImageService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
