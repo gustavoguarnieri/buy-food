@@ -47,10 +47,10 @@ public class PreparationStatusController {
     public List<PreparationStatusResponseDTO> getPreparationStatusList(
             @RequestParam(required = false) Integer status
     ) {
-        log.info(" preparation status: starting to consult the list of preparation status");
+        log.info("getPreparationStatusList: starting to consult the list of preparation status");
         var preparationStatusResponseDtoList =
                 preparationStatusService.getPreparationStatusList(status);
-        log.info(" preparation status: finished to consult the list preparation status");
+        log.info("getPreparationStatusList: finished to consult the list preparation status");
         return preparationStatusResponseDtoList;
     }
 
