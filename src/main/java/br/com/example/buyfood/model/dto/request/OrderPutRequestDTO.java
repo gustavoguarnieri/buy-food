@@ -16,8 +16,7 @@ public class OrderPutRequestDTO {
     @NotNull
     private Long deliveryAddressId;
     private List<OrderItemsPutRequestDTO> items;
-    @NotBlank
-    private String paymentWay;
+    private PaymentWayRequestDTO paymentWay;
     @NotBlank
     private String paymentStatus;
     private PreparationStatusRequestDTO preparationStatus;

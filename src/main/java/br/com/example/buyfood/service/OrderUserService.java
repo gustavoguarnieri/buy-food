@@ -36,6 +36,9 @@ public class OrderUserService {
     private ProductEstablishmentService productEstablishmentService;
 
     @Autowired
+    private PaymentWayService paymentWayService;
+
+    @Autowired
     private PreparationStatusService preparationStatusService;
 
     @Autowired
@@ -49,6 +52,8 @@ public class OrderUserService {
 
     @Autowired
     private OrderItemsRepository orderItemsRepository;
+
+    private static final String PREPARATION_STATUS_PENDING_NOT_FOUND = "Não existe o status de preparo padrão: (Pendente)";
 
     public List<OrderResponseDTO> getOrderList(Integer status) {
         if (status == null) {
@@ -112,12 +117,16 @@ public class OrderUserService {
 
         var preparationStatusId = orderRequestDto.getPreparationStatus() == null ?
                 preparationStatusRepository.findByDescriptionIgnoreCase(PreparationStatusDefault.PENDENTE.name())
-                        .orElseThrow(() -> new NotFoundException("Não existe o status de preparo padrão: (Pendente)")).getId() :
+                        .orElseThrow(() -> new NotFoundException(PREPARATION_STATUS_PENDING_NOT_FOUND)).getId() :
                 orderRequestDto.getPreparationStatus().getId();
 
         var preparationStatus =
                 preparationStatusService.getPreparationStatusById(preparationStatusId);
         convertedOrderEntity.setPreparationStatus(preparationStatus);
+
+        var paymentWay =
+                paymentWayService.getPreparationStatusById(orderRequestDto.getPaymentWay().getId());
+        convertedOrderEntity.setPaymentWay(paymentWay);
 
         convertedOrderEntity.setStatus(RegisterStatus.ENABLED.getValue());
 
@@ -137,13 +146,17 @@ public class OrderUserService {
     public void updateOrder(Long orderId, OrderPutRequestDTO orderPutRequestDto) {
         var orderEntity = getOrderById(orderId);
 
-        orderEntity.setPaymentWay(orderPutRequestDto.getPaymentWay());
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
-        orderEntity.setStatus(orderPutRequestDto.getStatus());
+
+        var paymentWay =
+                paymentWayService.getPreparationStatusById(orderPutRequestDto.getPaymentWay().getId());
+        orderEntity.setPaymentWay(paymentWay);
 
         var preparationStatus =
                 preparationStatusService.getPreparationStatusById(orderPutRequestDto.getPreparationStatus().getId());
         orderEntity.setPreparationStatus(preparationStatus);
+
+        orderEntity.setStatus(orderPutRequestDto.getStatus());
 
         orderUserRepository.save(orderEntity);
 

@@ -32,6 +32,9 @@ public class OrderEstablishmentService {
     private PreparationStatusService preparationStatusService;
 
     @Autowired
+    private PaymentWayService paymentWayService;
+
+    @Autowired
     private OrderItemsRepository orderItemsRepository;
 
     @Autowired
@@ -79,13 +82,17 @@ public class OrderEstablishmentService {
     public void updateOrder(Long orderId, OrderPutRequestDTO orderPutRequestDto) {
         var orderEntity = getOrderById(orderId);
 
-        orderEntity.setPaymentWay(orderPutRequestDto.getPaymentWay());
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
-        orderEntity.setStatus(orderPutRequestDto.getStatus());
+
+        var paymentWay =
+                paymentWayService.getPreparationStatusById(orderPutRequestDto.getPaymentWay().getId());
+        orderEntity.setPaymentWay(paymentWay);
 
         var preparationStatus =
                 preparationStatusService.getPreparationStatusById(orderPutRequestDto.getPreparationStatus().getId());
         orderEntity.setPreparationStatus(preparationStatus);
+
+        orderEntity.setStatus(orderPutRequestDto.getStatus());
 
         orderEstablishmentRepository.save(orderEntity);
 
