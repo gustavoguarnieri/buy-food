@@ -1,5 +1,6 @@
 package br.com.example.buyfood.service;
 
+import br.com.example.buyfood.enums.PreparationStatus;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -11,6 +12,7 @@ import br.com.example.buyfood.model.entity.OrderEntity;
 import br.com.example.buyfood.model.entity.OrderItemsEntity;
 import br.com.example.buyfood.model.repository.OrderItemsRepository;
 import br.com.example.buyfood.model.repository.OrderUserRepository;
+import br.com.example.buyfood.model.repository.PreparationStatusRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class OrderUserService {
 
     @Autowired
     private OrderUserRepository orderUserRepository;
+
+    @Autowired
+    private PreparationStatusRepository preparationStatusRepository;
 
     @Autowired
     private OrderItemsRepository orderItemsRepository;
@@ -105,8 +110,13 @@ public class OrderUserService {
                 addressService.getUserAddressById(orderRequestDto.getDeliveryAddressId());
         convertedOrderEntity.setDeliveryAddress(deliveryAddress);
 
+        var preparationStatusId = orderRequestDto.getPreparationStatus() == null ?
+                preparationStatusRepository.findByDescriptionIgnoreCase(PreparationStatus.PENDING.name())
+                        .orElseThrow(() -> new NotFoundException("Não existe o status de preparo padrão: (Pendente)")).getId() :
+                orderRequestDto.getPreparationStatus().getId();
+
         var preparationStatus =
-                preparationStatusService.getPreparationStatusById(orderRequestDto.getPreparationStatus().getId());
+                preparationStatusService.getPreparationStatusById(preparationStatusId);
         convertedOrderEntity.setPreparationStatus(preparationStatus);
 
         var count = new AtomicInteger(1);
