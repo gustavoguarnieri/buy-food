@@ -63,8 +63,4 @@ public class OrderEntity implements Serializable {
 
     @Embedded
     private Audit audit = new Audit();
-
-    public BigDecimal getValorTotal() {
-        return items.stream().map(OrderItemsEntity::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 }

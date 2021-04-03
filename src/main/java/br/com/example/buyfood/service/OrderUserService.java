@@ -119,6 +119,8 @@ public class OrderUserService {
                 preparationStatusService.getPreparationStatusById(preparationStatusId);
         convertedOrderEntity.setPreparationStatus(preparationStatus);
 
+        convertedOrderEntity.setStatus(RegisterStatus.ENABLED.getValue());
+
         var count = new AtomicInteger(1);
         convertedOrderEntity.getItems().forEach(i -> {
             i.setId(null);
