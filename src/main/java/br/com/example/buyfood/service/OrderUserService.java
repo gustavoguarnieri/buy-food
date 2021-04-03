@@ -1,6 +1,6 @@
 package br.com.example.buyfood.service;
 
-import br.com.example.buyfood.enums.PreparationStatus;
+import br.com.example.buyfood.enums.PreparationStatusDefault;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -111,7 +111,7 @@ public class OrderUserService {
         convertedOrderEntity.setDeliveryAddress(deliveryAddress);
 
         var preparationStatusId = orderRequestDto.getPreparationStatus() == null ?
-                preparationStatusRepository.findByDescriptionIgnoreCase(PreparationStatus.PENDING.name())
+                preparationStatusRepository.findByDescriptionIgnoreCase(PreparationStatusDefault.PENDENTE.name())
                         .orElseThrow(() -> new NotFoundException("Não existe o status de preparo padrão: (Pendente)")).getId() :
                 orderRequestDto.getPreparationStatus().getId();
 
