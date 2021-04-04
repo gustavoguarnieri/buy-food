@@ -66,7 +66,7 @@ public class PaymentWayController {
     public PaymentWayResponseDTO getPaymentWay(@Valid @NotBlank @PathVariable("id") Long id) {
         log.info("getPaymentWay: starting to consult payment way by id={}", id);
         var paymentWayResponseDtoList =
-                paymentWayService.getPreparationStatus(id);
+                paymentWayService.getPaymentWay(id);
         log.info("getPaymentWay: finished to consult payment way by id={}", id);
         return paymentWayResponseDtoList;
     }

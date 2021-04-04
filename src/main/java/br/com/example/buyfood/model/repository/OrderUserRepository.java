@@ -35,10 +35,12 @@ public interface OrderUserRepository extends JpaRepository<OrderEntity, Long> {
             "group by pse.description")
     List<DashboardStatisticsInterface> findPreparationStatus(LocalDateTime startDate);
 
-    @Query("select o.paymentWay as indice, count(o.id) as value " +
-            "from OrderEntity o " +
-            "where o.audit.creationDate >= :startDate " +
-            "group by o.paymentWay")
+    @Query("select pwe.description as indice, count(o.id) as value " +
+            "from OrderEntity o, " +
+            "PaymentWayEntity pwe " +
+            "where o.paymentWay = pwe.id " +
+            "and o.audit.creationDate >= :startDate " +
+            "group by pwe.description")
     List<DashboardStatisticsInterface> findPaymentWay(LocalDateTime startDate);
 
     @Query("select function('date_format', o.audit.creationDate, '%m/%y') as indice, count(o.id) as value " +

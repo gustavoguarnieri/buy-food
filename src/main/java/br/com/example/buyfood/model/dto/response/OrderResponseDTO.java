@@ -14,7 +14,7 @@ public class OrderResponseDTO {
     private Long deliveryAddressId;
     private EstablishmentDeliveryTaxResponseDTO delivery;
     private List<OrderItemsResponseDTO> items;
-    private String paymentWay;
+    private PaymentWayResponseDTO paymentWay;
     private String paymentStatus;
     private PreparationStatusResponseDTO preparationStatus;
     private String observation;

@@ -43,7 +43,7 @@ public class PaymentWayService {
         }
     }
 
-    public PaymentWayResponseDTO getPreparationStatus(Long id) {
+    public PaymentWayResponseDTO getPaymentWay(Long id) {
         return paymentWayRepository.findById(id)
                 .map(this::convertToDto)
                 .orElseThrow(() -> new NotFoundException("Payment way not found"));
@@ -61,12 +61,12 @@ public class PaymentWayService {
     }
 
     public void deletePaymentWay(Long id) {
-        var convertedPaymentWayEntity = getPreparationStatusById(id);
+        var convertedPaymentWayEntity = getPaymentWayById(id);
         convertedPaymentWayEntity.setStatus(RegisterStatus.DISABLED.getValue());
         paymentWayRepository.save(convertedPaymentWayEntity);
     }
 
-    public PaymentWayEntity getPreparationStatusById(Long id) {
+    public PaymentWayEntity getPaymentWayById(Long id) {
         return paymentWayRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Payment way not found"));
     }

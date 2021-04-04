@@ -125,7 +125,7 @@ public class OrderUserService {
         convertedOrderEntity.setPreparationStatus(preparationStatus);
 
         var paymentWay =
-                paymentWayService.getPreparationStatusById(orderRequestDto.getPaymentWay().getId());
+                paymentWayService.getPaymentWayById(orderRequestDto.getPaymentWayId());
         convertedOrderEntity.setPaymentWay(paymentWay);
 
         convertedOrderEntity.setStatus(RegisterStatus.ENABLED.getValue());
@@ -149,7 +149,7 @@ public class OrderUserService {
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
 
         var paymentWay =
-                paymentWayService.getPreparationStatusById(orderPutRequestDto.getPaymentWay().getId());
+                paymentWayService.getPaymentWayById(orderPutRequestDto.getPaymentWayId());
         orderEntity.setPaymentWay(paymentWay);
 
         var preparationStatus =

@@ -85,7 +85,7 @@ public class OrderEstablishmentService {
         orderEntity.setPaymentStatus(orderPutRequestDto.getPaymentStatus());
 
         var paymentWay =
-                paymentWayService.getPreparationStatusById(orderPutRequestDto.getPaymentWay().getId());
+                paymentWayService.getPaymentWayById(orderPutRequestDto.getPaymentWayId());
         orderEntity.setPaymentWay(paymentWay);
 
         var preparationStatus =
