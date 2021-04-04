@@ -1,6 +1,5 @@
 package br.com.example.buyfood.model.dto.response.Product;
 
-import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
 import br.com.example.buyfood.model.dto.response.IngredientResponseDTO;
 import br.com.example.buyfood.model.dto.response.UploadFileResponseDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
