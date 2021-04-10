@@ -101,7 +101,6 @@ public class EstablishmentService {
 
     public void deleteEstablishment(Long id) {
         var establishmentEntity = getEstablishmentById(id);
-        validUserOwnerOfEstablishment(establishmentEntity);
         establishmentEntity.setStatus(RegisterStatus.DISABLED.getValue());
         establishmentRepository.save(establishmentEntity);
     }
