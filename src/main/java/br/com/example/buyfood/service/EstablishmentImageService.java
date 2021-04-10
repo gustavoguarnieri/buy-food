@@ -14,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -123,6 +125,11 @@ public class EstablishmentImageService {
         establishmentImageRepository.save(imageEntity);
     }
 
+    @Retryable(
+            value = Exception.class,
+            maxAttempts = 6,
+            backoff = @Backoff(delayExpression = "200")
+    )
     public ResponseEntity<Resource> getDownloadEstablishmentImage(Long establishmentId, String fileName,
                                                                   HttpServletRequest request) {
         return fileStorageService.downloadFile(FileStorageFolder.ESTABLISHMENTS, establishmentId, fileName, request);
