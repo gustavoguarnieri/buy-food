@@ -139,10 +139,16 @@ public class UserService {
         if (newRole.isBlank()) {
             return;
         }
-        var realmRoleUser = realmResource.roles().get(newRole).toRepresentation();
-        userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
 
-        removeOldRoles(newRole, realmResource, userResource);
+        RoleRepresentation realmRoleUser;
+        try{
+            log.info("insertNewRole: Avaiable roles: " + realmResource.roles().list());
+            realmRoleUser = realmResource.roles().get(newRole).toRepresentation();
+            userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
+            removeOldRoles(newRole, realmResource, userResource);
+        }catch (Exception ex) {
+            log.error("insertNewRole: An error occurred when get role={}", newRole.toLowerCase(), ex);
+        }
     }
 
     private void removeOldRoles(String newRole, RealmResource realmResource, UserResource userResource) {
@@ -295,7 +301,7 @@ public class UserService {
 
             usersResource.get(userId).update(user);
 
-            insertNewRole(userUpdateRequestDto.getRole().name(), realmResource, userResource);
+            insertNewRole(userUpdateRequestDto.getRole().toLowerCase(), realmResource, userResource);
         } catch (Exception ex) {
             log.error("updateCustomUser: An error occurred when update keycloak user={} ", userEntity.getEmail(), ex);
             throw new BusinessException(ex.getMessage());

@@ -1,6 +1,5 @@
 package br.com.example.buyfood.model.dto.request;
 
-import br.com.example.buyfood.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +16,5 @@ public class UserUpdateRequestDTO {
     private String nickName;
     private String phone;
     private String password;
-    private Role role;
+    private String role;
 }
