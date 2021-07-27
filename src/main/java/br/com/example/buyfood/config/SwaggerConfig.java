@@ -27,6 +27,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("br.com.example.buyfood.controller"))
                 .paths(PathSelectors.any())
                 .build()
+                .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo());
     }
 
@@ -54,7 +55,7 @@ public class SwaggerConfig {
                     "/swagger-resources/**",
                     "/configuration/ui",
                     "/configuration/security",
-                    "/swagger-ui.html",
+                    "/swagger-ui/**",
                     "/webjars/**"
             };
         } else {
