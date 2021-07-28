@@ -26,8 +26,12 @@ import java.util.ArrayList;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    public ApiExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Object> handleApi(ApiException ex, WebRequest request) {
