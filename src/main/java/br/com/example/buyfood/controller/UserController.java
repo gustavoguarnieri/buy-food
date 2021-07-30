@@ -9,6 +9,8 @@ import br.com.example.buyfood.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,94 +25,101 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-
 @CrossOrigin
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Secured({"ROLE_ESTABLISHMENT", "ROLE_USER", "ROLE_ADMIN"})
-    @GetMapping("/{userId}")
-    @ApiOperation(value = "Returns the informed user")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returns the informed user",
-                    response = UserResponseDTO.class),
-            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
-            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
-            @ApiResponse(code = 500, message = "An exception was thrown"),
-    })
-    public UserResponseDTO getUser(@Valid @NotBlank @PathVariable("userId") String userId) {
-        log.info("getUser: starting to consult user by userId={}", userId);
-        var userResponseDTO = userService.getUser(userId);
-        log.info("getUser: finished to consult user by userId={}", userId);
-        return userResponseDTO;
-    }
+  @Secured({"ROLE_ESTABLISHMENT", "ROLE_USER", "ROLE_ADMIN"})
+  @GetMapping("/{userId}")
+  @ApiOperation(value = "Returns the informed user")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Returns the informed user",
+            response = UserResponseDTO.class),
+        @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+        @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+        @ApiResponse(code = 500, message = "An exception was thrown"),
+      })
+  public UserResponseDTO getUser(@Valid @NotBlank @PathVariable("userId") String userId) {
+    log.info("getUser: starting to consult user by userId={}", userId);
+    var userResponseDTO = userService.getUser(userId);
+    log.info("getUser: finished to consult user by userId={}", userId);
+    return userResponseDTO;
+  }
 
-    @ApiOperation(value = "Create a new user")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created user", response = UserCreateResponseDTO.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "An exception was thrown"),
-    })
-    @PostMapping(path = "/create")
-    public UserCreateResponseDTO createUser(@RequestBody UserCreateRequestDTO userCreateRequestDTO) {
-        log.info("createUser: starting create user firstname={} email={}",
-                userCreateRequestDTO.getFirstName(), userCreateRequestDTO.getEmail());
-        var createUserResponse = userService.createUser(userCreateRequestDTO);
-        log.info("createUser: finishing create user firstname={} email={}",
-                userCreateRequestDTO.getFirstName(), userCreateRequestDTO.getEmail());
-        return createUserResponse;
-    }
+  @ApiOperation(value = "Create a new user")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 201, message = "Created user", response = UserCreateResponseDTO.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "An exception was thrown"),
+      })
+  @PostMapping(path = "/create")
+  public UserCreateResponseDTO createUser(@RequestBody UserCreateRequestDTO userCreateRequestDTO) {
+    log.info(
+        "createUser: starting create user firstname={} email={}",
+        userCreateRequestDTO.getFirstName(),
+        userCreateRequestDTO.getEmail());
+    var createUserResponse = userService.createUser(userCreateRequestDTO);
+    log.info(
+        "createUser: finishing create user firstname={} email={}",
+        userCreateRequestDTO.getFirstName(),
+        userCreateRequestDTO.getEmail());
+    return createUserResponse;
+  }
 
-    @ApiOperation(value = "Signin")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = AccessTokenResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "An exception was thrown"),
-    })
-    @PostMapping(path = "/signin")
-    public AccessTokenResponse signin(@RequestBody UserSigninRequestDTO userSignin) {
-        log.info("signin: starting signin user email={}", userSignin.getEmail());
-        var userSigninResponse = userService.signin(userSignin);
-        log.info("signin: finishing signin user email={}", userSignin.getEmail());
-        return userSigninResponse;
-    }
+  @ApiOperation(value = "Signin")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 200, message = "OK", response = AccessTokenResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "An exception was thrown"),
+      })
+  @PostMapping(path = "/signin")
+  public AccessTokenResponse signin(@RequestBody UserSigninRequestDTO userSignin) {
+    log.info("signin: starting signin user email={}", userSignin.getEmail());
+    var userSigninResponse = userService.signin(userSignin);
+    log.info("signin: finishing signin user email={}", userSignin.getEmail());
+    return userSigninResponse;
+  }
 
-    @Secured({"ROLE_ESTABLISHMENT", "ROLE_USER", "ROLE_ADMIN"})
-    @PutMapping("/{userId}")
-    @ApiOperation(value = "Update user")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Updated user"),
-            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
-            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
-            @ApiResponse(code = 500, message = "An exception was thrown"),
-    })
-    public void updateUser(@Valid @NotBlank @PathVariable("userId") String userId,
-                           @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDto) {
-        log.info("updateUser: starting update user userId={}", userId);
-        userService.updateCustomUser(userId, userUpdateRequestDto);
-        log.info("updateUser: finished update user userId={}", userId);
-    }
+  @Secured({"ROLE_ESTABLISHMENT", "ROLE_USER", "ROLE_ADMIN"})
+  @PutMapping("/{userId}")
+  @ApiOperation(value = "Update user")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 200, message = "Updated user"),
+        @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+        @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+        @ApiResponse(code = 500, message = "An exception was thrown"),
+      })
+  public void updateUser(
+      @Valid @NotBlank @PathVariable("userId") String userId,
+      @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDto) {
+    log.info("updateUser: starting update user userId={}", userId);
+    userService.updateCustomUser(userId, userUpdateRequestDto);
+    log.info("updateUser: finished update user userId={}", userId);
+  }
 
-    @Secured("ROLE_ADMIN")
-    @DeleteMapping("/{userId}")
-    @ApiOperation(value = "Delete user")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Deleted user"),
-            @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
-            @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
-            @ApiResponse(code = 500, message = "An exception was thrown"),
-    })
-    public void deleteUser(@Valid @NotBlank @PathVariable("userId") String userId) {
-        log.info("deleteUser: starting delete user userId={}", userId);
-        userService.deleteCustomUser(userId);
-        log.info("deleteUser: finished delete user userId={}", userId);
-    }
+  @Secured("ROLE_ADMIN")
+  @DeleteMapping("/{userId}")
+  @ApiOperation(value = "Delete user")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 200, message = "Deleted user"),
+        @ApiResponse(code = 401, message = "You are unauthorized to access this resource"),
+        @ApiResponse(code = 403, message = "You do not have permission to access this resource"),
+        @ApiResponse(code = 500, message = "An exception was thrown"),
+      })
+  public void deleteUser(@Valid @NotBlank @PathVariable("userId") String userId) {
+    log.info("deleteUser: starting delete user userId={}", userId);
+    userService.deleteCustomUser(userId);
+    log.info("deleteUser: finished delete user userId={}", userId);
+  }
 }
-

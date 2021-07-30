@@ -13,13 +13,13 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponseDTO {
 
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String nickName;
-    private String birthDate;
-    private String phone;
-    private String cpf;
-    private String cnpj;
-    private int status;
+  private String email;
+  private String firstName;
+  private String lastName;
+  private String nickName;
+  private String birthDate;
+  private String phone;
+  private String cpf;
+  private String cnpj;
+  private int status;
 }

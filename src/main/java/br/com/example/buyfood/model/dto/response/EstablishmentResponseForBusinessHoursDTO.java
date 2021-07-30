@@ -9,8 +9,8 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EstablishmentResponseForBusinessHoursDTO {
 
-    private Long id;
-    private String companyName;
-    private String tradingName;
-    private int status;
+  private Long id;
+  private String companyName;
+  private String tradingName;
+  private int status;
 }

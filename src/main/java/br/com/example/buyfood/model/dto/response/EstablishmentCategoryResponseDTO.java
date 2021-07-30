@@ -9,7 +9,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EstablishmentCategoryResponseDTO {
 
-    private Long id;
-    private String description;
-    private int status;
+  private Long id;
+  private String description;
+  private int status;
 }

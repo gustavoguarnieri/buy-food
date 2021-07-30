@@ -16,50 +16,53 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    @Value("${swagger.enabled}")
-    private boolean enableSwagger;
+  @Value("${swagger.enabled}")
+  private boolean enableSwagger;
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(enableSwagger)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("br.com.example.buyfood.controller"))
-                .paths(PathSelectors.any())
-                .build()
-                .useDefaultResponseMessages(false)
-                .apiInfo(apiInfo());
-    }
+  @Bean
+  public Docket api() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .enable(enableSwagger)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("br.com.example.buyfood.controller"))
+        .paths(PathSelectors.any())
+        .build()
+        .useDefaultResponseMessages(false)
+        .apiInfo(apiInfo());
+  }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Buy-Food Rest Api Documentation")
-                .description("All necessary information is in this documentation")
-                .version("1.0.0")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
-                .contact(new Contact("Gustavo", "https://www.linkedin.com/in/gustavo-guarnieri/",
-                        "gustavo.guarnieri@gmail.com"))
-                .build();
-    }
+  private ApiInfo apiInfo() {
+    return new ApiInfoBuilder()
+        .title("Buy-Food Rest Api Documentation")
+        .description("All necessary information is in this documentation")
+        .version("1.0.0")
+        .license("Apache License Version 2.0")
+        .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
+        .contact(
+            new Contact(
+                "Gustavo",
+                "https://www.linkedin.com/in/gustavo-guarnieri/",
+                "gustavo.guarnieri@gmail.com"))
+        .build();
+  }
 
-    public Boolean isSwaggerEnabled() {
-        return enableSwagger;
-    }
+  public Boolean isSwaggerEnabled() {
+    return enableSwagger;
+  }
 
-    public String[] swaggerAuthWhiteList() {
-        if (isSwaggerEnabled()) {
-            return new String[]{
-                    "/v2/api-docs",
-                    "/swagger-resources",
-                    "/swagger-resources/**",
-                    "/configuration/ui",
-                    "/configuration/security",
-                    "/swagger-ui/**",
-                    "/webjars/**"
-            };
-        } else {
-            return new String[]{};
-        }
+  public String[] swaggerAuthWhiteList() {
+    if (isSwaggerEnabled()) {
+      return new String[] {
+        "/v2/api-docs",
+        "/swagger-resources",
+        "/swagger-resources/**",
+        "/configuration/ui",
+        "/configuration/security",
+        "/swagger-ui/**",
+        "/webjars/**"
+      };
+    } else {
+      return new String[] {};
     }
+  }
 }

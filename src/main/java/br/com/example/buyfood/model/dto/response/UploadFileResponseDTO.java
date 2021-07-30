@@ -13,8 +13,8 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UploadFileResponseDTO {
 
-    private String fileName;
-    private String fileUri;
-    private String fileType;
-    private long size;
+  private String fileName;
+  private String fileUri;
+  private String fileType;
+  private long size;
 }

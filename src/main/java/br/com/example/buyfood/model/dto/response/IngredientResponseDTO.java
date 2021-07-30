@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class IngredientResponseDTO {
 
-    private Long id;
-    private String ingredient;
-    private String portion;
-    private int status;
+  private Long id;
+  private String ingredient;
+  private String portion;
+  private int status;
 }

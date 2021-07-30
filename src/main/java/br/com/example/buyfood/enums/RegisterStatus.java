@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RegisterStatus {
-    ENABLED(1),
-    DISABLED(0);
+  ENABLED(1),
+  DISABLED(0);
 
-    private final int value;
+  private final int value;
 }

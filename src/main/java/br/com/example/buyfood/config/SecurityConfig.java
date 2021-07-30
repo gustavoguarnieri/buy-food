@@ -24,97 +24,111 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
-    private SwaggerConfig swaggerConfig;
-    private static final String AUTHORITY_MAPPER_PREFIX = "ROLE_";
+  private SwaggerConfig swaggerConfig;
+  private static final String AUTHORITY_MAPPER_PREFIX = "ROLE_";
 
-    public SecurityConfig(SwaggerConfig swaggerConfig) {
-        this.swaggerConfig = swaggerConfig;
-    }
+  public SecurityConfig(SwaggerConfig swaggerConfig) {
+    this.swaggerConfig = swaggerConfig;
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
 
-        super.configure(http);
+    super.configure(http);
 
-        http.cors().and().csrf().disable().sessionManagement().
-                sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers(swaggerConfig.swaggerAuthWhiteList()).permitAll()
-                .antMatchers("/index.html").permitAll()
-                .antMatchers("/actuator/health").permitAll()
-                .antMatchers("/api/v1/users/create").permitAll()
-                .antMatchers("/api/v1/users/signin").permitAll()
-                .antMatchers("/api/v1/establishments/{establishmentId}/products/{productId}/images/download-file/**").permitAll()
-                .antMatchers("/api/v1/establishments/{establishmentId}/images/download-file/**").permitAll()
-                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/v1/users/**").hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
-                .antMatchers("/api/v1/establishments/**").hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
-                .anyRequest().authenticated();
-    }
+    http.cors()
+        .and()
+        .csrf()
+        .disable()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeRequests()
+        .antMatchers(swaggerConfig.swaggerAuthWhiteList())
+        .permitAll()
+        .antMatchers("/index.html")
+        .permitAll()
+        .antMatchers("/actuator/health")
+        .permitAll()
+        .antMatchers("/api/v1/users/create")
+        .permitAll()
+        .antMatchers("/api/v1/users/signin")
+        .permitAll()
+        .antMatchers(
+            "/api/v1/establishments/{establishmentId}/products/{productId}/images/download-file/**")
+        .permitAll()
+        .antMatchers("/api/v1/establishments/{establishmentId}/images/download-file/**")
+        .permitAll()
+        .antMatchers("/api/v1/admin/**")
+        .hasRole("ADMIN")
+        .antMatchers("/api/v1/users/**")
+        .hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
+        .antMatchers("/api/v1/establishments/**")
+        .hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
+        .anyRequest()
+        .authenticated();
+  }
 
-    @Override
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+  @Override
+  protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
 
-        /**
-         * Returning NullAuthenticatedSessionStrategy means app will not remember session
-         */
+    /** Returning NullAuthenticatedSessionStrategy means app will not remember session */
+    return new NullAuthenticatedSessionStrategy();
+  }
 
-        return new NullAuthenticatedSessionStrategy();
-    }
+  @Autowired
+  public void configureGlobal(AuthenticationManagerBuilder auth) {
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
+    SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
+    grantedAuthorityMapper.setPrefix(AUTHORITY_MAPPER_PREFIX);
+    grantedAuthorityMapper.setConvertToUpperCase(true);
 
-        SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
-        grantedAuthorityMapper.setPrefix(AUTHORITY_MAPPER_PREFIX);
-        grantedAuthorityMapper.setConvertToUpperCase(true);
+    KeycloakAuthenticationProvider keycloakAuthenticationProvider =
+        keycloakAuthenticationProvider();
+    keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
+    auth.authenticationProvider(keycloakAuthenticationProvider);
+  }
 
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider =
-                keycloakAuthenticationProvider();
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
-        auth.authenticationProvider(keycloakAuthenticationProvider);
-    }
+  @Bean
+  public FilterRegistrationBean<?> keycloakAuthenticationProcessingFilterRegistrationBean(
+      KeycloakAuthenticationProcessingFilter filter) {
 
-    @Bean
-    public FilterRegistrationBean<?> keycloakAuthenticationProcessingFilterRegistrationBean(
-            KeycloakAuthenticationProcessingFilter filter) {
+    FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
+    registrationBean.setEnabled(false);
+    return registrationBean;
+  }
 
-        FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
-        registrationBean.setEnabled(false);
-        return registrationBean;
-    }
+  @Bean
+  public FilterRegistrationBean<?> keycloakPreAuthActionsFilterRegistrationBean(
+      KeycloakPreAuthActionsFilter filter) {
 
-    @Bean
-    public FilterRegistrationBean<?> keycloakPreAuthActionsFilterRegistrationBean(
-            KeycloakPreAuthActionsFilter filter) {
+    FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
+    registrationBean.setEnabled(false);
+    return registrationBean;
+  }
 
-        FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
-        registrationBean.setEnabled(false);
-        return registrationBean;
-    }
+  @Bean
+  public FilterRegistrationBean<?> keycloakAuthenticatedActionsFilterBean(
+      KeycloakAuthenticatedActionsFilter filter) {
 
-    @Bean
-    public FilterRegistrationBean<?> keycloakAuthenticatedActionsFilterBean(
-            KeycloakAuthenticatedActionsFilter filter) {
+    FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
+    registrationBean.setEnabled(false);
+    return registrationBean;
+  }
 
-        FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
-        registrationBean.setEnabled(false);
-        return registrationBean;
-    }
+  @Bean
+  public FilterRegistrationBean<?> keycloakSecurityContextRequestFilterBean(
+      KeycloakSecurityContextRequestFilter filter) {
 
-    @Bean
-    public FilterRegistrationBean<?> keycloakSecurityContextRequestFilterBean(
-            KeycloakSecurityContextRequestFilter filter) {
+    FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
+    registrationBean.setEnabled(false);
+    return registrationBean;
+  }
 
-        FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
-        registrationBean.setEnabled(false);
-        return registrationBean;
-    }
-
-    @Bean
-    @Override
-    @ConditionalOnMissingBean(HttpSessionManager.class)
-    protected HttpSessionManager httpSessionManager() {
-        return new HttpSessionManager();
-    }
+  @Bean
+  @Override
+  @ConditionalOnMissingBean(HttpSessionManager.class)
+  protected HttpSessionManager httpSessionManager() {
+    return new HttpSessionManager();
+  }
 }
-

@@ -1,19 +1,18 @@
 package br.com.example.buyfood.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.stream.Stream;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public enum Role {
-    ESTABLISHMENT,
-    USER,
-    ADMIN;
+  ESTABLISHMENT,
+  USER,
+  ADMIN;
 
-    public static Stream<Role> stream() {
-        return Arrays.stream(Role.values());
-    }
+  public static Stream<Role> stream() {
+    return Arrays.stream(Role.values());
+  }
 }

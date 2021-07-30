@@ -2,9 +2,7 @@ package br.com.example.buyfood.model.entity;
 
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.model.embeddable.Audit;
-import lombok.Getter;
-import lombok.Setter;
-
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,7 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -22,24 +21,23 @@ import java.io.Serializable;
 @Table(name = "ingredient")
 public class IngredientEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private ProductEntity product;
+  @ManyToOne
+  @JoinColumn(name = "product_id", referencedColumnName = "id")
+  private ProductEntity product;
 
-    @Column(nullable = false)
-    private String ingredient;
+  @Column(nullable = false)
+  private String ingredient;
 
-    private String portion;
+  private String portion;
 
-    @Column(nullable = false)
-    private int status = RegisterStatus.ENABLED.getValue();
+  @Column(nullable = false)
+  private int status = RegisterStatus.ENABLED.getValue();
 
-    @Embedded
-    private Audit audit = new Audit();
+  @Embedded private Audit audit = new Audit();
 }

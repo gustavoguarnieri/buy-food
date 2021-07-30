@@ -10,12 +10,12 @@ import org.springframework.retry.annotation.EnableRetry;
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
 
-    @Bean
-    public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
+  @Bean
+  public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
+    return new KeycloakSpringBootConfigResolver();
+  }
 }

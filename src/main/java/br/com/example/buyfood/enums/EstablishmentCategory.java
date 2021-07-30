@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum EstablishmentCategory {
-    RESTAURANTE,
-    PIZZARIA,
-    BAR
+  RESTAURANTE,
+  PIZZARIA,
+  BAR
 }

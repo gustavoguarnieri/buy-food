@@ -13,7 +13,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserCreateResponseDTO {
 
-    private String userId;
-    private int statusCode;
-    private String status;
+  private String userId;
+  private int statusCode;
+  private String status;
 }

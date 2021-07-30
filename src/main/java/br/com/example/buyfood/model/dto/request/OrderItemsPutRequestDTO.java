@@ -1,20 +1,16 @@
 package br.com.example.buyfood.model.dto.request;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class OrderItemsPutRequestDTO {
 
-    @NotNull
-    private Long id;
-    private int lineCode;
-    @NotNull
-    private Integer quantity;
-    @NotNull
-    private Long productId;
-    private int status = 1;
+  @NotNull private Long id;
+  private int lineCode;
+  @NotNull private Integer quantity;
+  @NotNull private Long productId;
+  private int status = 1;
 }

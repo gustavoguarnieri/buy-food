@@ -12,11 +12,11 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryResponseDTO {
 
-    private Long id;
-    private String companyName;
-    private String tradingName;
-    private String email;
-    private String commercialPhone;
-    private String mobilePhone;
-    private EstablishmentCategory category;
+  private Long id;
+  private String companyName;
+  private String tradingName;
+  private String email;
+  private String commercialPhone;
+  private String mobilePhone;
+  private EstablishmentCategory category;
 }

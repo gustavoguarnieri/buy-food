@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class OrderItemsResponseDTO {
 
-    private Long id;
-    private int lineCode;
-    private ProductResponseDTO product;
-    private Integer quantity;
-    private int status;
+  private Long id;
+  private int lineCode;
+  private ProductResponseDTO product;
+  private Integer quantity;
+  private int status;
 }

@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum FileStorageFolder {
-    ESTABLISHMENTS("/establishments/"),
-    PRODUCTS("/products/");
+  ESTABLISHMENTS("/establishments/"),
+  PRODUCTS("/products/");
 
-    private final String value;
+  private final String value;
 }
