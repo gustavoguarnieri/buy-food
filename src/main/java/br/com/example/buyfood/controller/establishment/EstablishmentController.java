@@ -1,8 +1,8 @@
-package br.com.example.buyfood.controller;
+package br.com.example.buyfood.controller.establishment;
 
 import br.com.example.buyfood.model.dto.request.EstablishmentRequestDTO;
 import br.com.example.buyfood.model.dto.response.EstablishmentResponseDTO;
-import br.com.example.buyfood.service.EstablishmentService;
+import br.com.example.buyfood.service.establishment.EstablishmentService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

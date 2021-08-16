@@ -1,4 +1,4 @@
-package br.com.example.buyfood.service;
+package br.com.example.buyfood.service.establishment;
 
 import br.com.example.buyfood.enums.FileStorageFolder;
 import br.com.example.buyfood.enums.RegisterStatus;
@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ForbiddenException;
+
+import br.com.example.buyfood.service.FileStorageService;
+import br.com.example.buyfood.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

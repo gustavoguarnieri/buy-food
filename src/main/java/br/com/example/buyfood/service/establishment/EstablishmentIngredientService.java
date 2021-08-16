@@ -1,4 +1,4 @@
-package br.com.example.buyfood.service;
+package br.com.example.buyfood.service.establishment;
 
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
@@ -13,6 +13,9 @@ import br.com.example.buyfood.model.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.ForbiddenException;
+
+import br.com.example.buyfood.service.UserService;
+import br.com.example.buyfood.service.establishment.EstablishmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class IngredientService {
+public class EstablishmentIngredientService {
 
   @Autowired private ModelMapper modelMapper;
 

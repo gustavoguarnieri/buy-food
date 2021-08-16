@@ -1,4 +1,4 @@
-package br.com.example.buyfood.service;
+package br.com.example.buyfood.service.establishment;
 
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -12,6 +12,7 @@ import br.com.example.buyfood.model.repository.OrderEstablishmentRepository;
 import br.com.example.buyfood.model.repository.OrderItemsRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,9 @@ public class OrderEstablishmentService {
 
   @Autowired private ProductEstablishmentService productEstablishmentService;
 
-  @Autowired private PreparationStatusService preparationStatusService;
+  @Autowired private EstablishmentPreparationStatusService preparationStatusService;
 
-  @Autowired private PaymentWayService paymentWayService;
+  @Autowired private EstablishmentPaymentWayService paymentWayService;
 
   @Autowired private OrderItemsRepository orderItemsRepository;
 

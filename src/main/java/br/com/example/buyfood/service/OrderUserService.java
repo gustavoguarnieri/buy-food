@@ -16,6 +16,10 @@ import br.com.example.buyfood.model.repository.PreparationStatusRepository;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import br.com.example.buyfood.service.establishment.EstablishmentPaymentWayService;
+import br.com.example.buyfood.service.establishment.EstablishmentPreparationStatusService;
+import br.com.example.buyfood.service.establishment.ProductEstablishmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +35,9 @@ public class OrderUserService {
 
   @Autowired private ProductEstablishmentService productEstablishmentService;
 
-  @Autowired private PaymentWayService paymentWayService;
+  @Autowired private EstablishmentPaymentWayService paymentWayService;
 
-  @Autowired private PreparationStatusService preparationStatusService;
+  @Autowired private EstablishmentPreparationStatusService preparationStatusService;
 
   @Autowired private AddressService addressService;
 

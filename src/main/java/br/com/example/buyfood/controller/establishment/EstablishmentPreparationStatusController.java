@@ -1,8 +1,8 @@
-package br.com.example.buyfood.controller;
+package br.com.example.buyfood.controller.establishment;
 
 import br.com.example.buyfood.model.dto.request.PreparationStatusRequestDTO;
 import br.com.example.buyfood.model.dto.response.PreparationStatusResponseDTO;
-import br.com.example.buyfood.service.PreparationStatusService;
+import br.com.example.buyfood.service.establishment.EstablishmentPreparationStatusService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/establishments/preparation-status")
-public class PreparationStatusController {
+public class EstablishmentPreparationStatusController {
 
-  @Autowired private PreparationStatusService preparationStatusService;
+  @Autowired private EstablishmentPreparationStatusService preparationStatusService;
 
   @GetMapping
   @ApiOperation(value = "Returns a list of preparation status")

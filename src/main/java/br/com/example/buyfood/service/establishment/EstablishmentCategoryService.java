@@ -1,4 +1,4 @@
-package br.com.example.buyfood.service;
+package br.com.example.buyfood.service.establishment;
 
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;

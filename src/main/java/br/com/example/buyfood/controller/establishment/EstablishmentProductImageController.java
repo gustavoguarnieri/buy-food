@@ -1,8 +1,8 @@
-package br.com.example.buyfood.controller;
+package br.com.example.buyfood.controller.establishment;
 
 import br.com.example.buyfood.model.dto.request.ImageRequestDTO;
 import br.com.example.buyfood.model.dto.response.ImageResponseDTO;
-import br.com.example.buyfood.service.ProductImageService;
+import br.com.example.buyfood.service.establishment.EstablishmentProductImageService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -33,9 +33,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/establishments/{establishmentId}/products/{productId}/images")
-public class ProductImageController {
+public class EstablishmentProductImageController {
 
-  @Autowired private ProductImageService productImageService;
+  @Autowired private EstablishmentProductImageService productImageService;
 
   @GetMapping
   @ApiOperation(value = "Returns a list of product image")

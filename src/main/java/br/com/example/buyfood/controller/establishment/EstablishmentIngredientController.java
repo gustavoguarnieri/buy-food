@@ -1,8 +1,8 @@
-package br.com.example.buyfood.controller;
+package br.com.example.buyfood.controller.establishment;
 
 import br.com.example.buyfood.model.dto.request.IngredientRequestDTO;
 import br.com.example.buyfood.model.dto.response.IngredientResponseDTO;
-import br.com.example.buyfood.service.IngredientService;
+import br.com.example.buyfood.service.establishment.EstablishmentIngredientService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/establishments/{establishmentId}/products/{productId}/ingredients")
-public class IngredientController {
+public class EstablishmentIngredientController {
 
-  @Autowired private IngredientService ingredientService;
+  @Autowired private EstablishmentIngredientService ingredientService;
 
   @GetMapping
   @ApiOperation(value = "Returns a ingredient list of product")

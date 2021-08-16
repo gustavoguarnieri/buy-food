@@ -1,8 +1,8 @@
-package br.com.example.buyfood.controller;
+package br.com.example.buyfood.controller.establishment;
 
 import br.com.example.buyfood.model.dto.request.PaymentWayRequestDTO;
 import br.com.example.buyfood.model.dto.response.PaymentWayResponseDTO;
-import br.com.example.buyfood.service.PaymentWayService;
+import br.com.example.buyfood.service.establishment.EstablishmentPaymentWayService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/establishments/payment-way")
-public class PaymentWayController {
+public class EstablishmentPaymentWayController {
 
-  @Autowired private PaymentWayService paymentWayService;
+  @Autowired private EstablishmentPaymentWayService paymentWayService;
 
   @GetMapping
   @ApiOperation(value = "Returns a list of payment way")
