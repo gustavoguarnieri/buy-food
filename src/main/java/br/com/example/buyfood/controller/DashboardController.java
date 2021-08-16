@@ -19,7 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/dashboard")
 public class DashboardController {
 
-  @Autowired private DashboardService dashboardService;
+  private final DashboardService dashboardService;
+
+  @Autowired
+  public DashboardController(DashboardService dashboardService) {
+    this.dashboardService = dashboardService;
+  }
 
   @GetMapping("/admin/orders-by-month")
   @ApiOperation(value = "Returns a list of orders by month")

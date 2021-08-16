@@ -13,26 +13,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class DashboardService {
 
-  @Autowired private OrderUserRepository orderUserRepository;
+  private final int NINETY_DAYS = 90;
+
+  private final OrderUserRepository orderUserRepository;
+
+  @Autowired
+  public DashboardService(OrderUserRepository orderUserRepository) {
+    this.orderUserRepository = orderUserRepository;
+  }
 
   public List<DashboardStatisticsInterface> getOrdersByMonthList() {
-    return orderUserRepository.findOrdersByMonth(LocalDateTime.now().minusDays(90));
+    return orderUserRepository.findOrdersByMonth(LocalDateTime.now().minusDays(NINETY_DAYS));
   }
 
   public List<DashboardStatisticsInterface> getBillingByMonthList() {
-    return orderUserRepository.findBillingByMonth(LocalDateTime.now().minusDays(90));
+    return orderUserRepository.findBillingByMonth(LocalDateTime.now().minusDays(NINETY_DAYS));
   }
 
   public List<DashboardStatisticsInterface> getPreparationStatusList() {
-    return orderUserRepository.findPreparationStatus(LocalDateTime.now().minusDays(90));
+    return orderUserRepository.findPreparationStatus(LocalDateTime.now().minusDays(NINETY_DAYS));
   }
 
   public List<DashboardStatisticsInterface> getPaymentWayList() {
-    return orderUserRepository.findPaymentWay(LocalDateTime.now().minusDays(90));
+    return orderUserRepository.findPaymentWay(LocalDateTime.now().minusDays(NINETY_DAYS));
   }
 
   public List<DashboardStatisticsInterface> getPaymentDeclinedStatusList() {
     return orderUserRepository.findPaymentDeclinedStatus(
-        LocalDateTime.now().minusDays(90), PaymentStatus.DECLINED.name());
+        LocalDateTime.now().minusDays(NINETY_DAYS), PaymentStatus.DECLINED.name());
   }
 }
