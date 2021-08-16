@@ -27,12 +27,17 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/users/addresses")
 public class AddressController {
 
-  @Autowired private AddressService addressService;
+  private final AddressService addressService;
 
-  @GetMapping("/addresses")
+  @Autowired
+  public AddressController(AddressService addressService) {
+    this.addressService = addressService;
+  }
+
+  @GetMapping
   @ApiOperation(value = "Returns a list of user address")
   @ApiResponses(
       value = {
@@ -53,7 +58,7 @@ public class AddressController {
     return addressResponseDto;
   }
 
-  @GetMapping("/addresses/mine")
+  @GetMapping("/mine")
   @ApiOperation(value = "Returns a list of user address")
   @ApiResponses(
       value = {
@@ -69,12 +74,12 @@ public class AddressController {
   public List<DeliveryAddressResponseDTO> getUserAddressMineList(
       @RequestParam(required = false) Integer status) {
     log.info("getUserAddressList: starting to consult the list of user address");
-    var addressResponseDto = addressService.getMyUserAddressList(status);
+    var addressResponseDto = addressService.getAddressListByCreatedBy(status);
     log.info("getUserAddressList: finished to consult the list of user address");
     return addressResponseDto;
   }
 
-  @GetMapping("/address/{addressId}")
+  @GetMapping("/{addressId}")
   @ApiOperation(value = "Returns the informed user address")
   @ApiResponses(
       value = {
@@ -94,7 +99,7 @@ public class AddressController {
     return addressResponseDto;
   }
 
-  @PostMapping("/address")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @ApiOperation(value = "Create a new user address")
   @ApiResponses(
@@ -115,7 +120,7 @@ public class AddressController {
     return addressResponseDto;
   }
 
-  @PutMapping("/address/{addressId}")
+  @PutMapping("/{addressId}")
   @ApiOperation(value = "Update user address")
   @ApiResponses(
       value = {
@@ -132,7 +137,7 @@ public class AddressController {
     log.info("updateUserAddress: finished update user address by addressId={}", addressId);
   }
 
-  @DeleteMapping("/address/{addressId}")
+  @DeleteMapping("/{addressId}")
   @ApiOperation(value = "Delete user address")
   @ApiResponses(
       value = {

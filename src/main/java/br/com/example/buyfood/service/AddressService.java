@@ -1,12 +1,12 @@
 package br.com.example.buyfood.service;
 
 import br.com.example.buyfood.enums.RegisterStatus;
-import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.DeliveryAddressRequestDTO;
 import br.com.example.buyfood.model.dto.response.DeliveryAddressResponseDTO;
 import br.com.example.buyfood.model.entity.DeliveryAddressEntity;
 import br.com.example.buyfood.model.repository.DeliveryAddressRepository;
+import br.com.example.buyfood.util.StatusValidation;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -18,66 +18,41 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddressService {
 
-  @Autowired private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
 
-  @Autowired private DeliveryAddressRepository deliveryAddressRepository;
+  private final DeliveryAddressRepository deliveryAddressRepository;
 
-  @Autowired private UserService userService;
+  private final UserService userService;
 
-  public List<DeliveryAddressResponseDTO> getUserAddressList(Integer status) {
-    if (status == null) {
-      return deliveryAddressRepository.findAll().stream()
-          .map(this::convertToDto)
-          .collect(Collectors.toList());
-    } else {
-      switch (status) {
-        case 1:
-          return deliveryAddressRepository
-              .findAllByStatus(RegisterStatus.ENABLED.getValue())
-              .stream()
-              .map(this::convertToDto)
-              .collect(Collectors.toList());
-        case 0:
-          {
-            return deliveryAddressRepository
-                .findAllByStatus(RegisterStatus.DISABLED.getValue())
-                .stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-          }
-        default:
-          log.error("getUserAddressList: Status incompatible, status:{}", status);
-          throw new BadRequestException("Status incompatible");
-      }
-    }
+  private final StatusValidation statusValidation;
+
+  @Autowired
+  public AddressService(
+      ModelMapper modelMapper,
+      DeliveryAddressRepository deliveryAddressRepository,
+      UserService userService,
+      StatusValidation statusValidation) {
+    this.modelMapper = modelMapper;
+    this.deliveryAddressRepository = deliveryAddressRepository;
+    this.userService = userService;
+    this.statusValidation = statusValidation;
   }
 
-  public List<DeliveryAddressResponseDTO> getMyUserAddressList(Integer status) {
-    if (status == null) {
-      return deliveryAddressRepository.findAllByAuditCreatedBy(getUserId()).stream()
-          .map(this::convertToDto)
-          .collect(Collectors.toList());
-    } else {
-      switch (status) {
-        case 1:
-          return deliveryAddressRepository
-              .findAllByAuditCreatedByAndStatus(getUserId(), RegisterStatus.ENABLED.getValue())
-              .stream()
-              .map(this::convertToDto)
-              .collect(Collectors.toList());
-        case 0:
-          {
-            return deliveryAddressRepository
-                .findAllByAuditCreatedByAndStatus(getUserId(), RegisterStatus.DISABLED.getValue())
-                .stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-          }
-        default:
-          log.error("getUserAddressList: Status incompatible, status:{}", status);
-          throw new BadRequestException("Status incompatible");
-      }
-    }
+  public List<DeliveryAddressResponseDTO> getUserAddressList(Integer status) {
+    return deliveryAddressRepository
+        .findAllByStatus(statusValidation.getStatusIdentification(status))
+        .stream()
+        .map(this::convertToDto)
+        .collect(Collectors.toList());
+  }
+
+  public List<DeliveryAddressResponseDTO> getAddressListByCreatedBy(Integer status) {
+    return deliveryAddressRepository
+        .findAllByAuditCreatedByAndStatus(
+            getUserId(), statusValidation.getStatusIdentification(status))
+        .stream()
+        .map(this::convertToDto)
+        .collect(Collectors.toList());
   }
 
   public DeliveryAddressResponseDTO getUserAddress(Long addressId) {
