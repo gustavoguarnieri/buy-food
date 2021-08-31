@@ -27,7 +27,6 @@ public class Error {
   @Getter
   @Setter
   public static class Field {
-
     private String name;
     private String message;
 

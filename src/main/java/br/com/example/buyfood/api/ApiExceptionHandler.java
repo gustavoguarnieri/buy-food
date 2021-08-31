@@ -36,7 +36,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleApi(ApiException ex, WebRequest request) {
     var status = HttpStatus.INTERNAL_SERVER_ERROR;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
-
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
   }
 
@@ -44,7 +43,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleBusiness(BusinessException ex, WebRequest request) {
     var status = HttpStatus.BAD_REQUEST;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
-
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
   }
 
@@ -52,7 +50,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
     var status = HttpStatus.NOT_FOUND;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
-
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
   }
 
@@ -60,7 +57,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleFileNotFound(FileNotFoundException ex, WebRequest request) {
     var status = HttpStatus.NOT_FOUND;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
-
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
   }
 
@@ -68,15 +64,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleForbidden(ForbiddenException ex, WebRequest request) {
     var status = HttpStatus.FORBIDDEN;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
-
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
-  public ResponseEntity<Object> handleForbidden(AccessDeniedException ex, WebRequest request) {
+  public ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
     var status = HttpStatus.FORBIDDEN;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
-
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
   }
 
@@ -84,7 +78,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleConflit(ConflitException ex, WebRequest request) {
     var status = HttpStatus.CONFLICT;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
+    return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+  }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Object> handleIllegalArgument(
+      IllegalArgumentException ex, WebRequest request) {
+    var status = HttpStatus.BAD_REQUEST;
+    var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
   }
 

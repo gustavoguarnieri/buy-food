@@ -1,5 +1,6 @@
 package br.com.example.buyfood.service.establishment;
 
+import br.com.example.buyfood.constants.ErrorMessages;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -8,12 +9,12 @@ import br.com.example.buyfood.model.dto.response.ProductResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.ProductEntity;
 import br.com.example.buyfood.model.repository.ProductRepository;
+import br.com.example.buyfood.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.ForbiddenException;
 
-import br.com.example.buyfood.service.UserService;
-import br.com.example.buyfood.service.establishment.EstablishmentService;
+import br.com.example.buyfood.util.StatusValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,32 +24,37 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductEstablishmentService {
 
-  @Autowired private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
 
-  @Autowired private ProductRepository productRepository;
+  private final ProductRepository productRepository;
 
-  @Autowired private EstablishmentService establishmentService;
+  private final EstablishmentService establishmentService;
 
-  @Autowired private UserService userService;
+  private final UserService userService;
 
-  public List<ProductResponseDTO> getProductListByEstablishment(
-      Long establishmentId, Integer status) {
+  private final StatusValidation statusValidation;
+
+  @Autowired
+  public ProductEstablishmentService(ModelMapper modelMapper, ProductRepository productRepository, EstablishmentService establishmentService, UserService userService, StatusValidation statusValidation) {
+    this.modelMapper = modelMapper;
+    this.productRepository = productRepository;
+    this.establishmentService = establishmentService;
+    this.userService = userService;
+    this.statusValidation = statusValidation;
+  }
+
+  public List<ProductResponseDTO> getProductListByEstablishment(Long establishmentId, Integer status) {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
     if (status == null) {
       return productRepository.findAllByEstablishment(establishment).stream()
           .map(this::convertToDto)
           .collect(Collectors.toList());
     } else {
-      switch (status) {
-        case 1:
-          return getProductListByEstablishmentAndStatus(establishment, RegisterStatus.ENABLED);
-        case 0:
-          {
-            return getProductListByEstablishmentAndStatus(establishment, RegisterStatus.DISABLED);
-          }
-        default:
-          throw new BadRequestException("Status incompatible");
-      }
+      return productRepository
+              .findAllByEstablishmentAndStatus(establishment, statusValidation.getStatusIdentification(status))
+              .stream()
+              .map(this::convertToDto)
+              .collect(Collectors.toList());
     }
   }
 
@@ -57,19 +63,17 @@ public class ProductEstablishmentService {
     return productRepository
         .findByEstablishmentAndId(establishment, productId)
         .map(this::convertToDto)
-        .orElseThrow(() -> new NotFoundException("Product not found"));
+        .orElseThrow(() -> new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
   }
 
-  public ProductResponseDTO createProduct(
-      Long establishmentId, ProductRequestDTO productRequestDto) {
+  public ProductResponseDTO createProduct(Long establishmentId, ProductRequestDTO productRequestDto) {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
     var convertedProductEntity = convertToEntity(productRequestDto);
     convertedProductEntity.setEstablishment(establishment);
     return convertToDto(productRepository.save(convertedProductEntity));
   }
 
-  public void updateProduct(
-      Long establishmentId, Long productId, ProductRequestDTO productRequestDto) {
+  public void updateProduct(Long establishmentId, Long productId, ProductRequestDTO productRequestDto) {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
     validUserOwnerOfEstablishment(establishment);
 
@@ -89,27 +93,17 @@ public class ProductEstablishmentService {
   }
 
   public ProductEntity getProductById(Long productId) {
-    return productRepository
-        .findById(productId)
-        .orElseThrow(() -> new NotFoundException("Product not found"));
-  }
-
-  private List<ProductResponseDTO> getProductListByEstablishmentAndStatus(
-      EstablishmentEntity establishment, RegisterStatus enabled) {
-    return productRepository
-        .findAllByEstablishmentAndStatus(establishment, enabled.getValue())
-        .stream()
-        .map(this::convertToDto)
-        .collect(Collectors.toList());
+    return productRepository.findById(productId)
+        .orElseThrow(() -> new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
   }
 
   private String getUserId() {
-    return userService.getUserId().orElseThrow(() -> new NotFoundException("User not found"));
+    return userService.getUserId().orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
   }
 
   private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
     if (!establishmentEntity.getAudit().getCreatedBy().equals(getUserId())) {
-      throw new ForbiddenException("User is not owner of establishment");
+      throw new ForbiddenException(ErrorMessages.USER_IS_NOT_OWNER_OF_ESTABLISHMENT);
     }
   }
 

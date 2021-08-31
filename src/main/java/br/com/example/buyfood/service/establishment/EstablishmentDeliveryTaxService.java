@@ -1,5 +1,6 @@
 package br.com.example.buyfood.service.establishment;
 
+import br.com.example.buyfood.constants.ErrorMessages;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
@@ -8,120 +9,120 @@ import br.com.example.buyfood.model.dto.request.EstablishmentDeliveryTaxRequestD
 import br.com.example.buyfood.model.dto.response.EstablishmentDeliveryTaxResponseDTO;
 import br.com.example.buyfood.model.entity.EstablishmentDeliveryTaxEntity;
 import br.com.example.buyfood.model.repository.EstablishmentDeliveryTaxRepository;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import br.com.example.buyfood.service.UserService;
+import br.com.example.buyfood.util.StatusValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class EstablishmentDeliveryTaxService {
 
-  @Autowired private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-  @Autowired private EstablishmentDeliveryTaxRepository establishmentDeliveryTaxRepository;
+    private final EstablishmentDeliveryTaxRepository establishmentDeliveryTaxRepository;
 
-  public List<EstablishmentDeliveryTaxResponseDTO> getDeliveryTaxList(Integer status) {
-    if (status == null) {
-      return establishmentDeliveryTaxRepository.findAll().stream()
-          .map(this::convertToDto)
-          .collect(Collectors.toList());
-    } else {
-      switch (status) {
-        case 1:
-          return getDeliveryTaxListByStatus(RegisterStatus.ENABLED);
-        case 0:
-          {
-            return getDeliveryTaxListByStatus(RegisterStatus.DISABLED);
-          }
-        default:
-          throw new BadRequestException("Status incompatible");
-      }
+    private final UserService userService;
+
+    private final StatusValidation statusValidation;
+
+    @Autowired
+    public EstablishmentDeliveryTaxService(ModelMapper modelMapper, EstablishmentDeliveryTaxRepository establishmentDeliveryTaxRepository, UserService userService, StatusValidation statusValidation) {
+        this.modelMapper = modelMapper;
+        this.establishmentDeliveryTaxRepository = establishmentDeliveryTaxRepository;
+        this.userService = userService;
+        this.statusValidation = statusValidation;
     }
-  }
 
-  public EstablishmentDeliveryTaxResponseDTO getDeliveryTax(Long deliveryTaxId) {
-    return establishmentDeliveryTaxRepository
-        .findById(deliveryTaxId)
-        .map(this::convertToDto)
-        .orElseThrow(() -> new NotFoundException("Delivery tax not found"));
-  }
-
-  public List<EstablishmentDeliveryTaxResponseDTO> getMyDeliveryTaxList(Integer status) {
-    if (status == null) {
-      return establishmentDeliveryTaxRepository
-          .findAllByAuditCreatedBy(new UserService().getUserId().orElse("-1"))
-          .stream()
-          .map(this::convertToDto)
-          .collect(Collectors.toList());
-    } else {
-      switch (status) {
-        case 1:
-          return getMyDeliveryTaxListByAuditCreatedByAndStatus(RegisterStatus.ENABLED);
-        case 0:
-          {
-            return getMyDeliveryTaxListByAuditCreatedByAndStatus(RegisterStatus.DISABLED);
-          }
-        default:
-          throw new BadRequestException("Status incompatible");
-      }
+    public List<EstablishmentDeliveryTaxResponseDTO> getDeliveryTaxList(Integer status) {
+        if (status == null) {
+            return establishmentDeliveryTaxRepository.findAll().stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            return establishmentDeliveryTaxRepository.findAllByStatus(statusValidation.getStatusIdentification(status))
+                    .stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        }
     }
-  }
 
-  public EstablishmentDeliveryTaxResponseDTO createDeliveryTax(
-      EstablishmentDeliveryTaxRequestDTO establishmentDeliveryTaxRequestDto) {
-    var convertedDeliveryTaxEntity = convertToEntity(establishmentDeliveryTaxRequestDto);
-    return convertToDto(establishmentDeliveryTaxRepository.save(convertedDeliveryTaxEntity));
-  }
+    public EstablishmentDeliveryTaxResponseDTO getDeliveryTax(Long deliveryTaxId) {
+        return establishmentDeliveryTaxRepository
+                .findById(deliveryTaxId)
+                .map(this::convertToDto)
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.DELIVERY_TAX_NOT_FOUND));
+    }
 
-  public void updateDeliveryTax(
-      Long deliveryTaxId,
-      EstablishmentDeliveryTaxPutRequestDTO establishmentDeliveryTaxPutRequestDto) {
-    var convertedDeliveryTaxEntity = convertToEntity(establishmentDeliveryTaxPutRequestDto);
-    convertedDeliveryTaxEntity.setId(deliveryTaxId);
-    establishmentDeliveryTaxRepository.save(convertedDeliveryTaxEntity);
-  }
+    public List<EstablishmentDeliveryTaxResponseDTO> getMyDeliveryTaxList(Integer status) {
+        if (status == null) {
+            return establishmentDeliveryTaxRepository
+                    .findAllByAuditCreatedBy(userService.getUserId().orElse("-1"))
+                    .stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } else {
+            switch (status) {
+                case 1:
+                    return getMyDeliveryTaxListByAuditCreatedByAndStatus(RegisterStatus.ENABLED);
+                case 0: {
+                    return getMyDeliveryTaxListByAuditCreatedByAndStatus(RegisterStatus.DISABLED);
+                }
+                default:
+                    throw new BadRequestException("Status incompatible");
+            }
+        }
+    }
 
-  public void deleteDeliveryTax(Long deliveryTaxId) {
-    var deliveryTaxEntity = getDeliveryTaxById(deliveryTaxId);
-    deliveryTaxEntity.setStatus(RegisterStatus.DISABLED.getValue());
-    establishmentDeliveryTaxRepository.save(deliveryTaxEntity);
-  }
+    public EstablishmentDeliveryTaxResponseDTO createDeliveryTax(
+            EstablishmentDeliveryTaxRequestDTO establishmentDeliveryTaxRequestDto) {
+        var convertedDeliveryTaxEntity = convertToEntity(establishmentDeliveryTaxRequestDto);
+        return convertToDto(establishmentDeliveryTaxRepository.save(convertedDeliveryTaxEntity));
+    }
 
-  public EstablishmentDeliveryTaxEntity getDeliveryTaxById(Long deliveryTaxId) {
-    return establishmentDeliveryTaxRepository
-        .findById(deliveryTaxId)
-        .orElseThrow(() -> new NotFoundException("Delivery tax not found"));
-  }
+    public void updateDeliveryTax(
+            Long deliveryTaxId,
+            EstablishmentDeliveryTaxPutRequestDTO establishmentDeliveryTaxPutRequestDto) {
+        var convertedDeliveryTaxEntity = convertToEntity(establishmentDeliveryTaxPutRequestDto);
+        convertedDeliveryTaxEntity.setId(deliveryTaxId);
+        establishmentDeliveryTaxRepository.save(convertedDeliveryTaxEntity);
+    }
 
-  private List<EstablishmentDeliveryTaxResponseDTO> getDeliveryTaxListByStatus(
-      RegisterStatus enabled) {
-    return establishmentDeliveryTaxRepository.findAllByStatus(enabled.getValue()).stream()
-        .map(this::convertToDto)
-        .collect(Collectors.toList());
-  }
+    public void deleteDeliveryTax(Long deliveryTaxId) {
+        var deliveryTaxEntity = getDeliveryTaxById(deliveryTaxId);
+        deliveryTaxEntity.setStatus(RegisterStatus.DISABLED.getValue());
+        establishmentDeliveryTaxRepository.save(deliveryTaxEntity);
+    }
 
-  private List<EstablishmentDeliveryTaxResponseDTO> getMyDeliveryTaxListByAuditCreatedByAndStatus(
-      RegisterStatus enabled) {
-    return establishmentDeliveryTaxRepository
-        .findAllByAuditCreatedByAndStatus(
-            new UserService().getUserId().orElse("-1"), enabled.getValue())
-        .stream()
-        .map(this::convertToDto)
-        .collect(Collectors.toList());
-  }
+    public EstablishmentDeliveryTaxEntity getDeliveryTaxById(Long deliveryTaxId) {
+        return establishmentDeliveryTaxRepository
+                .findById(deliveryTaxId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.DELIVERY_TAX_NOT_FOUND));
+    }
 
-  private EstablishmentDeliveryTaxResponseDTO convertToDto(
-      EstablishmentDeliveryTaxEntity establishmentDeliveryTaxEntity) {
-    return modelMapper.map(
-        establishmentDeliveryTaxEntity, EstablishmentDeliveryTaxResponseDTO.class);
-  }
+    private List<EstablishmentDeliveryTaxResponseDTO> getMyDeliveryTaxListByAuditCreatedByAndStatus(
+            RegisterStatus enabled) {
+        return establishmentDeliveryTaxRepository
+                .findAllByAuditCreatedByAndStatus(
+                        userService.getUserId().orElse("-1"), enabled.getValue())
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 
-  private EstablishmentDeliveryTaxEntity convertToEntity(Object deliveryTaxRequestDto) {
-    return modelMapper.map(deliveryTaxRequestDto, EstablishmentDeliveryTaxEntity.class);
-  }
+    private EstablishmentDeliveryTaxResponseDTO convertToDto(
+            EstablishmentDeliveryTaxEntity establishmentDeliveryTaxEntity) {
+        return modelMapper.map(
+                establishmentDeliveryTaxEntity, EstablishmentDeliveryTaxResponseDTO.class);
+    }
+
+    private EstablishmentDeliveryTaxEntity convertToEntity(Object deliveryTaxRequestDto) {
+        return modelMapper.map(deliveryTaxRequestDto, EstablishmentDeliveryTaxEntity.class);
+    }
 }

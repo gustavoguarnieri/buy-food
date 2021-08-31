@@ -1,5 +1,6 @@
 package br.com.example.buyfood.model.repository;
 
+import br.com.example.buyfood.model.entity.EstablishmentEntity;
 import br.com.example.buyfood.model.entity.OrderEntity;
 import br.com.example.buyfood.model.interfaces.DashboardStatisticsInterface;
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrderUserRepository extends JpaRepository<OrderEntity, Long> {
+public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
   @Query(
       "select function('date_format', o.audit.creationDate, '%m/%y') as indice, count(o) as value "
@@ -56,7 +57,13 @@ public interface OrderUserRepository extends JpaRepository<OrderEntity, Long> {
 
   List<OrderEntity> findAllByStatus(int status);
 
-  List<OrderEntity> findAllByAuditCreatedBy(String userId);
+  //  List<OrderEntity> findAllByAuditCreatedBy(String userId);
 
   List<OrderEntity> findAllByAuditCreatedByAndStatus(String userId, int status);
+
+  //  List<OrderEntity> findAllByStatus(int status);
+
+  List<OrderEntity> findAllByEstablishment(EstablishmentEntity establishment);
+
+  List<OrderEntity> findAllByEstablishmentAndStatus(EstablishmentEntity establishment, int status);
 }

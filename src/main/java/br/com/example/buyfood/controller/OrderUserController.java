@@ -31,7 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/users/orders")
 public class OrderUserController {
 
-  @Autowired private OrderUserService orderUserService;
+  private final OrderUserService orderUserService;
+
+  @Autowired
+  public OrderUserController(OrderUserService orderUserService) {
+    this.orderUserService = orderUserService;
+  }
 
   @GetMapping
   @ApiOperation(value = "Returns a list of orders")
@@ -68,7 +73,7 @@ public class OrderUserController {
       })
   public List<OrderResponseDTO> getMyOrderList(@RequestParam(required = false) Integer status) {
     log.info("getOrderList: starting to consult the list of orders");
-    var orderResponseDtoList = orderUserService.getMyOrderList(status);
+    var orderResponseDtoList = orderUserService.getOrderListByCreatedBy(status);
     log.info("getOrderList: finished to consult the list of orders");
     return orderResponseDtoList;
   }
