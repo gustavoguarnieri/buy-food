@@ -28,8 +28,27 @@ public class OrderEstablishmentService extends OrderService {
   private final StatusValidation statusValidation;
 
   @Autowired
-  public OrderEstablishmentService(ModelMapper modelMapper, ProductEstablishmentService productEstablishmentService, EstablishmentPreparationStatusService preparationStatusService, EstablishmentPaymentWayService paymentWayService, OrderItemsRepository orderItemsRepository, OrderRepository orderRepository, StatusValidation statusValidation, UserService userService, OrderRepository orderRepository1, EstablishmentRepository establishmentRepository, StatusValidation statusValidation1) {
-    super(modelMapper, productEstablishmentService, preparationStatusService, paymentWayService, orderItemsRepository, orderRepository, statusValidation, userService);
+  public OrderEstablishmentService(
+      ModelMapper modelMapper,
+      ProductEstablishmentService productEstablishmentService,
+      EstablishmentPreparationStatusService preparationStatusService,
+      EstablishmentPaymentWayService paymentWayService,
+      OrderItemsRepository orderItemsRepository,
+      OrderRepository orderRepository,
+      StatusValidation statusValidation,
+      UserService userService,
+      OrderRepository orderRepository1,
+      EstablishmentRepository establishmentRepository,
+      StatusValidation statusValidation1) {
+    super(
+        modelMapper,
+        productEstablishmentService,
+        preparationStatusService,
+        paymentWayService,
+        orderItemsRepository,
+        orderRepository,
+        statusValidation,
+        userService);
     this.orderRepository = orderRepository1;
     this.establishmentRepository = establishmentRepository;
     this.statusValidation = statusValidation1;
@@ -55,7 +74,8 @@ public class OrderEstablishmentService extends OrderService {
     }
   }
 
-  private List<OrderResponseDTO> getEstablishmentOrderListByStatus(Integer establishmentId, Integer status) {
+  private List<OrderResponseDTO> getEstablishmentOrderListByStatus(
+      Integer establishmentId, Integer status) {
     var statusIdentification = statusValidation.getStatusIdentification(status);
 
     if (establishmentId == null) {
@@ -76,7 +96,8 @@ public class OrderEstablishmentService extends OrderService {
   }
 
   private EstablishmentEntity getEstablishmentById(Integer establishmentId) {
-    return establishmentRepository.findById(Long.valueOf(establishmentId))
+    return establishmentRepository
+        .findById(Long.valueOf(establishmentId))
         .orElseThrow(() -> new NotFoundException(ErrorMessages.ESTABLISHMENT_ORDER_NOT_FOUND));
   }
 }

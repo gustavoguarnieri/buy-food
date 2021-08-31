@@ -39,8 +39,31 @@ public class OrderUserService extends OrderService {
       "Não existe o status de preparo padrão: (Pendente)";
 
   @Autowired
-  public OrderUserService(ModelMapper modelMapper, ProductEstablishmentService productEstablishmentService, EstablishmentPreparationStatusService preparationStatusService, EstablishmentPaymentWayService paymentWayService, OrderItemsRepository orderItemsRepository, OrderRepository orderRepository, StatusValidation statusValidation, UserService userService, ProductEstablishmentService productEstablishmentService1, EstablishmentPaymentWayService paymentWayService1, EstablishmentPreparationStatusService preparationStatusService1, AddressService addressService, OrderRepository orderRepository1, PreparationStatusRepository preparationStatusRepository, OrderItemsRepository orderItemsRepository1) {
-    super(modelMapper, productEstablishmentService, preparationStatusService, paymentWayService, orderItemsRepository, orderRepository, statusValidation, userService);
+  public OrderUserService(
+      ModelMapper modelMapper,
+      ProductEstablishmentService productEstablishmentService,
+      EstablishmentPreparationStatusService preparationStatusService,
+      EstablishmentPaymentWayService paymentWayService,
+      OrderItemsRepository orderItemsRepository,
+      OrderRepository orderRepository,
+      StatusValidation statusValidation,
+      UserService userService,
+      ProductEstablishmentService productEstablishmentService1,
+      EstablishmentPaymentWayService paymentWayService1,
+      EstablishmentPreparationStatusService preparationStatusService1,
+      AddressService addressService,
+      OrderRepository orderRepository1,
+      PreparationStatusRepository preparationStatusRepository,
+      OrderItemsRepository orderItemsRepository1) {
+    super(
+        modelMapper,
+        productEstablishmentService,
+        preparationStatusService,
+        paymentWayService,
+        orderItemsRepository,
+        orderRepository,
+        statusValidation,
+        userService);
     this.productEstablishmentService = productEstablishmentService1;
     this.paymentWayService = paymentWayService1;
     this.preparationStatusService = preparationStatusService1;
@@ -59,7 +82,8 @@ public class OrderUserService extends OrderService {
 
     var preparationStatusId =
         orderRequestDto.getPreparationStatus() == null
-            ? preparationStatusRepository.findByDescriptionIgnoreCase(PreparationStatusDefault.PENDENTE.name())
+            ? preparationStatusRepository
+                .findByDescriptionIgnoreCase(PreparationStatusDefault.PENDENTE.name())
                 .orElseThrow(() -> new NotFoundException(PREPARATION_STATUS_PENDING_NOT_FOUND))
                 .getId()
             : orderRequestDto.getPreparationStatus().getId();

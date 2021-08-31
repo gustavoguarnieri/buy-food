@@ -15,7 +15,7 @@ public class ErrorMessages {
   public static String PAYMENT_WAY_NOT_FOUND = "Payment way not found";
   public static String PREPARATION_STATUS_NOT_FOUND = "Payment way not found";
   public static String COULD_NOT_CREATE_DIRECTORY =
-          "Could not create the directory where the uploaded files will be stored";
+      "Could not create the directory where the uploaded files will be stored";
   public static String COULD_NOT_STORE_FILE = "Could not store file";
   public static String INVALID_FILE_NAME_PATH = "Filename contains invalid path sequence";
   public static String FILE_NOT_FOUND = "File not found";

@@ -2,7 +2,6 @@ package br.com.example.buyfood.service.establishment;
 
 import br.com.example.buyfood.constants.ErrorMessages;
 import br.com.example.buyfood.enums.RegisterStatus;
-import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
 import br.com.example.buyfood.model.dto.request.IngredientRequestDTO;
 import br.com.example.buyfood.model.dto.response.IngredientResponseDTO;
@@ -12,11 +11,10 @@ import br.com.example.buyfood.model.entity.ProductEntity;
 import br.com.example.buyfood.model.repository.IngredientRepository;
 import br.com.example.buyfood.model.repository.ProductRepository;
 import br.com.example.buyfood.service.UserService;
+import br.com.example.buyfood.util.StatusValidation;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.ForbiddenException;
-
-import br.com.example.buyfood.util.StatusValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,13 @@ public class EstablishmentIngredientService {
   private final StatusValidation statusValidation;
 
   @Autowired
-  public EstablishmentIngredientService(ModelMapper modelMapper, ProductRepository productRepository, IngredientRepository ingredientRepository, EstablishmentService establishmentService, UserService userService, StatusValidation statusValidation) {
+  public EstablishmentIngredientService(
+      ModelMapper modelMapper,
+      ProductRepository productRepository,
+      IngredientRepository ingredientRepository,
+      EstablishmentService establishmentService,
+      UserService userService,
+      StatusValidation statusValidation) {
     this.modelMapper = modelMapper;
     this.productRepository = productRepository;
     this.ingredientRepository = ingredientRepository;
@@ -53,21 +57,23 @@ public class EstablishmentIngredientService {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
     if (status == null) {
       return ingredientRepository.findAllByProductId(productId).stream()
-              .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
-              .map(this::convertToDto)
-              .collect(Collectors.toList());
+          .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
+          .map(this::convertToDto)
+          .collect(Collectors.toList());
     } else {
       return ingredientRepository
-              .findAllByProductIdAndStatus(productId, statusValidation.getStatusIdentification(status))
-              .stream()
-              .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
-              .map(this::convertToDto)
-              .collect(Collectors.toList());
+          .findAllByProductIdAndStatus(productId, statusValidation.getStatusIdentification(status))
+          .stream()
+          .filter(i -> i.getProduct().getEstablishment().getId().equals(establishment.getId()))
+          .map(this::convertToDto)
+          .collect(Collectors.toList());
     }
   }
 
-  public IngredientResponseDTO getIngredient(Long establishmentId, Long productId, Long ingredientId) {
-    return convertToDto(getIngredientByEstablishmentIdAndProductIdAndId(establishmentId, productId, ingredientId));
+  public IngredientResponseDTO getIngredient(
+      Long establishmentId, Long productId, Long ingredientId) {
+    return convertToDto(
+        getIngredientByEstablishmentIdAndProductIdAndId(establishmentId, productId, ingredientId));
   }
 
   public IngredientResponseDTO createIngredient(
@@ -79,7 +85,10 @@ public class EstablishmentIngredientService {
   }
 
   public void updateIngredient(
-      Long establishmentId, Long productId, Long ingredientId, IngredientRequestDTO ingredientRequestDTO) {
+      Long establishmentId,
+      Long productId,
+      Long ingredientId,
+      IngredientRequestDTO ingredientRequestDTO) {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
     validUserOwnerOfEstablishment(establishment);
 
@@ -101,33 +110,39 @@ public class EstablishmentIngredientService {
   }
 
   public IngredientEntity getIngredientById(Long ingredientId) {
-    return ingredientRepository.findById(ingredientId)
+    return ingredientRepository
+        .findById(ingredientId)
         .orElseThrow(() -> new NotFoundException(ErrorMessages.INGREDIENT_NOT_FOUND));
   }
 
   public ProductEntity getProductByEstablishmentIdAndProductId(
       Long establishmentId, Long productId) {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
-    return productRepository.findByEstablishmentAndId(establishment, productId)
+    return productRepository
+        .findByEstablishmentAndId(establishment, productId)
         .orElseThrow(() -> new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
   }
 
   public ProductEntity getProductByEstablishmentAndProductId(
       EstablishmentEntity establishment, Long productId) {
-    return productRepository.findByEstablishmentAndId(establishment, productId)
+    return productRepository
+        .findByEstablishmentAndId(establishment, productId)
         .orElseThrow(() -> new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
   }
 
   private IngredientEntity getIngredientByEstablishmentIdAndProductIdAndId(
       Long establishmentId, Long productId, Long ingredientId) {
-    return ingredientRepository.findById(ingredientId)
+    return ingredientRepository
+        .findById(ingredientId)
         .filter(i -> i.getProduct().getId().equals(productId))
         .filter(i -> i.getProduct().getEstablishment().getId().equals(establishmentId))
         .orElseThrow(() -> new NotFoundException(ErrorMessages.INGREDIENT_NOT_FOUND));
   }
 
   private String getUserId() {
-    return userService.getUserId().orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
+    return userService
+        .getUserId()
+        .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
   }
 
   private void validUserOwnerOfEstablishment(EstablishmentEntity establishmentEntity) {
