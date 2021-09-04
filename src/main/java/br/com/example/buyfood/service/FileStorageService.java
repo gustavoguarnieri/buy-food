@@ -1,6 +1,6 @@
 package br.com.example.buyfood.service;
 
-import br.com.example.buyfood.config.Property.FileStorageProperty;
+import br.com.example.buyfood.config.property.FileStorageProperty;
 import br.com.example.buyfood.constants.ErrorMessages;
 import br.com.example.buyfood.enums.FileStorageFolder;
 import br.com.example.buyfood.exception.FileNotFoundException;

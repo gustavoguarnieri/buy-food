@@ -1,4 +1,4 @@
-package br.com.example.buyfood.config.Property;
+package br.com.example.buyfood.config.property;
 
 import lombok.Getter;
 import lombok.Setter;
