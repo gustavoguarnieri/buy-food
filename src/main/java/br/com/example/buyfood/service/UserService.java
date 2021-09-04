@@ -14,7 +14,12 @@ import br.com.example.buyfood.model.embeddable.Audit;
 import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.UserRepository;
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.KeycloakPrincipal;
@@ -65,6 +70,8 @@ public class UserService {
 
   @Autowired private UserRepository userRepository;
 
+  private static final int KEYCLOAK_CONNECTION_POOL_SIZE = 15;
+
   public UserResponseDTO getUser(String userId) {
     var userEntity =
         userRepository
@@ -77,7 +84,7 @@ public class UserService {
   public UserCreateResponseDTO createUser(UserCreateRequestDTO userCreateRequestDto) {
     var userEntity = saveCustomUser(userCreateRequestDto);
 
-    var ROLE = userCreateRequestDto.getRole().name().toLowerCase();
+    var role = userCreateRequestDto.getRole().name().toLowerCase();
 
     var keycloak = getKeycloakBuilder(adminUser, adminPass);
 
@@ -93,8 +100,7 @@ public class UserService {
 
     var userCreateResponseDto = new UserCreateResponseDTO();
 
-    try {
-      var response = usersResource.create(user);
+    try (var response = usersResource.create(user)) {
 
       userCreateResponseDto.setStatusCode(response.getStatus());
       userCreateResponseDto.setStatus(response.getStatusInfo().toString());
@@ -113,7 +119,7 @@ public class UserService {
         var userResource = usersResource.get(userId);
         userResource.resetPassword(passwordCred);
 
-        insertNewRole(ROLE, realmResource, userResource);
+        insertNewRole(role, realmResource, userResource);
 
         userEntity.setUserId(userId);
         userEntity.getAudit().setCreatedBy(userId);
@@ -174,16 +180,17 @@ public class UserService {
     return passwordCred;
   }
 
-  private Keycloak getKeycloakBuilder(String USER, String PASS) {
+  private Keycloak getKeycloakBuilder(String user, String pass) {
     return KeycloakBuilder.builder()
         .serverUrl(authServerUrl)
         .grantType(OAuth2Constants.PASSWORD)
         .realm(realm)
         .clientId(clientId)
         .clientSecret(clientSecret)
-        .username(USER)
-        .password(PASS)
-        .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(15).build())
+        .username(user)
+        .password(pass)
+        .resteasyClient(
+            new ResteasyClientBuilder().connectionPoolSize(KEYCLOAK_CONNECTION_POOL_SIZE).build())
         .build();
   }
 
