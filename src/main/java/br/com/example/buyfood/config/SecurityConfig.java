@@ -24,8 +24,11 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
-  private SwaggerConfig swaggerConfig;
+  private final SwaggerConfig swaggerConfig;
   private static final String AUTHORITY_MAPPER_PREFIX = "ROLE_";
+  private static final String PROFILE_ADMIN = "ADMIN";
+  private static final String PROFILE_ESTABLISHMENT = "ESTABLISHMENT";
+  private static final String PROFILE_USER = "USER";
 
   public SecurityConfig(SwaggerConfig swaggerConfig) {
     this.swaggerConfig = swaggerConfig;
@@ -60,11 +63,11 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         .antMatchers("/api/v1/establishments/{establishmentId}/images/download-file/**")
         .permitAll()
         .antMatchers("/api/v1/admin/**")
-        .hasRole("ADMIN")
+        .hasRole(PROFILE_ADMIN)
         .antMatchers("/api/v1/users/**")
-        .hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
+        .hasAnyRole(PROFILE_USER, PROFILE_ESTABLISHMENT, PROFILE_ADMIN)
         .antMatchers("/api/v1/establishments/**")
-        .hasAnyRole("USER", "ESTABLISHMENT", "ADMIN")
+        .hasAnyRole(PROFILE_USER, PROFILE_ESTABLISHMENT, PROFILE_ADMIN)
         .anyRequest()
         .authenticated();
   }
