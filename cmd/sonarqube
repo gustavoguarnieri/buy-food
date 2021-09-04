@@ -1,0 +1,1 @@
+./gradlew sonarqube -D "sonar.projectKey=buy-food" -D "sonar.host.url=http://localhost:9000" -D "sonar.login=4b8b85bf9454f397f48026c2212c83afacf37cac"
