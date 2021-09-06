@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EstablishmentBusinessHoursPutRequestDTO {
+public class BusinessHoursRequestDTO {
 
   @JsonDeserialize(using = LocalTimeDeserializer.class)
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")

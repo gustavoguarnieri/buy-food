@@ -1,7 +1,6 @@
 package br.com.example.buyfood.controller.establishment;
 
-import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursPutRequestDTO;
-import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursRequestDTO;
+import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDTO;
 import br.com.example.buyfood.model.dto.response.EstablishmentBusinessHoursResponseDTO;
 import br.com.example.buyfood.service.establishment.EstablishmentBusinessHoursService;
 import io.swagger.annotations.ApiOperation;
@@ -129,15 +128,14 @@ public class EstablishmentBusinessHoursController {
       })
   public EstablishmentBusinessHoursResponseDTO createBusinessHours(
       @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
-      @Valid @RequestBody
-          EstablishmentBusinessHoursRequestDTO establishmentBusinessHoursRequestDto) {
+      @Valid @RequestBody BusinessHoursRequestDTO businessHoursRequestDto) {
 
     log.info(
         "createBusinessHours: starting to create new business hours, establishmentId={}",
         establishmentId);
     var businessHoursResponseDto =
         establishmentBusinessHoursService.createBusinessHours(
-            establishmentId, establishmentBusinessHoursRequestDto);
+            establishmentId, businessHoursRequestDto);
     log.info(
         "createBusinessHours: finished to create new business hours, establishmentId={}",
         establishmentId);
@@ -157,15 +155,14 @@ public class EstablishmentBusinessHoursController {
   public void updateBusinessHours(
       @Valid @NotBlank @PathVariable("establishmentId") Long establishmentId,
       @Valid @NotBlank @PathVariable("businessHoursId") Long businessHoursId,
-      @Valid @RequestBody
-          EstablishmentBusinessHoursPutRequestDTO establishmentBusinessHoursPutRequestDto) {
+      @Valid @RequestBody BusinessHoursRequestDTO businessHoursRequestDto) {
 
     log.info(
         "updateBusinessHours: starting update business hours establishmentId={}, businessHoursId={}",
         establishmentId,
         businessHoursId);
     establishmentBusinessHoursService.updateBusinessHours(
-        establishmentId, businessHoursId, establishmentBusinessHoursPutRequestDto);
+        establishmentId, businessHoursId, businessHoursRequestDto);
     log.info(
         "updateBusinessHours: finished update business hours establishmentId={}, businessHoursId={}",
         establishmentId,

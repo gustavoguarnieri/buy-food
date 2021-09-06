@@ -46,7 +46,7 @@ public class SwaggerConfig {
         .build();
   }
 
-  public Boolean isSwaggerEnabled() {
+  public boolean isSwaggerEnabled() {
     return enableSwagger;
   }
 

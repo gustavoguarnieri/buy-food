@@ -5,6 +5,7 @@ import br.com.example.buyfood.exception.BusinessException;
 import br.com.example.buyfood.exception.ConflitException;
 import br.com.example.buyfood.exception.FileNotFoundException;
 import br.com.example.buyfood.exception.NotFoundException;
+import java.net.ConnectException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import javax.ws.rs.ForbiddenException;
@@ -25,7 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private MessageSource messageSource;
+  private final MessageSource messageSource;
 
   @Autowired
   public ApiExceptionHandler(MessageSource messageSource) {
@@ -34,6 +35,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(ApiException.class)
   public ResponseEntity<Object> handleApi(ApiException ex, WebRequest request) {
+    var status = HttpStatus.INTERNAL_SERVER_ERROR;
+    var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
+    return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+  }
+
+  @ExceptionHandler(ConnectException.class)
+  public ResponseEntity<Object> handleConnect(ConnectException ex, WebRequest request) {
     var status = HttpStatus.INTERNAL_SERVER_ERROR;
     var error = new Error(status.value(), ex.getMessage(), OffsetDateTime.now(), null);
     return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);

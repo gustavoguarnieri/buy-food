@@ -4,8 +4,7 @@ import br.com.example.buyfood.constants.ErrorMessages;
 import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.exception.BadRequestException;
 import br.com.example.buyfood.exception.NotFoundException;
-import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursPutRequestDTO;
-import br.com.example.buyfood.model.dto.request.EstablishmentBusinessHoursRequestDTO;
+import br.com.example.buyfood.model.dto.request.BusinessHoursRequestDTO;
 import br.com.example.buyfood.model.dto.response.EstablishmentBusinessHoursResponseDTO;
 import br.com.example.buyfood.model.entity.BusinessHoursEntity;
 import br.com.example.buyfood.model.entity.EstablishmentEntity;
@@ -94,8 +93,7 @@ public class EstablishmentBusinessHoursService {
   }
 
   public EstablishmentBusinessHoursResponseDTO createBusinessHours(
-      Long establishmentId,
-      EstablishmentBusinessHoursRequestDTO establishmentBusinessHoursRequestDto) {
+      Long establishmentId, BusinessHoursRequestDTO businessHoursRequestDto) {
 
     var establishment = establishmentService.getEstablishmentById(establishmentId);
 
@@ -105,7 +103,7 @@ public class EstablishmentBusinessHoursService {
       throw new BadRequestException("Establishment already exist");
     }
 
-    var convertedBusinessHoursEntity = convertToEntity(establishmentBusinessHoursRequestDto);
+    var convertedBusinessHoursEntity = convertToEntity(businessHoursRequestDto);
     convertedBusinessHoursEntity.setEstablishment(establishment);
 
     var businessHoursEntity = businessHoursRepository.save(convertedBusinessHoursEntity);
@@ -114,13 +112,11 @@ public class EstablishmentBusinessHoursService {
   }
 
   public void updateBusinessHours(
-      Long establishmentId,
-      Long businessHoursId,
-      EstablishmentBusinessHoursPutRequestDTO establishmentBusinessHoursPutRequestDto) {
+      Long establishmentId, Long businessHoursId, BusinessHoursRequestDTO businessHoursRequestDto) {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
     validUserOwnerOfEstablishment(establishment);
 
-    var convertedBusinessHoursEntity = convertToEntity(establishmentBusinessHoursPutRequestDto);
+    var convertedBusinessHoursEntity = convertToEntity(businessHoursRequestDto);
     convertedBusinessHoursEntity.setId(businessHoursId);
     convertedBusinessHoursEntity.setEstablishment(establishment);
     businessHoursRepository.save(convertedBusinessHoursEntity);

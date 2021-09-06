@@ -1,4 +1,4 @@
-package br.com.example.buyfood.model.dto.response.Product;
+package br.com.example.buyfood.model.dto.response.product;
 
 import br.com.example.buyfood.model.dto.response.EstablishmentCategoryResponseDTO;
 import br.com.example.buyfood.model.dto.response.EstablishmentDeliveryTaxResponseDTO;

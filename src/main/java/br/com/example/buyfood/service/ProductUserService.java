@@ -1,6 +1,6 @@
 package br.com.example.buyfood.service;
 
-import br.com.example.buyfood.model.dto.response.Product.EstablishmentProductResponseDTO;
+import br.com.example.buyfood.model.dto.response.product.EstablishmentProductResponseDTO;
 import br.com.example.buyfood.model.entity.ProductEntity;
 import br.com.example.buyfood.model.repository.ProductRepository;
 import br.com.example.buyfood.util.StatusValidation;

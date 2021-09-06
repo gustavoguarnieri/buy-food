@@ -1,6 +1,7 @@
 package br.com.example.buyfood.model.embeddable;
 
 import br.com.example.buyfood.service.UserService;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -14,7 +15,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Audit {
+public class Audit implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   public Audit(String createdBy) {
     this.createdBy = createdBy;
