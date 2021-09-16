@@ -100,7 +100,7 @@ public class EstablishmentIngredientService {
     ingredientRepository.save(convertedIngredientEntity);
   }
 
-  public void deleteIngredient(Long establishmentId, Long productId, Long ingredientId) {
+  public void deleteIngredient(Long establishmentId, Long ingredientId) {
     var establishment = establishmentService.getEstablishmentById(establishmentId);
     validUserOwnerOfEstablishment(establishment);
 

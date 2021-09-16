@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DashboardService {
 
-  private final int NINETY_DAYS = 90;
+  private static final int NINETY_DAYS = 90;
 
   private final OrderRepository orderRepository;
 

@@ -175,7 +175,7 @@ public class EstablishmentIngredientController {
         establishmentId,
         productId,
         ingredientId);
-    ingredientService.deleteIngredient(establishmentId, productId, ingredientId);
+    ingredientService.deleteIngredient(establishmentId, ingredientId);
     log.info(
         "deleteIngredient: finished delete ingredient establishmentId={}, productId={}, ingredientId={}",
         establishmentId,

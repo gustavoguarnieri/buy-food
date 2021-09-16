@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 public class StatusValidation {
 
   public int getStatusIdentification(Integer status) {
-    return status != null
-        ? (status == 0 ? RegisterStatus.DISABLED.getValue() : RegisterStatus.ENABLED.getValue())
-        : RegisterStatus.ENABLED.getValue();
+    return status == 0 ? RegisterStatus.DISABLED.getValue() : RegisterStatus.ENABLED.getValue();
   }
 }

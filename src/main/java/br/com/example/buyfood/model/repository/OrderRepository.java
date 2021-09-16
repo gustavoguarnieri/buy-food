@@ -57,11 +57,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
   List<OrderEntity> findAllByStatus(int status);
 
-  //  List<OrderEntity> findAllByAuditCreatedBy(String userId);
-
   List<OrderEntity> findAllByAuditCreatedByAndStatus(String userId, int status);
-
-  //  List<OrderEntity> findAllByStatus(int status);
 
   List<OrderEntity> findAllByEstablishment(EstablishmentEntity establishment);
 

@@ -43,8 +43,8 @@ public class EstablishmentImageService {
 
   private final StatusValidation statusValidation;
 
-  private final String RETRY_DELAY_TIME = "200";
-  private final int RETRY_MAX_ATTEMPTS = 6;
+  private static final String RETRY_DELAY_TIME = "200";
+  private static final int RETRY_MAX_ATTEMPTS = 6;
 
   @Autowired
   public EstablishmentImageService(
