@@ -28,29 +28,6 @@ public class UserEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  public UserEntity(
-      String userId,
-      String firstName,
-      String lastName,
-      String nickName,
-      String email,
-      String phone,
-      LocalDate birthDate,
-      @CPF String cpf,
-      @CNPJ String cnpj,
-      Audit audit) {
-    this.userId = userId;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.nickName = nickName;
-    this.email = email;
-    this.phone = phone;
-    this.birthDate = birthDate;
-    this.cpf = cpf;
-    this.cnpj = cnpj;
-    this.audit = audit;
-  }
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

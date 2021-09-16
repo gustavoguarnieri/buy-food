@@ -10,7 +10,6 @@ import br.com.example.buyfood.model.dto.request.UserSigninRequestDTO;
 import br.com.example.buyfood.model.dto.request.UserUpdateRequestDTO;
 import br.com.example.buyfood.model.dto.response.UserCreateResponseDTO;
 import br.com.example.buyfood.model.dto.response.UserResponseDTO;
-import br.com.example.buyfood.model.embeddable.Audit;
 import br.com.example.buyfood.model.entity.UserEntity;
 import br.com.example.buyfood.model.repository.UserRepository;
 import java.security.Principal;
@@ -257,18 +256,8 @@ public class UserService {
     }
 
     try {
-      return userRepository.save(
-          new UserEntity(
-              null,
-              userCreateRequestDto.getFirstName(),
-              userCreateRequestDto.getLastName(),
-              userCreateRequestDto.getNickName(),
-              userCreateRequestDto.getEmail(),
-              userCreateRequestDto.getPhone(),
-              userCreateRequestDto.getBirthDate(),
-              userCreateRequestDto.getCpf(),
-              userCreateRequestDto.getCnpj(),
-              new Audit(null)));
+      var userEntity = convertToEntity(userCreateRequestDto);
+      return userRepository.save(userEntity);
     } catch (Exception ex) {
       log.error(
           "saveCustomUser: An error occurred when save user={} ",
@@ -359,5 +348,9 @@ public class UserService {
 
   private UserResponseDTO convertToDto(UserEntity userEntity) {
     return modelMapper.map(userEntity, UserResponseDTO.class);
+  }
+
+  private UserEntity convertToEntity(Object userCreateRequestDto) {
+    return modelMapper.map(userCreateRequestDto, UserEntity.class);
   }
 }
