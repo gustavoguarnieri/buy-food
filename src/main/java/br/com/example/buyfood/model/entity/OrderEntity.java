@@ -5,6 +5,7 @@ import br.com.example.buyfood.enums.RegisterStatus;
 import br.com.example.buyfood.model.embeddable.Audit;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -40,7 +41,7 @@ public class OrderEntity implements Serializable {
   @JoinColumn(name = "establishment_id", referencedColumnName = "id")
   private EstablishmentEntity establishment;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   private List<OrderItemsEntity> items;
 
   @ManyToOne private PaymentWayEntity paymentWay;

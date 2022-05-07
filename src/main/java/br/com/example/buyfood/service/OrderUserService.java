@@ -109,7 +109,6 @@ public class OrderUserService extends OrderService {
             });
 
     var orderEntity = orderRepository.save(convertedOrderEntity);
-    orderItemsRepository.saveAll(convertedOrderEntity.getItems());
     return convertToDto(orderEntity);
   }
 }
