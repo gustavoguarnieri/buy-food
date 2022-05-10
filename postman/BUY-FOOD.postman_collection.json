@@ -1,0 +1,4055 @@
+{
+	"info": {
+		"_postman_id": "f9741924-406d-4e53-9ac4-4a1b004ac3e2",
+		"name": "BUY-FOOD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health check",
+			"item": [
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrlBackEnd}}/actuator/health",
+							"host": [
+								"{{baseUrlBackEnd}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoints",
+			"item": [
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Create User (final customer)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpf\": \"658.139.730-01\",\r\n    \"cnpj\": \"19.973.725/0001-94\",\r\n    \"firstName\": \"João\",\r\n    \"lastName\": \"Macedo\",\r\n    \"nickName\": \"João\",\r\n    \"phone\": \"1938000000\",\r\n    \"birthDate\": \"1999-01-01\",\r\n    \"email\": \"joao.m.user@gmail.com\",\r\n    \"password\": \"pass\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/create",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User (establishment)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpf\": \"658.139.730-01\",\r\n    \"cnpj\": \"19.973.725/0001-94\",\r\n    \"firstName\": \"João\",\r\n    \"lastName\": \"Macedo\",\r\n    \"nickName\": \"João\",\r\n    \"phone\": \"1938000000\",\r\n    \"birthDate\": \"1999-01-01\",\r\n    \"email\": \"joao.macedo.establishment@gmail.com\",\r\n    \"password\": \"pass\",\r\n    \"role\": \"ESTABLISHMENT\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/create",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Signin User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);\r",
+											"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \r\n    \"email\": \"joao.m.user@gmail.com\",\r\n    \"password\": \"pass\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/signin",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);\r",
+											"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/:userId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "7ae51d62-2f58-49b0-956b-17075f384f38"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"joao.m.user@gmail.com\",\r\n    \"firstName\": \"João\",\r\n    \"lastName\": \"Macedo Almeida\",\r\n    \"nickName\": \"João\",\r\n    \"birthDate\": \"1999-01-01\",\r\n    \"phone\": \"1938000000\",\r\n    \"cpf\": \"658.139.730-01\",\r\n    \"cnpj\": \"19.973.725/0001-94\",\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/:userId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "7ae51d62-2f58-49b0-956b-17075f384f38"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/:userId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "7ae51d62-2f58-49b0-956b-17075f384f38"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Establishment",
+					"item": [
+						{
+							"name": "Image",
+							"item": [
+								{
+									"name": "New establishment image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/images/upload-file",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"images",
+												"upload-file"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New establishment image list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "files",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/images/upload-files",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"images",
+												"upload-files"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Establishment images",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/images",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"images"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "0",
+													"description": "0 - disabled, 1 - enabled",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Establishment image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishment/:establishmentId/images/:imageId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishment",
+												":establishmentId",
+												"images",
+												":imageId"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "imageId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete establishment image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishment/:establishmentId/images/:imageId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishment",
+												":establishmentId",
+												"images",
+												":imageId"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "imageId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update establishment image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"fileName\": \"estabelecimento-1.jpg\",\r\n    \"fileUri\": \"http://localhost:9080/buy-food/download-file/estabelecimento-1.jpg\",\r\n    \"fileType\": \"image/jpeg\",\r\n    \"size\": 48778,\r\n    \"id\": 3,\r\n    \"status\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishment/:establishmentId/images/:imageId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishment",
+												":establishmentId",
+												"images",
+												":imageId"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "0",
+													"description": "0 - disabled, 1 - enabled",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "imageId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Establishment download image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/images/download-file/:file",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"images",
+												"download-file",
+												":file"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "file",
+													"value": "52827187-6c19-41db-ae16-595a22ead35c.jpeg"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Establishment download image Copy",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9080/buy-food/api/v1/establishments/:establishmentId/images/download-file/:file",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9080",
+											"path": [
+												"buy-food",
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"images",
+												"download-file",
+												":file"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "file",
+													"value": "7e914ec9-2c72-4083-9499-c80b6be97b1c.jpg"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Category",
+							"item": [
+								{
+									"name": "GET Establishment Categories",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"preparation-status"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "0",
+													"description": "0 - disabled, 1 - enabled",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GET Establishment Category",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status/:preparationStatusId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"preparation-status",
+												":preparationStatusId"
+											],
+											"variable": [
+												{
+													"key": "preparationStatusId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "POST Establishment Category",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"description\": \"Entregue\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"preparation-status"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PUT Establishment Category",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 4,\r\n    \"description\": \"Entregue\",\r\n    \"status\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status/:preparationStatusId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"preparation-status",
+												":preparationStatusId"
+											],
+											"variable": [
+												{
+													"key": "preparationStatusId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "DELETE Establishment Category",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status/:preparationStatusId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"preparation-status",
+												":preparationStatusId"
+											],
+											"variable": [
+												{
+													"key": "preparationStatusId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delivery Tax",
+							"item": [
+								{
+									"name": "Delivery Tax",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/delivery-tax",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"delivery-tax"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delivery Tax by Id",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/delivery-tax/:deliveryTaxId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"delivery-tax",
+												":deliveryTaxId"
+											],
+											"variable": [
+												{
+													"key": "deliveryTaxId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Delivery Tax",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \r\n  \"taxAmount\": 4.00\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/delivery-tax",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"delivery-tax"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Delivery Tax",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 1,\r\n    \"taxAmount\": 3.25,\r\n    \"status\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/delivery-tax/:deliveryTaxId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"delivery-tax",
+												":deliveryTaxId"
+											],
+											"variable": [
+												{
+													"key": "deliveryTaxId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Delivery Tax",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/delivery-tax/:deliveryTaxId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"delivery-tax",
+												":deliveryTaxId"
+											],
+											"variable": [
+												{
+													"key": "deliveryTaxId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{access_token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "Order",
+							"item": [
+								{
+									"name": "Order",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/orders?status=1&establishment=1",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"orders"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "1"
+												},
+												{
+													"key": "establishment",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Order by Id",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/orders/:orderId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												"orders",
+												":orderId"
+											],
+											"variable": [
+												{
+													"key": "orderId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{access_token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "Establishment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "0 - disabled, 1 - enabled",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Establishment by userId",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/mine?status=1",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"mine"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "1",
+											"description": "0 - disabled, 1 - enabled"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Establishment by Id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Establishment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"companyName\": \"Restaurante Real\",\r\n    \"tradingName\": \"Restaurante Real\",\r\n    \"email\": \"restaurante_real@gmail.com.br\",\r\n    \"name\": \"Real\",\r\n    \"commercialPhone\": \"1938000001\",\r\n    \"mobilePhone\": \"19999660000\",\r\n    \"category\": {\r\n        \"id\": 1\r\n    },\r\n    \"deliveryTax\": {\r\n        \"id\": 1\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Establishment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"companyName\": \"Restaurante Real\",\r\n    \"tradingName\": \"Restaurante Real\",\r\n    \"email\": \"restaurante_real@gmail.com.br\",\r\n    \"commercialPhone\": \"1938000001\",\r\n    \"mobilePhone\": \"19999660000\",\r\n    \"category\": {\r\n        \"id\": 2,\r\n        \"status\": 1\r\n    },\r\n    \"deliveryTax\": {\r\n        \"id\": 2,\r\n        \"status\": 1\r\n    },\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Establishment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Business Hours",
+					"item": [
+						{
+							"name": "Business Hours",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/business-hours",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"business-hours"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "0 - disabled, 1 - enabled",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Business Hours by userId",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/business-hours/mine",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"business-hours",
+										"mine"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "0 - disabled, 1 - enabled",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Business Hours by Id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/business-hours/:businessHoursId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"business-hours",
+										":businessHoursId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										},
+										{
+											"key": "businessHoursId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Business Hours",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"startTimeFirstPeriodMonday\": \"08:00\",\r\n   \"finalTimeFirstPeriodMonday\": \"12:00\",\r\n   \"startTimeSecondPeriodMonday\": \"13:00\",\r\n   \"finalTimeSecondPeriodMonday\": \"18:00\",\r\n   \"startTimeFirstPeriodTuesday\": \"08:00\",\r\n   \"finalTimeFirstPeriodTuesday\": \"12:00\",\r\n   \"startTimeSecondPeriodTuesday\": \"13:30\",\r\n   \"finalTimeSecondPeriodTuesday\": \"18:00\",\r\n   \"startTimeFirstPeriodWednesday\": \"09:00\",\r\n   \"finalTimeFirstPeriodWednesday\": \"13:00\",\r\n   \"startTimeSecondPeriodWednesday\": \"14:30\",\r\n   \"finalTimeSecondPeriodWednesday\": \"19:00\",\r\n   \"startTimeSecondPeriodFriday\": \"07:30\",\r\n   \"finalTimeSecondPeriodFriday\": \"16:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/business-hours",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"business-hours"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Business Hours",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"startTimeFirstPeriodMonday\": \"09:00\",\r\n    \"finalTimeFirstPeriodMonday\": \"12:00\",\r\n    \"startTimeSecondPeriodMonday\": \"13:00\",\r\n    \"finalTimeSecondPeriodMonday\": \"18:00\",\r\n    \"startTimeFirstPeriodTuesday\": \"08:00\",\r\n    \"finalTimeFirstPeriodTuesday\": \"12:00\",\r\n    \"startTimeSecondPeriodTuesday\": \"13:30\",\r\n    \"finalTimeSecondPeriodTuesday\": \"18:00\",\r\n    \"startTimeFirstPeriodWednesday\": \"09:00\",\r\n    \"finalTimeFirstPeriodWednesday\": \"13:00\",\r\n    \"startTimeSecondPeriodWednesday\": \"14:30\",\r\n    \"finalTimeSecondPeriodWednesday\": \"19:00\",\r\n    \"startTimeSecondPeriodFriday\": \"07:30\",\r\n    \"finalTimeSecondPeriodFriday\": \"16:00\",\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/business-hours/:businessHoursId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"business-hours",
+										":businessHoursId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										},
+										{
+											"key": "businessHoursId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Business Hours",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/::establishmentId/business-hours/:businessHoursId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"::establishmentId",
+										"business-hours",
+										":businessHoursId"
+									],
+									"variable": [
+										{
+											"key": ":establishmentId",
+											"value": "1"
+										},
+										{
+											"key": "businessHoursId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Files",
+					"item": [
+						{
+							"name": "New Upload File",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/files/upload-file",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"files",
+										"upload-file"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Upload Multiple Files",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "files",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/files/upload-multiple-files",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"files",
+										"upload-multiple-files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Upload File Copy",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/files/download-file/robo.jpg",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"files",
+										"download-file",
+										"robo.jpg"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "Image",
+							"item": [
+								{
+									"name": "New product image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/images/upload-file",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"images",
+												"upload-file"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New product image list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "files",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/images/upload-files",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"images",
+												"upload-files"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Product images",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId:1/products/:productId/images",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId:1",
+												"products",
+												":productId",
+												"images"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "0",
+													"description": "0 - disabled, 1 - enabled",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "establishmentId:1",
+													"value": null
+												},
+												{
+													"key": "productId",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Product image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/images/:imageId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"images",
+												":imageId"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												},
+												{
+													"key": "imageId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Product download image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/images/download-file/:file",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"images",
+												"download-file",
+												":file"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												},
+												{
+													"key": "file",
+													"value": "3646d2c7-69cd-4cd9-aca1-5ef8d3474a04.jpg"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/images/:imageId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"images",
+												":imageId"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												},
+												{
+													"key": "imageId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update image",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"fileName\": \"27dd40aa-9e75-4044-9695-892f6ea8a1e2.jpg\",\r\n    \"fileUri\": \"http://localhost:9080/buy-food/api/v1/establishments/1/products/1/images/download-file/27dd40aa-9e75-4044-9695-892f6ea8a1e2.jpg\",\r\n    \"fileType\": \"image/jpeg\",\r\n    \"size\": 215079,\r\n    \"id\": 33,\r\n    \"status\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/images/:imageId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"images",
+												":imageId"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "0",
+													"description": "0 - disabled, 1 - enabled",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												},
+												{
+													"key": "imageId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Ingredientes",
+							"item": [
+								{
+									"name": "Ingredientes by Id",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/ingredients/:ingredientId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"ingredients",
+												":ingredientId"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												},
+												{
+													"key": "ingredientId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Ingredientes",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/ingredients",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"ingredients"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "0",
+													"description": "0 - disabled, 1 - enabled",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Ingredientes",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"ingredient\": \"Salada\",\r\n    \"portion\": \"100gr\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/ingredients",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"ingredients"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Ingredientes",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 14,\r\n   \"ingredient\": \"Purê de batata\",\r\n        \"portion\": \"120gr\",\r\n    \"status\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/ingredients/:ingredientId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"ingredients",
+												":ingredientId"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												},
+												{
+													"key": "ingredientId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Ingredientes",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{access_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId/ingredients/:ingredientId",
+											"host": [
+												"{{baseUrlBackEnd}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"establishments",
+												":establishmentId",
+												"products",
+												":productId",
+												"ingredients",
+												":ingredientId"
+											],
+											"variable": [
+												{
+													"key": "establishmentId",
+													"value": "1"
+												},
+												{
+													"key": "productId",
+													"value": "1"
+												},
+												{
+													"key": "ingredientId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Products",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"products"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "0 - disabled, 1 - enabled",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Products",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/products",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "0 - disabled, 1 - enabled",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Products by Id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"products",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										},
+										{
+											"key": "productId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New products",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Pastel grande\",\r\n    \"price\": 10.00,\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"products"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update products",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"hamburguer\",\r\n    \"price\": 1.50,\r\n    \"description\": \"melhor hamburguer da região\",\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"products",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										},
+										{
+											"key": "productId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete products",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/:establishmentId/products/:productId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										":establishmentId",
+										"products",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "establishmentId",
+											"value": "1"
+										},
+										{
+											"key": "productId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Delivery Address",
+					"item": [
+						{
+							"name": "Delivery Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/addresses",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"addresses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delivery Address by userId",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/addresses/mine",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"addresses",
+										"mine"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delivery Address by Id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/address/3",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"address",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Delivery Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"recipientName\": \"Monike\",\r\n    \"zipCode\": \"13801000\",\r\n    \"address\": \"Rua das rosas\",\r\n    \"addressNumber\": 100,\r\n    \"neighbourhood\": \"Centro\",\r\n    \"city\": \"Santo Antonio de Posse\",\r\n    \"state\": \"SP\",\r\n    \"observation\": \"casa com muro amarelo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/address",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Delivery Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 3,\r\n    \"recipientName\": \"Monike\",\r\n    \"zipCode\": \"13801001\",\r\n    \"address\": \"Rua das rosas\",\r\n    \"addressNumber\": 100,\r\n    \"neighbourhood\": \"Centro\",\r\n    \"city\": \"Santo Antonio de Posse\",\r\n    \"state\": \"SP\",\r\n    \"observation\": \"casa com muro amarelo\",\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/address/:addressId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"address",
+										":addressId"
+									],
+									"variable": [
+										{
+											"key": "addressId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Delivery Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/address/:addressId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"address",
+										":addressId"
+									],
+									"variable": [
+										{
+											"key": "addressId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Order",
+					"item": [
+						{
+							"name": "Order",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/orders",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order by userId",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/orders/mine",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"orders",
+										"mine"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order by Id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/orders/:orderId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"orders",
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Order",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"establishmentId\": 1,\r\n    \"deliveryAddressId\": 1,\r\n    \"items\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": 2,\r\n            \"quantity\": 2\r\n        }\r\n    ],\r\n    \"observation\": \"o mais rapido possivel\",\r\n     \"paymentWayId\": 4,\r\n    \"preparationStatus\": {\r\n        \"id\": 1\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/orders",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Order",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 15,\r\n    \"establishmentId\": 1,\r\n    \"deliveryAddressId\": 1,\r\n    \"delivery\": {\r\n        \"id\": 1,\r\n        \"status\": 1\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"id\": 19,\r\n            \"lineCode\": 1,\r\n            \"product\": {\r\n                \"id\": 1,\r\n                \"status\": 1\r\n            },\r\n            \"quantity\": 1,\r\n            \"status\": 1\r\n        },\r\n        {\r\n            \"id\": 20,\r\n            \"lineCode\": 2,\r\n            \"product\": {\r\n                \"id\": 2,\r\n                \"status\": 1\r\n            },\r\n            \"quantity\": 2,\r\n            \"status\": 1\r\n        }\r\n    ],\r\n    \"paymentWay\": \"CREDIT_CARD\",\r\n    \"paymentStatus\": \"PENDING\",\r\n    \"preparationStatus\": {\r\n        \"id\": 1\r\n    },\r\n    \"observation\": \"o mais rapido possivel\",\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/orders/:orderId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"orders",
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Order",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/users/orders/:orderId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"orders",
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Preparation Status",
+					"item": [
+						{
+							"name": "GET Preparation Status List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"preparation-status"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "0 - disabled, 1 - enabled",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Preparation Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"description\": \"Supermercado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"preparation-status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Preparation Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status/:preparationStatusId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"preparation-status",
+										":preparationStatusId"
+									],
+									"variable": [
+										{
+											"key": "preparationStatusId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Preparation Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"description\": \"SUPERMERCADO\",\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status/:preparationStatusId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"preparation-status",
+										":preparationStatusId"
+									],
+									"variable": [
+										{
+											"key": "preparationStatusId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Preparation Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/preparation-status/:preparationStatusId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"preparation-status",
+										":preparationStatusId"
+									],
+									"variable": [
+										{
+											"key": "preparationStatusId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Payment Way",
+					"item": [
+						{
+							"name": "GET Payment Way List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/payment-way",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"payment-way"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "0",
+											"description": "0 - disabled, 1 - enabled",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Payment Way",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"description\": \"Cartão de Crédito\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/payment-way",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"payment-way"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Payment Way",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/payment-way/:paymentWayId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"payment-way",
+										":paymentWayId"
+									],
+									"variable": [
+										{
+											"key": "paymentWayId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Payment Way",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"description\": \"QR Code\",\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/payment-way/:paymentWayId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"payment-way",
+										":paymentWayId"
+									],
+									"variable": [
+										{
+											"key": "paymentWayId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Payment Way",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/establishments/payment-way/:paymentWayId",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"establishments",
+										"payment-way",
+										":paymentWayId"
+									],
+									"variable": [
+										{
+											"key": "paymentWayId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "getOrdersByMonthList",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/dashboard/admin/orders-by-month",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"dashboard",
+										"admin",
+										"orders-by-month"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getBillingByMonthList",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/dashboard/admin/billing-by-month",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"dashboard",
+										"admin",
+										"billing-by-month"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "preparationStatus",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/dashboard/admin/preparation-status",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"dashboard",
+										"admin",
+										"preparation-status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "paymentWay",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/dashboard/admin/payment-way",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"dashboard",
+										"admin",
+										"payment-way"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "payment declined",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrlBackEnd}}/api/v1/dashboard/admin/payment-declined-status",
+									"host": [
+										"{{baseUrlBackEnd}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"dashboard",
+										"admin",
+										"payment-declined-status"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
